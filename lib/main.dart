@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:todo_flutter_app/todo/todo.dart';
 
 typedef void Cb2();
 
-typedef Widget StateCb(
-    int _counter, BuildContext context, Cb2 onButtonClick, String title);
+typedef Widget StateCb(int _counter, BuildContext context, Cb2 onButtonClick, String title);
 
 void main() => runApp(new MyApp());
 
@@ -14,11 +14,13 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       title: 'Flutter Demo',
       theme: new ThemeData(primarySwatch: Colors.orange),
-      home: new MyHomePage(title: 'Butter Demo Home Page'),
+      home: new TodoApp(),
+//      home: new MyHomePage(title: 'Butter Demo Home Page'),
     );
   }
 }
 
+/*
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -56,7 +58,9 @@ class MyHomePage extends StatefulWidget {
     );
   }
 }
+*/
 
+/*
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   final StateCb cb;
@@ -74,3 +78,4 @@ class _MyHomePageState extends State<MyHomePage> {
     return cb(_counter, context, _incrementCounter, widget.title);
   }
 }
+*/

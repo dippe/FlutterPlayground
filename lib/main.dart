@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_flutter_app/todo/todo.dart';
+import 'package:todo_flutter_app/todo/Todo.dart';
 
 typedef void Cb2();
 
@@ -8,6 +8,8 @@ typedef Widget StateCb(int _counter, BuildContext context, Cb2 onButtonClick, St
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
+  MyApp() {}
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,8 @@ class MyApp extends StatelessWidget {
 }
 
 /*
+todo: original example - should be removed later:
+
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 

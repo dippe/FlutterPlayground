@@ -9,8 +9,24 @@ class SimpleBarChart extends StatelessWidget {
 
   /// Creates a [BarChart] with sample data and no transition.
   factory SimpleBarChart.withSampleData() {
+    final data = [
+      new OrdinalSales('Todo', 5),
+      new OrdinalSales('Done', 25),
+    ];
     return new SimpleBarChart(
-      _createSampleData(),
+      _createSeriesData(data),
+      // Disable animations for image tests.
+      animate: true,
+    );
+  }
+
+  factory SimpleBarChart.withData(int done, int todo) {
+    final data = [
+      new OrdinalSales('Todo', todo),
+      new OrdinalSales('Done', done),
+    ];
+    return new SimpleBarChart(
+      _createSeriesData(data),
       // Disable animations for image tests.
       animate: true,
     );
@@ -28,12 +44,7 @@ class SimpleBarChart extends StatelessWidget {
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<OrdinalSales, String>> _createSampleData() {
-    final data = [
-      new OrdinalSales('Todo', 5),
-      new OrdinalSales('Done', 25),
-    ];
-
+  static List<charts.Series<OrdinalSales, String>> _createSeriesData(data) {
     return [
       new charts.Series<OrdinalSales, String>(
         id: 'Sales',

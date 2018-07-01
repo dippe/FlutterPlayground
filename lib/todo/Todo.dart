@@ -59,8 +59,8 @@ class TodoBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new GridView(
-      scrollDirection: Axis.horizontal,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      scrollDirection: Axis.vertical,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
       children: <Widget>[
         _TodoListItems(),
         new SimpleBarChart.withData(_todoStateStore.lengthDone(), _todoStateStore.lengthTodo()),
@@ -80,6 +80,24 @@ Widget _renderTodoItem(TodoData d) => (new Row(
           value: d.done,
           onChanged: (bool state) => _todoStateStore.toggleState(d),
         ),
-        new Text(d.title, style: TextStyle(decoration: d.done ? TextDecoration.lineThrough : TextDecoration.none))
+        new Text(d.title, style: TextStyle(decoration: d.done ? TextDecoration.lineThrough : TextDecoration.none)),
+        new Expanded(
+          child: new TextFormField(
+            initialValue: d.title,
+            enabled: true,
+            decoration: const InputDecoration(
+              border: const UnderlineInputBorder(),
+              filled: true,
+              icon: const Icon(Icons.short_text),
+              hintText: 'What would you like to remember?',
+              labelText: 'Title',
+              prefixText: '+1',
+            ),
+            keyboardType: TextInputType.text,
+            onSaved: (String value) {},
+            // TextInputFormatters are applied in sequence.
+            inputFormatters: [],
+          ),
+        )
       ],
     ));

@@ -8,8 +8,6 @@ typedef Widget StateCb(int _counter, BuildContext context, Cb2 onButtonClick, St
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
-  MyApp() {}
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

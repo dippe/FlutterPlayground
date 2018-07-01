@@ -62,42 +62,76 @@ class TodoBody extends StatelessWidget {
       scrollDirection: Axis.vertical,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
       children: <Widget>[
-        _TodoListItems(),
+        _renderTodoListItems(),
         new SimpleBarChart.withData(_todoStateStore.lengthDone(), _todoStateStore.lengthTodo()),
       ],
     );
   }
 }
 
-_TodoListItems() => ListView(
+_renderTodoListItems() => ListView(
       scrollDirection: Axis.vertical,
-      children: _todoStateStore.list().map((i) => _renderTodoItem(i)).toList(),
+      children: _todoStateStore.list().map(_renderTodoItem).toList(),
     );
 
-Widget _renderTodoItem(TodoData d) => (new Row(
-      children: <Widget>[
-        new Checkbox(
-          value: d.done,
-          onChanged: (bool state) => _todoStateStore.toggleState(d),
+var _actTextFieldController = TextEditingController(text: 'Empty');
+
+Widget _renderTodoItem(TodoData d) {
+  return (new Row(
+    children: <Widget>[
+      new Checkbox(
+        value: d.done,
+        onChanged: (bool state) => _todoStateStore.toggleState(d),
+      ),
+      new Expanded(
+        child: new GestureDetector(
+          child: _renderTitle(_todoStateStore.isSelectedForEdit(d), d, _actTextFieldController),
+          onLongPress: () {
+            _actTextFieldController = TextEditingController(text: d.title);
+            return _todoStateStore.selectItemTitleForEdit(d);
+          },
+          onDoubleTap: () {
+            _actTextFieldController = TextEditingController(text: d.title);
+            return _todoStateStore.selectItemTitleForEdit(d);
+          },
+          onTap: () => _todoStateStore.selectItem(d),
+          onHorizontalDragEnd: (DragEndDetails details) => _todoStateStore.toggleState(d),
         ),
-        new Text(d.title, style: TextStyle(decoration: d.done ? TextDecoration.lineThrough : TextDecoration.none)),
-        new Expanded(
-          child: new TextFormField(
-            initialValue: d.title,
-            enabled: true,
-            decoration: const InputDecoration(
-              border: const UnderlineInputBorder(),
-              filled: true,
-              icon: const Icon(Icons.short_text),
-              hintText: 'What would you like to remember?',
-              labelText: 'Title',
-              prefixText: '+1',
-            ),
-            keyboardType: TextInputType.text,
-            onSaved: (String value) {},
-            // TextInputFormatters are applied in sequence.
-            inputFormatters: [],
-          ),
-        )
-      ],
-    ));
+      ),
+      new IconButton(icon: Icon(Icons.delete), onPressed: () => _todoStateStore.delete(d)),
+    ],
+  ));
+}
+
+_renderTitle(bool edit, TodoData d, TextEditingController controller) =>
+    edit == false ? _renderReadOnlyTitle(d) : _renderEditableTitle(d, controller);
+
+_renderReadOnlyTitle(TodoData d) => new Text(
+      d.title,
+      style: TextStyle(decoration: d.done ? TextDecoration.lineThrough : TextDecoration.none),
+    );
+
+_renderEditableTitle(TodoData d, TextEditingController c) {
+//  _actTextFieldController.text = d.title;
+//  _actTextFieldController.value = TextEditingValue(text: d.title);
+  return new TextField(
+    controller: c,
+    enabled: true,
+    decoration: const InputDecoration(
+      border: const UnderlineInputBorder(),
+      filled: true,
+      icon: const Icon(Icons.short_text),
+      hintText: 'What would you like to remember?',
+      //        labelText: 'Title',
+      //        prefixText: '+1',
+    ),
+    keyboardType: TextInputType.text,
+    onChanged: (String value) {
+      _todoStateStore.update(d.withTitle(value));
+    },
+
+    // TextInputFormatters are applied in sequence.
+    inputFormatters: [],
+    //      controller: _todoStateStore.getTextFieldController(),
+  );
+}

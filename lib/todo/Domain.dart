@@ -13,3 +13,5 @@ class TodoData {
     return new TodoData(this.id, this.title, done);
   }
 }
+
+enum ConfigMenuItems { About, Config, DisplayFinished }

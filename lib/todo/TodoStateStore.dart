@@ -39,6 +39,10 @@ abstract class TodoStateStore extends State<TodoApp> {
     });
   }
 
+  TodoData getById(int id) {
+    return _todos[id];
+  }
+
   int length() {
     return _todos.length;
   }

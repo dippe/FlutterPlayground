@@ -20,6 +20,7 @@ class TodoApp extends StatefulWidget {
 
   @override
   Widget build(BuildContext context) {
+    return null;
     // Implementing this is unneeded because the state will do the rendering and this build method will be never called
   }
 
@@ -72,11 +73,31 @@ Widget _renderTodoBody(TodoAppStore state) {
 
 Widget _renderTodoListItems(TodoAppStore state) => ListView(
       scrollDirection: Axis.vertical,
-      children: state.list().map((i) => _renderTodoItem(i, state)).toList(),
+      children: state.list().map((i) => _renderTodoItem(state, i.id)).toList(),
     );
 
-Widget _renderTodoItem(TodoData d, TodoAppStore state) {
-  var _actTextFieldController = TextEditingController(text: d.title); //TextEditingController(text: 'Empty');
+// memoize start
+// todo refactor/re-think (too much change can cause memory leak like issue)
+final _memoizedTodoRenderers = new Map<String, Widget>();
+
+Widget _renderTodoItem(TodoAppStore state, int id) {
+  final isSelectedForEdit = state.isSelectedForEdit(state.getById(id));
+  final key = id.toString() + isSelectedForEdit.toString();
+  if (!_memoizedTodoRenderers.containsKey(key)) {
+    final Widget w = _renderTodoItem1(state, id);
+    _memoizedTodoRenderers.putIfAbsent(key, () => w);
+  } else if (isSelectedForEdit) {
+    // remove read-only cache if the element is edited
+    _memoizedTodoRenderers.remove(id.toString() + 'false');
+  }
+  return _memoizedTodoRenderers[key];
+}
+// memoize end
+
+Widget _renderTodoItem1(TodoAppStore state, int id) {
+  var _actTextFieldController = TextEditingController(); //TextEditingController(text: 'Empty');
+
+  final TodoData d = state.getById(id);
 
   return (Row(
     children: <Widget>[
@@ -88,11 +109,14 @@ Widget _renderTodoItem(TodoData d, TodoAppStore state) {
         child: GestureDetector(
           child: _renderTitle(state.isSelectedForEdit(d), d, _actTextFieldController, state),
           onLongPress: () {
+            if (_actTextFieldController != null) {
+//              _actTextFieldController.dispose();
+            }
             return state.selectItemTitleForEdit(d);
           },
           onDoubleTap: () {
             if (_actTextFieldController != null) {
-              _actTextFieldController.dispose();
+//              _actTextFieldController.dispose();
             }
             return state.selectItemTitleForEdit(d);
           },
@@ -114,8 +138,8 @@ Widget _renderReadOnlyTitle(TodoData d) => Text(
     );
 
 Widget _renderEditableTitle(TodoData d, TextEditingController c, TodoAppStore state) {
-//  _actTextFieldController.text = d.title;
-//  _actTextFieldController.value = TextEditingValue(text: d.title);
+  c.text = d.title;
+  c.value = TextEditingValue(text: d.title);
   return TextField(
     controller: c,
     enabled: true,

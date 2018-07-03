@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_flutter_app/BasicChart.dart';
 import 'package:todo_flutter_app/todo/TodoStateStore.dart';
 import 'package:todo_flutter_app/todo/Domain.dart';
+import 'package:todo_flutter_app/util/memoize.dart';
 
 class TodoAppStore extends State<TodoApp> with TodoStateStore {
   final _renderer;
@@ -78,6 +79,7 @@ Widget _renderTodoListItems(TodoAppStore state) => ListView(
 
 // memoize start
 // todo refactor/re-think (too much change can cause memory leak like issue)
+/*
 final _memoizedTodoRenderers = new Map<String, Widget>();
 
 Widget _renderTodoItem(TodoAppStore state, int id) {
@@ -92,11 +94,10 @@ Widget _renderTodoItem(TodoAppStore state, int id) {
   }
   return _memoizedTodoRenderers[key];
 }
+*/
 // memoize end
 
-Widget _renderTodoItem1(TodoAppStore state, int id) {
-  var _actTextFieldController = TextEditingController(); //TextEditingController(text: 'Empty');
-
+Widget _renderTodoItem(TodoAppStore state, int id) {
   final TodoData d = state.getById(id);
 
   return (Row(
@@ -106,42 +107,46 @@ Widget _renderTodoItem1(TodoAppStore state, int id) {
         onChanged: (bool val) => state.toggleState(d),
       ),
       Expanded(
-        child: GestureDetector(
-          child: _renderTitle(state.isSelectedForEdit(d), d, _actTextFieldController, state),
-          onLongPress: () {
-            if (_actTextFieldController != null) {
-//              _actTextFieldController.dispose();
-            }
-            return state.selectItemTitleForEdit(d);
-          },
-          onDoubleTap: () {
-            if (_actTextFieldController != null) {
-//              _actTextFieldController.dispose();
-            }
-            return state.selectItemTitleForEdit(d);
-          },
-          onTap: () => state.selectItem(d),
-          onHorizontalDragEnd: (DragEndDetails details) => state.toggleState(d),
-        ),
+        child: state.isSelectedForEdit(d.id) ? _renderEditableTitle(state, d.id) : _renderReadOnlyTitle(state, d.id),
       ),
       IconButton(icon: Icon(Icons.delete), onPressed: () => state.delete(d)),
     ],
   ));
 }
 
-Widget _renderTitle(bool edit, TodoData d, TextEditingController controller, TodoAppStore state) =>
-    edit == false ? _renderReadOnlyTitle(d) : _renderEditableTitle(d, controller, state);
+// memoize is added to avoid re-rendering and weird background obj re-allocations which causes rendering issues (the GestureDetector is stateful and re-creating on every state chang causes weird behavior)
+final _renderReadOnlyTitle = memoize((TodoAppStore state, int id) {
+  final d = state.getById(id);
 
-Widget _renderReadOnlyTitle(TodoData d) => Text(
+  return GestureDetector(
+    onLongPress: () {
+      return state.selectItemTitleForEdit(d);
+    },
+    onDoubleTap: () {
+      return state.selectItemTitleForEdit(d);
+    },
+    onTap: () => state.selectItem(d),
+    onHorizontalDragEnd: (DragEndDetails details) => state.toggleState(d),
+    child: Text(
       d.title,
       style: TextStyle(decoration: d.done ? TextDecoration.lineThrough : TextDecoration.none),
-    );
+    ),
+  );
+});
 
-Widget _renderEditableTitle(TodoData d, TextEditingController c, TodoAppStore state) {
-  c.text = d.title;
-  c.value = TextEditingValue(text: d.title);
+// memoize is added to avoid re-rendering and weird background obj re-allocations which causes rendering issues (textfield with controller is stateful and re-rendering is unpleasant)
+final _renderEditableTitle = memoize((TodoAppStore state, int id) {
+  final d = state.getById(id);
+  final ctrl = new TextEditingController();
+
+  ctrl.addListener(() {
+    print('ctrl' + ctrl.hashCode.toString() + ' -- ' + d.hashCode.toString());
+//    _focusManager.rootScope.requestFocus(focusNode);
+  });
+  ctrl.text = d.title;
+  ctrl.value = TextEditingValue(text: d.title);
   return TextField(
-    controller: c,
+    controller: ctrl,
     enabled: true,
     decoration: const InputDecoration(
       border: const UnderlineInputBorder(),
@@ -152,12 +157,21 @@ Widget _renderEditableTitle(TodoData d, TextEditingController c, TodoAppStore st
       //        prefixText: '+1',
     ),
     keyboardType: TextInputType.text,
+    onSubmitted: (String value) {
+      print('SUBMIT');
+      state.update(d.withTitle(value));
+      state.unSelectTitleForEdit();
+    },
+//    focusNode: focusNode,
     onChanged: (String value) {
+      print('CHANGE');
+      state.update(d.withTitle(value));
       state.update(d.withTitle(value));
     },
+    autofocus: true,
 
     // TextInputFormatters are applied in sequence.
     inputFormatters: [],
     //      controller: _todoStateStore.getTextFieldController(),
   );
-}
+});

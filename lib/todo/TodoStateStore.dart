@@ -12,7 +12,7 @@ abstract class TodoStateStore extends State<TodoApp> {
     setState(() {
       _todos.putIfAbsent(_idCounter, () => new TodoData(_idCounter, title, false));
       _idCounter++;
-      _unSelectTitleForEdit();
+      unSelectTitleForEdit();
       _unSelectItem();
     });
   }
@@ -62,7 +62,7 @@ abstract class TodoStateStore extends State<TodoApp> {
     });
   }
 
-  _unSelectTitleForEdit() {
+  unSelectTitleForEdit() {
     setState(() {
       _selectedTitleForEdit = null;
     });
@@ -81,8 +81,8 @@ abstract class TodoStateStore extends State<TodoApp> {
     });
   }
 
-  isSelectedForEdit(TodoData d) {
-    return d.id == _selectedTitleForEdit;
+  isSelectedForEdit(int id) {
+    return id == _selectedTitleForEdit;
   }
 
   isSelected(TodoData d) {

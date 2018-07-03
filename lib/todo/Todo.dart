@@ -80,26 +80,6 @@ Widget _renderTodoListItems(TodoAppStore state) => ListView(
       children: state.list().map((i) => _renderTodoItem(state, i.id)).toList(),
     );
 
-// memoize start
-// todo refactor/re-think (too much change can cause memory leak like issue)
-/*
-final _memoizedTodoRenderers = new Map<String, Widget>();
-
-Widget _renderTodoItem(TodoAppStore state, int id) {
-  final isSelectedForEdit = state.isSelectedForEdit(state.getById(id));
-  final key = id.toString() + isSelectedForEdit.toString();
-  if (!_memoizedTodoRenderers.containsKey(key)) {
-    final Widget w = _renderTodoItem1(state, id);
-    _memoizedTodoRenderers.putIfAbsent(key, () => w);
-  } else if (isSelectedForEdit) {
-    // remove read-only cache if the element is edited
-    _memoizedTodoRenderers.remove(id.toString() + 'false');
-  }
-  return _memoizedTodoRenderers[key];
-}
-*/
-// memoize end
-
 Widget _renderTodoItem(TodoAppStore state, int id) {
   final TodoData d = state.getById(id);
 

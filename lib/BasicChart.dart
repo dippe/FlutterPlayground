@@ -1,5 +1,6 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:todo_flutter_app/util/memoize.dart';
 
 class SimpleBarChart extends StatelessWidget {
   final List<charts.Series> seriesList;
@@ -20,7 +21,7 @@ class SimpleBarChart extends StatelessWidget {
     );
   }
 
-  factory SimpleBarChart.withData(int done, int todo) {
+  static final withData = memoize((int done, int todo) {
     final data = [
       new OrdinalSales('Todo', todo),
       new OrdinalSales('Done', done),
@@ -30,7 +31,7 @@ class SimpleBarChart extends StatelessWidget {
       // Disable animations for image tests.
       animate: true,
     );
-  }
+  });
 
   @override
   Widget build(BuildContext context) {

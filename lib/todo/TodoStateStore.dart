@@ -3,8 +3,8 @@ import 'package:todo_flutter_app/todo/Domain.dart';
 import 'package:todo_flutter_app/todo/Todo.dart';
 
 abstract class TodoStateStore extends State<TodoApp> {
-  final Map<int, TodoData> _todos = {1: new TodoData(1, 'Hello world :P', false)};
-  int _idCounter = 0;
+  final Map<int, TodoData> _todos = {0: new TodoData(0, 'Hello world :P', false)};
+  int _idCounter = 1;
   int _selectedTitleForEdit = null;
   int _selectedItem = null;
 

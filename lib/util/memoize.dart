@@ -5,10 +5,10 @@ memoize(Function input) {
   var capture = new _FunctionCapture((p, n) {
     var call = new _FunctionCall(p, n);
     if (cache.containsKey(call)) {
-      print("Using Cache");
+      print("Using Cache : " + input.runtimeType.toString() + p.toString());
       return cache[call];
     } else {
-      print("Placing in Cache");
+      print("Placing in Cache : " + input.runtimeType.toString() + " - " + p.toString());
       return cache[call] = Function.apply(input, p, n);
     }
   });

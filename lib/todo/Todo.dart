@@ -55,7 +55,10 @@ Widget _renderMainBtns(TodoAppStore state) {
   return ButtonBar(
     alignment: MainAxisAlignment.center,
     children: <Widget>[
-      IconButton(icon: Icon(Icons.add), onPressed: () => state.add('Unnamed ' + state.length().toString())),
+      IconButton(
+          tooltip: 'New Todo',
+          icon: Icon(Icons.add),
+          onPressed: () => state.add('Unnamed ' + state.length().toString())),
       PopupMenuButton<ConfigMenuItems>(icon: Icon(Icons.settings), itemBuilder: builder)
     ],
   );
@@ -100,20 +103,23 @@ Widget _renderTodoItem(TodoAppStore state, int id) {
 Widget _renderTodoItem(TodoAppStore state, int id) {
   final TodoData d = state.getById(id);
 
-  return (Row(
-    children: <Widget>[
-      Checkbox(
-        value: d.done,
-        onChanged: (bool val) => state.toggleState(d),
-      ),
-      Expanded(
-        child: state.isSelectedForEdit(d.id)
-            ? _renderEditableTitle(state, d.id)
-            : _renderReadOnlyTitle(state, d.id, d.title, d.done),
-      ),
-      IconButton(icon: Icon(Icons.delete), onPressed: () => state.delete(d)),
-    ],
-  ));
+  return GestureDetector(
+    child: Row(
+      children: <Widget>[
+        Checkbox(
+          value: d.done,
+          onChanged: (bool val) => state.toggleState(d),
+        ),
+        Expanded(
+          child: state.isSelectedForEdit(d.id)
+              ? _renderEditableTitle(state, d.id)
+              : _renderReadOnlyTitle(state, d.id, d.title, d.done),
+        ),
+        IconButton(icon: Icon(Icons.delete), onPressed: () => state.delete(d)),
+      ],
+    ),
+    onHorizontalDragEnd: (DragEndDetails details) => state.toggleState(d),
+  );
 }
 
 // memoize is added to avoid re-rendering and weird background obj re-allocations which causes rendering issues (the GestureDetector is stateful and re-creating on every state chang causes weird behavior)
@@ -128,7 +134,6 @@ final _renderReadOnlyTitle = memoize((TodoAppStore state, int id, String title, 
       return state.selectItemTitleForEdit(d);
     },
     onTap: () => state.selectItem(d),
-    onHorizontalDragEnd: (DragEndDetails details) => state.toggleState(d),
     child: Text(
       d.title,
       style: TextStyle(decoration: d.done ? TextDecoration.lineThrough : TextDecoration.none),

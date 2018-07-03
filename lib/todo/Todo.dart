@@ -22,7 +22,7 @@ class TodoApp extends StatefulWidget {
   @override
   Widget build(BuildContext context) {
     return null;
-    // Implementing this is unneeded because the state will do the rendering and this build method will be never called
+    // Implementation here is unneeded because the state will do the rendering and this build method will be never called
   }
 
   @override
@@ -41,7 +41,6 @@ Widget _renderTodoApp(TodoAppStore state) => Scaffold(
       appBar: AppBar(
         actions: <Widget>[_renderMainBtns(state)],
       ),
-//      bottomNavigationBar: MainBtns(),
       body: _renderTodoBody(state),
     );
 
@@ -126,9 +125,9 @@ final _renderEditableTitle = memoize((TodoAppStore state, int id) {
   final d = state.getById(id);
   final ctrl = new TextEditingController();
 
+  // fixme: remove this later
   ctrl.addListener(() {
     print('ctrl' + ctrl.hashCode.toString() + ' -- ' + d.hashCode.toString());
-//    _focusManager.rootScope.requestFocus(focusNode);
   });
   ctrl.text = d.title;
   ctrl.value = TextEditingValue(text: d.title);
@@ -140,25 +139,22 @@ final _renderEditableTitle = memoize((TodoAppStore state, int id) {
       filled: true,
       icon: const Icon(Icons.short_text),
       hintText: 'What would you like to remember?',
-      //        labelText: 'Title',
-      //        prefixText: '+1',
     ),
     keyboardType: TextInputType.text,
     onSubmitted: (String value) {
+      // fixme: remove this later
       print('SUBMIT');
       state.update(d.withTitle(value));
       state.unSelectTitleForEdit();
     },
-//    focusNode: focusNode,
     onChanged: (String value) {
+      // fixme: remove this later
       print('CHANGE');
-      state.update(d.withTitle(value));
       state.update(d.withTitle(value));
     },
     autofocus: true,
 
     // TextInputFormatters are applied in sequence.
     inputFormatters: [],
-    //      controller: _todoStateStore.getTextFieldController(),
   );
 });

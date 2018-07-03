@@ -107,7 +107,9 @@ Widget _renderTodoItem(TodoAppStore state, int id) {
         onChanged: (bool val) => state.toggleState(d),
       ),
       Expanded(
-        child: state.isSelectedForEdit(d.id) ? _renderEditableTitle(state, d.id) : _renderReadOnlyTitle(state, d.id),
+        child: state.isSelectedForEdit(d.id)
+            ? _renderEditableTitle(state, d.id)
+            : _renderReadOnlyTitle(state, d.id, d.title, d.done),
       ),
       IconButton(icon: Icon(Icons.delete), onPressed: () => state.delete(d)),
     ],
@@ -115,7 +117,7 @@ Widget _renderTodoItem(TodoAppStore state, int id) {
 }
 
 // memoize is added to avoid re-rendering and weird background obj re-allocations which causes rendering issues (the GestureDetector is stateful and re-creating on every state chang causes weird behavior)
-final _renderReadOnlyTitle = memoize((TodoAppStore state, int id) {
+final _renderReadOnlyTitle = memoize((TodoAppStore state, int id, String title, bool done) {
   final d = state.getById(id);
 
   return GestureDetector(

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:todo_flutter_app/todo/Domain.dart';
-import 'package:todo_flutter_app/todo/Todo.dart';
+import 'package:todo_flutter_app/examples/state/simple/Domain.dart';
+import 'package:todo_flutter_app/examples/state/simple/Todo.dart';
 
 abstract class TodoStateStore extends State<TodoApp> {
   final Map<int, TodoData> _todos = {0: new TodoData(0, 'Hello world :P', false)};

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_flutter_app/BasicChart.dart';
-import 'package:todo_flutter_app/todo/TodoStateStore.dart';
-import 'package:todo_flutter_app/todo/Domain.dart';
+import 'package:todo_flutter_app/examples/state/simple/TodoStateStore.dart';
+import 'package:todo_flutter_app/examples/state/simple/Domain.dart';
 import 'package:todo_flutter_app/util/memoize.dart';
 
 class TodoAppStore extends State<TodoApp> with TodoStateStore {

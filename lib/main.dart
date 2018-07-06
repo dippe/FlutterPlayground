@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_flutter_app/examples/state/simple/Todo.dart';
+import 'package:todo_flutter_app/examples/state/immutable/Todo.dart';
 
 void main() => runApp(new MyApp());
 

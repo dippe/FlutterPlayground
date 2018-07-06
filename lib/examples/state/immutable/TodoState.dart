@@ -137,6 +137,8 @@ class TodoState {
   bool operator ==(other) => other is TodoState && todos == other.todos && listView == other.listView;
 }
 
+// todo: re-think if these are needed and remove if not:
+// immutable object example:
 var appState = new Immutable<TodoState>(new TodoState(
   todos: new Todos(
     items: new Map.unmodifiable({0: new TodoData(0, 'Hello world :P', false)}),

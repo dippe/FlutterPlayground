@@ -3,15 +3,28 @@ import 'package:flutter_immutable_state/flutter_immutable_state.dart';
 import 'package:todo_flutter_app/BasicChart.dart';
 import 'package:todo_flutter_app/examples/state/immutable/TodoState.dart';
 
+final _INIT_STATE = TodoState(
+  todos: Todos(
+    items: Map.unmodifiable({0: new TodoData(0, 'Hello world :P', false)}),
+    idCounter: 1,
+  ),
+  listView: TodoListView(
+    selectedItem: null,
+    selectedTitleForEdit: null,
+  ),
+);
+
 // This Stateful widget creates connection between the app state and the rendering
 class TodoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Details about rendering+immutable classes here: https://pub.dartlang.org/packages/flutter_immutable_state
     return ImmutableManager<TodoState>(
-      // fixme: rename + rethink usage
-      initialValue: appState.current,
+      initialValue: _INIT_STATE,
       child: MaterialApp(
-        home: _renderTodoApp(),
+        home: _renderMainRoot(),
+        title: 'Test title',
+        theme: ThemeData.dark(),
       ),
     );
   }
@@ -23,21 +36,26 @@ class TodoApp extends StatelessWidget {
  *
  *************************************/
 
-Widget _renderTodoApp() => ImmutableView<TodoState>.readOnly(
+Widget _renderMainRoot() => ImmutableView<TodoState>.readOnly(
       builder: (context, state) => Scaffold(
-            appBar: AppBar(
-              actions: <Widget>[
-// map the substate to the child widgets (hide uneeded data)
-                ImmutablePropertyManager<TodoState, Todos>(
-                  current: (state) => state.todos,
-                  child: _renderMainBtns(),
-                  change: (state, newElem) => state.withTodos(newElem),
-                ),
-              ],
-            ),
-            body: _renderTodoBody(),
+            appBar: _renderAppBar(state.todos.lengthDone(), state.todos.lengthTodo()),
+            body: _renderTodoListItems(),
           ),
     );
+
+Widget _renderAppBar(int done, int todo) {
+  return AppBar(
+    actions: <Widget>[
+      new SizedBox(height: 100.0, width: 100.0, child: SimpleBarChart.withData(done, todo)),
+// map the substate to the child widgets (hide uneeded data)
+      ImmutablePropertyManager<TodoState, Todos>(
+        current: (state) => state.todos,
+        child: _renderMainBtns(),
+        change: (state, newElem) => state.withTodos(newElem),
+      ),
+    ],
+  );
+}
 
 Widget _renderMainBtns() => ImmutableView<Todos>(
       builder: (context, state) {
@@ -53,22 +71,11 @@ Widget _renderMainBtns() => ImmutableView<Todos>(
             IconButton(
               tooltip: 'New Todo',
               icon: Icon(Icons.add),
-              onPressed: () =>
-                  state.change((s) => s.withNewItem(TodoData(null, 'Unnamed ' + s.idCounter.toString(), false))),
+              onPressed: () {
+                _debug(context, 'add clicked');
+                state.change((s) => s.withNewItem(TodoData(null, 'Unnamed ' + s.idCounter.toString(), false)));
+              },
             ),
-          ],
-        );
-      },
-    );
-
-Widget _renderTodoBody() => ImmutableView<TodoState>.readOnly(
-      builder: (context, state) {
-        return GridView(
-          scrollDirection: Axis.vertical,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
-          children: <Widget>[
-            _renderTodoListItems(),
-            SimpleBarChart.withData(state.todos.lengthDone(), state.todos.lengthTodo()),
           ],
         );
       },
@@ -175,6 +182,7 @@ Widget _renderEditableTitle({int id, Function onSubmit}) => ImmutableView<Todos>
 
           onSubmitted: onSubmit,
           onChanged: (String value) {
+            _debug(context, 'onchanged');
             // do not change the state here!!! The auto triggered re-rendering will cause serious perf/rendering issues
           },
           autofocus: true,
@@ -184,3 +192,7 @@ Widget _renderEditableTitle({int id, Function onSubmit}) => ImmutableView<Todos>
         );
       },
     );
+
+void _debug(BuildContext context, String msg) {
+  Scaffold.of(context).showSnackBar(SnackBar(content: Text(msg)));
+}

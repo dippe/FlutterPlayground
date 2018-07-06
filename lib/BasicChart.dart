@@ -2,29 +2,18 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:todo_flutter_app/util/memoize.dart';
 
+// simple bar chart example
+// Details here: https://google.github.io/charts/flutter/gallery.html
 class SimpleBarChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
 
   SimpleBarChart(this.seriesList, {this.animate});
 
-  /// Creates a [BarChart] with sample data and no transition.
-  factory SimpleBarChart.withSampleData() {
-    final data = [
-      new OrdinalSales('Todo', 5),
-      new OrdinalSales('Done', 25),
-    ];
-    return new SimpleBarChart(
-      _createSeriesData(data),
-      // Disable animations for image tests.
-      animate: true,
-    );
-  }
-
   static final withData = memoize((int done, int todo) {
     final data = [
-      new OrdinalSales('Todo', todo),
-      new OrdinalSales('Done', done),
+      new TodoStatus('Todo', todo),
+      new TodoStatus('Done', done),
     ];
     return new SimpleBarChart(
       _createSeriesData(data),
@@ -35,23 +24,52 @@ class SimpleBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.BarChart(
+    return charts.BarChart(
       seriesList,
       animate: true,
       animationDuration: Duration(seconds: 1),
       defaultInteractions: true,
       vertical: false,
+      // Optionally Set a bar label decorator.
+      //          barRendererDecorator: new charts.BarLabelDecorator<String>(
+      //            outsideLabelStyleSpec: new charts.TextStyleSpec(color: charts.MaterialPalette.white),
+      //          ),
+      // configure the text before the bars:
+      domainAxis: new charts.OrdinalAxisSpec(
+          renderSpec: new charts.SmallTickRendererSpec(
+
+              // Tick and Label styling here.
+              labelStyle: new charts.TextStyleSpec(
+                  fontSize: 8, // size in Pts.
+                  color: charts.MaterialPalette.white),
+
+              // Change the line colors to match text color.
+              lineStyle: new charts.LineStyleSpec(color: charts.MaterialPalette.white))),
+
+      /// Assign a custom style for the measure axis.
+      /* optionally set :
+          primaryMeasureAxis: new charts.NumericAxisSpec(
+              renderSpec: new charts.GridlineRendererSpec(
+
+                  // Tick and Label styling here.
+                  labelStyle: new charts.TextStyleSpec(
+                      fontSize: 8, // size in Pts.
+                      color: charts.MaterialPalette.white),
+
+                  // Change the line colors to match text color.
+                  lineStyle: new charts.LineStyleSpec(color: charts.MaterialPalette.white))),
+          */
     );
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<OrdinalSales, String>> _createSeriesData(data) {
+  static List<charts.Series<TodoStatus, String>> _createSeriesData(data) {
     return [
-      new charts.Series<OrdinalSales, String>(
+      new charts.Series<TodoStatus, String>(
         id: 'Sales',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
+        domainFn: (TodoStatus todo, _) => todo.stateName,
+        measureFn: (TodoStatus todo, _) => todo.number,
         data: data,
       )
     ];
@@ -59,9 +77,9 @@ class SimpleBarChart extends StatelessWidget {
 }
 
 /// Sample ordinal data type.
-class OrdinalSales {
-  final String year;
-  final int sales;
+class TodoStatus {
+  final String stateName;
+  final int number;
 
-  OrdinalSales(this.year, this.sales);
+  TodoStatus(this.stateName, this.number);
 }

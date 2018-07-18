@@ -91,44 +91,69 @@ Widget _renderTodoListItems() => ImmutableView<TodoState>.readOnly(
 Widget _renderTodoItem(int id) => ImmutableView<TodoState>(
       builder: (context, state) {
         var d = state.current.todos.getById(id);
-        return GestureDetector(
-          child: Row(
-            children: <Widget>[
-              Checkbox(
-                value: d.done,
-                onChanged: (bool val) => state.change((t) => t.withTodos(t.todos.withToggledItem(d))),
-              ),
-              Expanded(
-                // map state to Todos
-                child: state.current.listView.isSelectedForEdit(d.id)
-                    ? ImmutablePropertyManager<TodoState, Todos>(
-                        current: (state) => state.todos,
-                        child: _renderEditableTitle(
-                          id: d.id,
-                          onSubmit: (String value) {
-                            state.change((s) {
-                              var ret = s
-                                  .withListView(s.listView.withUnselect())
-                                  .withTodos(s.todos.withUpdated(d.withTitle(value)));
-                              return ret;
-                            });
-                          },
-                        ),
-                        change: (state, newElem) => state.withTodos(newElem),
-                      )
-                    : ImmutablePropertyManager<TodoState, TodoListView>(
-                        current: (state) => state.listView,
-                        child: _renderReadOnlyTitle(d.id, d.title, d.done),
-                        change: (state, newElem) => state.withListView(newElem),
-                      ),
-              ),
-              IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () => state.change((t) => t.withTodos(t.todos.withDeleted(d))),
-              ),
-            ],
-          ),
-          onHorizontalDragEnd: (DragEndDetails details) => state.change((t) => t.withTodos(t.todos.withToggledItem(d))),
+        return Column(
+          children: [
+            Draggable<TodoData>(
+              child: Icon(Icons.drag_handle),
+              feedback: Text('Dragged'),
+              data: d,
+              onDragCompleted: () => {},
+            ),
+            DragTarget<TodoData>(
+              onAccept: (a) {
+                // returns void
+                print('**** onAccept: ' + a.title);
+              },
+              onLeave: (a) {
+                // returns void
+                print('**** onLeave: ' + a.title);
+              },
+              onWillAccept: (a) {
+                print('**** onWillAccept: ' + a.title);
+                return true;
+              },
+              builder: (BuildContext context, List<dynamic> candidateData, List<dynamic> rejectedData) {
+                TodoData rd = rejectedData.isNotEmpty ? rejectedData.first : null;
+                TodoData cd = candidateData.isNotEmpty ? candidateData.first : null;
+                print('**** build: ' + rd.toString() + ' ---- ' + cd.toString());
+                return Row(
+                  children: <Widget>[
+                    Checkbox(
+                        value: d.done,
+                        onChanged: (bool val) => state.change((t) => t.withTodos(t.todos.withToggledItem(d)))),
+                    Expanded(
+                      // map state to Todos
+                      child: state.current.listView.isSelectedForEdit(d.id)
+                          ? ImmutablePropertyManager<TodoState, Todos>(
+                              current: (state) => state.todos,
+                              child: _renderEditableTitle(
+                                id: d.id,
+                                onSubmit: (String value) {
+                                  state.change((s) {
+                                    var ret = s
+                                        .withListView(s.listView.withUnselect())
+                                        .withTodos(s.todos.withUpdated(d.withTitle(value)));
+                                    return ret;
+                                  });
+                                },
+                              ),
+                              change: (state, newElem) => state.withTodos(newElem),
+                            )
+                          : ImmutablePropertyManager<TodoState, TodoListView>(
+                              current: (state) => state.listView,
+                              child: _renderReadOnlyTitle(d.id, d.title, d.done),
+                              change: (state, newElem) => state.withListView(newElem),
+                            ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () => state.change((t) => t.withTodos(t.todos.withDeleted(d))),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
         );
       },
     );
@@ -137,9 +162,11 @@ Widget _renderTodoItem(int id) => ImmutableView<TodoState>(
 Widget _renderReadOnlyTitle(int id, String title, bool done) {
   return ImmutableView<TodoListView>(builder: (context, state) {
     return GestureDetector(
+/*
       onLongPress: () {
         state.change((s) => s.withSelectedForEdit(id));
       },
+*/
       onDoubleTap: () {
         state.change((s) {
           return s.withSelectedForEdit(id);

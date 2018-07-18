@@ -113,43 +113,49 @@ Widget _renderTodoItem(int id) => ImmutableView<TodoState>(
                 return true;
               },
               builder: (BuildContext context, List<dynamic> candidateData, List<dynamic> rejectedData) {
+                // todo: remove these 3 debugging lines later
                 TodoData rd = rejectedData.isNotEmpty ? rejectedData.first : null;
                 TodoData cd = candidateData.isNotEmpty ? candidateData.first : null;
                 print('**** build: ' + rd.toString() + ' ---- ' + cd.toString());
-                return Row(
-                  children: <Widget>[
-                    Checkbox(
-                        value: d.done,
-                        onChanged: (bool val) => state.change((t) => t.withTodos(t.todos.withToggledItem(d)))),
-                    Expanded(
-                      // map state to Todos
-                      child: state.current.listView.isSelectedForEdit(d.id)
-                          ? ImmutablePropertyManager<TodoState, Todos>(
-                              current: (state) => state.todos,
-                              child: _renderEditableTitle(
-                                id: d.id,
-                                onSubmit: (String value) {
-                                  state.change((s) {
-                                    var ret = s
-                                        .withListView(s.listView.withUnselect())
-                                        .withTodos(s.todos.withUpdated(d.withTitle(value)));
-                                    return ret;
-                                  });
-                                },
+
+                var decoration = candidateData.isNotEmpty ? new BoxDecoration(color: Colors.green) : null;
+                return Container(
+                  decoration: decoration,
+                  child: Row(
+                    children: <Widget>[
+                      Checkbox(
+                          value: d.done,
+                          onChanged: (bool val) => state.change((t) => t.withTodos(t.todos.withToggledItem(d)))),
+                      Expanded(
+                        // map state to Todos
+                        child: state.current.listView.isSelectedForEdit(d.id)
+                            ? ImmutablePropertyManager<TodoState, Todos>(
+                                current: (state) => state.todos,
+                                child: _renderEditableTitle(
+                                  id: d.id,
+                                  onSubmit: (String value) {
+                                    state.change((s) {
+                                      var ret = s
+                                          .withListView(s.listView.withUnselect())
+                                          .withTodos(s.todos.withUpdated(d.withTitle(value)));
+                                      return ret;
+                                    });
+                                  },
+                                ),
+                                change: (state, newElem) => state.withTodos(newElem),
+                              )
+                            : ImmutablePropertyManager<TodoState, TodoListView>(
+                                current: (state) => state.listView,
+                                child: _renderReadOnlyTitle(d.id, d.title, d.done),
+                                change: (state, newElem) => state.withListView(newElem),
                               ),
-                              change: (state, newElem) => state.withTodos(newElem),
-                            )
-                          : ImmutablePropertyManager<TodoState, TodoListView>(
-                              current: (state) => state.listView,
-                              child: _renderReadOnlyTitle(d.id, d.title, d.done),
-                              change: (state, newElem) => state.withListView(newElem),
-                            ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () => state.change((t) => t.withTodos(t.todos.withDeleted(d))),
-                    ),
-                  ],
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () => state.change((t) => t.withTodos(t.todos.withDeleted(d))),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),

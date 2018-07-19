@@ -7,22 +7,28 @@ class TodoData {
   final int id;
   final String title;
   final bool done;
+  final bool isEdit;
+  final bool isSelected;
 
-  const TodoData(this.id, this.title, this.done);
+  const TodoData(this.id, this.title, this.done, {this.isEdit = false, this.isSelected = false});
 
   @override
   bool operator ==(other) => other is TodoData && id == (other.id) && title == other.title && done == other.done;
 
-  TodoData withId(int id) {
-    return TodoData(id, title, done);
+  withEdit(bool edit) {
+    return new TodoData(id, title, done, isEdit: edit, isSelected: edit);
   }
 
-  TodoData withToggled() {
-    return TodoData(id, title, !done);
+  TodoData withSelected(bool val) {
+    return new TodoData(id, title, done, isEdit: isEdit, isSelected: val);
   }
 
-  TodoData withTitle(String newTitle) {
-    return TodoData(id, newTitle, done);
+  withToggled() {
+    return TodoData(id, title, !done, isEdit: isEdit, isSelected: isSelected);
+  }
+
+  withTitle(String newTitle) {
+    return TodoData(id, newTitle, done, isEdit: false, isSelected: isSelected);
   }
 }
 
@@ -32,17 +38,11 @@ class Todos {
 
   Todos({this.items, this.idCounter = 0});
 
-  Todos withNewItem(TodoData d) {
+  Todos withNewItem(String title) {
     Map<int, TodoData> copy = Map.from(items);
     var nextId = idCounter + 1;
-    copy.putIfAbsent(nextId, () => d.withId(nextId));
+    copy.putIfAbsent(nextId, () => TodoData(nextId, title, false));
     return new Todos(items: copy, idCounter: nextId);
-  }
-
-  Todos withToggledItem(TodoData d) {
-    Map<int, TodoData> copy = Map.from(items);
-    copy.update(d.id, (d) => d.withToggled());
-    return Todos(items: copy, idCounter: idCounter);
   }
 
   TodoData getById(int id) {
@@ -90,38 +90,16 @@ class Todos {
     });
     return otherItems is Map<int, TodoData> && isEq;
   }
+
+  Todos withAllUnselected() {
+    return Todos(
+      items: items.map((key, value) => MapEntry(key, value.withSelected(false).withEdit(false))),
+      idCounter: idCounter,
+    );
+  }
 }
 
-class TodoListView {
-  final int selectedTitleForEdit;
-  final int selectedItem;
-
-  TodoListView({this.selectedTitleForEdit, this.selectedItem});
-
-  isSelectedForEdit(int id) {
-    return id == selectedTitleForEdit;
-  }
-
-  isSelected(TodoData d) {
-    return d.id == selectedItem;
-  }
-
-  withSelectedForEdit(int id) {
-    return new TodoListView(selectedTitleForEdit: id, selectedItem: selectedItem);
-  }
-
-  withSelected(int id) {
-    return new TodoListView(selectedTitleForEdit: selectedTitleForEdit, selectedItem: id);
-  }
-
-  withUnselect() {
-    return new TodoListView(selectedTitleForEdit: null, selectedItem: null);
-  }
-
-  @override
-  bool operator ==(other) =>
-      other is TodoListView && selectedItem == other.selectedItem && selectedTitleForEdit == other.selectedTitleForEdit;
-}
+class TodoListView {}
 
 class TodoState {
   final Todos todos;
@@ -129,7 +107,7 @@ class TodoState {
 
   TodoState({this.listView, this.todos});
 
-  TodoState withTodos(newElem) => new TodoState(listView: listView, todos: newElem);
+  TodoState withTodos(Todos newElem) => new TodoState(listView: listView, todos: newElem);
 
   TodoState withListView(newElem) => new TodoState(listView: newElem, todos: todos);
 
@@ -144,10 +122,7 @@ var appState = new Immutable<TodoState>(new TodoState(
     items: new Map.unmodifiable({0: new TodoData(0, 'Hello world :P', false)}),
     idCounter: 1,
   ),
-  listView: new TodoListView(
-    selectedItem: null,
-    selectedTitleForEdit: null,
-  ),
+  listView: new TodoListView(),
 ));
 
 var todosState = appState.property(

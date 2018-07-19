@@ -24,7 +24,7 @@ void main() {
       );
     });
 
-    var expectedState = origState.withTodos(origState.todos.withNewItem(TodoData(2, 't2', false)));
+    var expectedState = origState.withTodos(origState.todos.withNewItem('t2'));
 
     expect(appState.onChange, emitsAnyOf([origState, expectedState]));
   });
@@ -66,7 +66,7 @@ void main() {
     var todo1 = TodoData(1, 'title', true);
     var todo2 = TodoData(2, 'title2', false);
 
-    var underTest = Todos(idCounter: 1, items: {1: todo1}).withNewItem(todo2);
+    var underTest = Todos(idCounter: 1, items: {1: todo1}).withNewItem(todo2.title);
     var expectedList = Todos(idCounter: 2, items: {1: todo1, 2: todo2});
 
     expect(underTest == expectedList, isTrue);

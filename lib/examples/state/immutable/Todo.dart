@@ -158,14 +158,31 @@ Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTap
                       : _renderReadOnlyTitle(onTapCb, onDoubleTapCb),
             );
 
-            return Container(
-              decoration: decoration,
-              child: isSelected && isEdit
-                  ? Row(children: [todoName, deleteBtn])
-                  : isSelected
-                      ? Row(children: [dragIcon, checkBox, todoName, deleteBtn])
-                      : Row(children: [checkBox, todoName]),
-            );
+            return isSelected && isEdit
+                ? Row(
+                    children: [
+                      todoName,
+                      deleteBtn,
+                    ],
+                  )
+                : isSelected
+                    ? Row(
+                        children: [
+                          dragIcon,
+                          checkBox,
+                          todoName,
+                          deleteBtn,
+                        ],
+                      )
+                    : GestureDetector(
+                        onHorizontalDragEnd: (DragEndDetails details) => state.change((d) => d.withToggled()),
+                        child: Row(
+                          children: [
+                            checkBox,
+                            todoName,
+                          ],
+                        ),
+                      );
           },
         );
       },
@@ -174,17 +191,17 @@ Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTap
 Widget _renderReadOnlyTitle(Function onTapCb, Function onDoubleTapCb) {
   // the actual substate is the proper tododata (see the PropertyManager)
   return ImmutableView.readOnly<TodoData>(builder: (context, state) {
-    return GestureDetector(
-/*
-      onLongPress: () {
-        state.change((s) => s.withSelectedForEdit(id));
-      },
-*/
+    return InkWell(
       onDoubleTap: () => onDoubleTapCb(state),
       onTap: () => onTapCb(state),
-      child: Text(
-        state.title,
-        style: TextStyle(decoration: state.done ? TextDecoration.lineThrough : TextDecoration.none),
+      // todo: kell ez a container?
+      child: Container(
+        padding: new EdgeInsets.all(10.0),
+        // color: new Color(0X9900CCCC),
+        child: Text(
+          state.title,
+          style: TextStyle(decoration: state.done ? TextDecoration.lineThrough : TextDecoration.none),
+        ),
       ),
     );
   });

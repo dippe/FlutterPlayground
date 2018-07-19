@@ -62,9 +62,8 @@ Widget _renderMainBtns() => ImmutableView<Todos>(
               PopupMenuItem(value: ConfigMenuItems.DisplayFinished, child: const Text('Show finished')),
             ];
 
-        return ButtonBar(
-          alignment: MainAxisAlignment.center,
-          children: <Widget>[
+        return Row(
+          children: [
             IconButton(
               tooltip: 'New Todo',
               icon: Icon(Icons.add),
@@ -72,6 +71,9 @@ Widget _renderMainBtns() => ImmutableView<Todos>(
                 _debug(context, 'add clicked');
                 state.change((s) => s.withNewItem('Unnamed ' + s.idCounter.toString()));
               },
+            ),
+            PopupMenuButton(
+              itemBuilder: builder,
             ),
           ],
         );

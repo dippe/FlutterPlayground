@@ -136,16 +136,17 @@ Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTap
         );
 
         return DragTarget<TodoData>(
-          onAccept: (a) {
+          onAccept: (dragged) {
             // returns void
-            print('**** onAccept: ' + state.current.title + ' >> ' + a.title);
+            print('**** onAccept: ' + state.current.title + ' >> ' + dragged.title);
+            onItemDrop(dragged, state.current);
           },
-          onLeave: (a) {
+          onLeave: (dragged) {
             // returns void
-            print('**** onLeave: ' + state.current.title + ' >> ' + a.title);
+            print('**** onLeave: ' + state.current.title + ' >> ' + dragged.title);
           },
-          onWillAccept: (a) {
-            print('**** onWillAccept: ' + state.current.title + ' >> ' + a.title);
+          onWillAccept: (dragged) {
+            print('**** onWillAccept: ' + state.current.title + ' >> ' + dragged.title);
             return true;
           },
           builder: (BuildContext context, List<dynamic> candidateData, List<dynamic> rejectedData) {

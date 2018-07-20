@@ -3,6 +3,8 @@ import 'package:flutter_immutable_state/flutter_immutable_state.dart';
 import 'package:todo_flutter_app/BasicChart.dart';
 import 'package:todo_flutter_app/examples/state/immutable/TodoState.dart';
 
+const DEFAULT_ITEM_NAME = 'Unnamed';
+
 final _INIT_STATE = TodoState(
   todos: Todos(
     items: List.unmodifiable([new TodoData(0, 'Hello world :P', false)]),
@@ -69,7 +71,7 @@ Widget _renderMainBtns() => ImmutableView<Todos>(
               icon: Icon(Icons.add),
               onPressed: () {
                 _debug(context, 'add clicked');
-                state.change((s) => s.withNewItem('Unnamed ' + s.idCounter.toString()));
+                state.change((s) => s.withNewItem(DEFAULT_ITEM_NAME));
               },
             ),
             PopupMenuButton(
@@ -87,7 +89,7 @@ Widget _renderTodoListItems() => ImmutableView<TodoState>(
           state.change((t) => t.withTodos(t.todos.withAllUnselected().withUpdated(d.withSelected(true))));
         };
         var onDoubleTap = (TodoData d) {
-          state.change((t) => t.withTodos(t.todos.withAllUnselected().withUpdated(d.withEdit(true))));
+          state.change((t) => t.withTodos(t.todos.withAllUnselected().withUpdated(d.withTitle('').withEdit(true))));
         };
         var onItemDrop = (TodoData dragged, TodoData target) {
           state.change((t) => t.withTodos(t.todos.withAllUnselected().withMoved(dragged, target)));
@@ -139,7 +141,9 @@ Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTap
           onAccept: (dragged) {
             // returns void
             print('**** onAccept: ' + state.current.title + ' >> ' + dragged.title);
-            onItemDrop(dragged, state.current);
+            if (dragged != state.current) {
+              onItemDrop(dragged, state.current);
+            }
           },
           onLeave: (dragged) {
             // returns void
@@ -251,7 +255,7 @@ Widget _renderEditableTitle() => ImmutableView<TodoData>(
             });
           },
           onChanged: (String value) {
-            _debug(context, 'onchanged');
+            _debug(context, 'onchanged: ' + value);
             // do not change the state here!!! The auto triggered re-rendering will cause serious perf/rendering issues
           },
           autofocus: true,
@@ -263,5 +267,6 @@ Widget _renderEditableTitle() => ImmutableView<TodoData>(
     );
 
 void _debug(BuildContext context, String msg) {
+  print('**** ' + msg);
   Scaffold.of(context).showSnackBar(SnackBar(content: Text(msg)));
 }

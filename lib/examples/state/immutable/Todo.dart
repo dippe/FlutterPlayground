@@ -119,7 +119,10 @@ Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTap
 
         final dragIcon = Draggable<TodoData>(
           child: Icon(Icons.drag_handle),
-          feedback: Text('Dragged'),
+          feedback: Text(
+            'Dragged',
+            style: TextStyle(fontSize: 20.0),
+          ),
           data: state.current,
           childWhenDragging: Container(
             decoration: new BoxDecoration(color: Colors.green),
@@ -148,6 +151,7 @@ Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTap
             print('**** build: ' + rd.toString() + ' ---- ' + cd.toString());
 
             var decoration = candidateData.isNotEmpty ? new BoxDecoration(color: Colors.green) : null;
+            var _renderHighlight = (Widget row) => Container(decoration: decoration, child: row);
 
             var checkBox =
                 Checkbox(value: state.current.done, onChanged: (bool val) => state.change((d) => d.withToggled()));
@@ -160,7 +164,7 @@ Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTap
                       : _renderReadOnlyTitle(onTapCb, onDoubleTapCb),
             );
 
-            return isSelected && isEdit
+            var row = isSelected && isEdit
                 ? Row(
                     children: [
                       todoName,
@@ -185,6 +189,8 @@ Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTap
                           ],
                         ),
                       );
+
+            return _renderHighlight(row);
           },
         );
       },

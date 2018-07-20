@@ -15,7 +15,10 @@ class TodoData {
   @override
   bool operator ==(other) => other is TodoData && id == (other.id) && title == other.title && done == other.done;
 
-  withEdit(bool edit) {
+  @override
+  int get hashCode => id.hashCode ^ title.hashCode ^ done.hashCode;
+
+  TodoData withEdit(bool edit) {
     return new TodoData(id, title, done, isEdit: edit, isSelected: edit);
   }
 
@@ -33,32 +36,60 @@ class TodoData {
 }
 
 class Todos {
-  final Map<int, TodoData> items;
+  final List<TodoData> items;
   final int idCounter;
 
   Todos({this.items, this.idCounter = 0});
 
   Todos withNewItem(String title) {
-    Map<int, TodoData> copy = Map.from(items);
+    final List<TodoData> copy = List.from(items);
     var nextId = idCounter + 1;
-    copy.putIfAbsent(nextId, () => TodoData(nextId, title, false));
+    copy.add(TodoData(nextId, title, false));
     return new Todos(items: copy, idCounter: nextId);
   }
 
   TodoData getById(int id) {
-    return items[id];
+    return items.firstWhere((i) => i.id == id);
   }
 
   Todos withUpdated(TodoData todo) {
-    Map<int, TodoData> copy = Map.from(items);
-    copy.update(todo.id, (tmp) => todo);
-    return Todos(items: copy, idCounter: idCounter);
+    final List<TodoData> copy = List.from(items);
+    final index = copy.indexOf(getById(todo.id));
+    copy[index] = todo;
+    return Todos(
+      items: copy,
+      idCounter: idCounter,
+    );
   }
 
-  Todos withDeleted(d) {
-    Map<int, TodoData> copy = Map.from(items);
-    copy.remove(d.id);
-    return Todos(items: copy, idCounter: idCounter);
+  Todos withDeleted(todo) {
+    final List<TodoData> copy = List.from(items);
+    copy.remove(getById(todo.id));
+    return Todos(
+      items: copy,
+      idCounter: idCounter,
+    );
+  }
+
+  Todos withAllUnselected() {
+    List<TodoData> tmp = items.map((value) => value.withSelected(false).withEdit(false)).toList();
+    return Todos(
+      items: tmp,
+      idCounter: idCounter,
+    );
+  }
+
+  Todos withMoved(TodoData what, TodoData target) {
+    final List<TodoData> copy = List.from(items);
+
+    copy.remove(what);
+    final newIndex = copy.indexOf(target);
+    copy.insert(newIndex, what);
+
+    return Todos(
+      items: copy,
+      idCounter: idCounter,
+    );
   }
 
   int length() {
@@ -66,36 +97,32 @@ class Todos {
   }
 
   int lengthDone() {
-    return items.values.where((d) => d.done).length;
+    return items.where((d) => d.done).length;
   }
 
   int lengthTodo() {
-    return items.values.where((d) => !d.done).length;
+    return items.where((d) => !d.done).length;
   }
 
   List<TodoData> list() {
-    return List.from(items.values);
+    return items;
   }
 
   @override
   bool operator ==(other) =>
+      identical(this, other) ||
       other is Todos && other.items != null && _itemsEqual(items, other.items) && idCounter == other.idCounter;
 
-  bool _itemsEqual(Map items, Map otherItems) {
-    bool isEq = true;
-    items.forEach((key, i) {
-      if (otherItems[key] != items[key]) {
-        isEq = false;
-      }
-    });
-    return otherItems is Map<int, TodoData> && isEq;
-  }
+  @override
+  int get hashCode => items.hashCode ^ idCounter.hashCode;
 
-  Todos withAllUnselected() {
-    return Todos(
-      items: items.map((key, value) => MapEntry(key, value.withSelected(false).withEdit(false))),
-      idCounter: idCounter,
-    );
+  bool _itemsEqual(List<TodoData> items, List<TodoData> otherItems) {
+    bool isEq = true;
+    if (!(otherItems is List<TodoData>)) {
+      return false;
+    } else {
+      return items.every((i) => otherItems.any((o) => o == i));
+    }
   }
 }
 
@@ -112,14 +139,18 @@ class TodoState {
   TodoState withListView(newElem) => new TodoState(listView: newElem, todos: todos);
 
   @override
-  bool operator ==(other) => other is TodoState && todos == other.todos && listView == other.listView;
+  bool operator ==(other) =>
+      identical(this, other) || other is TodoState && todos == other.todos && listView == other.listView;
+
+  @override
+  int get hashCode => todos.hashCode ^ listView.hashCode;
 }
 
 // todo: re-think if these are needed and remove if not:
 // immutable object example:
 var appState = new Immutable<TodoState>(new TodoState(
   todos: new Todos(
-    items: new Map.unmodifiable({0: new TodoData(0, 'Hello world :P', false)}),
+    items: new List.unmodifiable([new TodoData(0, 'Hello world :P', false)]),
     idCounter: 1,
   ),
   listView: new TodoListView(),

@@ -5,7 +5,7 @@ import 'package:todo_flutter_app/examples/state/immutable/TodoState.dart';
 
 final _INIT_STATE = TodoState(
   todos: Todos(
-    items: Map.unmodifiable({0: new TodoData(0, 'Hello world :P', false)}),
+    items: List.unmodifiable([new TodoData(0, 'Hello world :P', false)]),
     idCounter: 1,
   ),
   listView: TodoListView(),
@@ -89,6 +89,9 @@ Widget _renderTodoListItems() => ImmutableView<TodoState>(
         var onDoubleTap = (TodoData d) {
           state.change((t) => t.withTodos(t.todos.withAllUnselected().withUpdated(d.withEdit(true))));
         };
+        var onItemDrop = (TodoData dragged, TodoData target) {
+          state.change((t) => t.withTodos(t.todos.withAllUnselected().withMoved(dragged, target)));
+        };
 
         return ListView(
           scrollDirection: Axis.vertical,
@@ -97,8 +100,8 @@ Widget _renderTodoListItems() => ImmutableView<TodoState>(
               .map((d) =>
                   // map state to the item
                   ImmutablePropertyManager<TodoState, TodoData>(
-                    current: (state) => state.todos.items[d.id],
-                    child: _renderTodoItem(onDelete(d), onTap, onDoubleTap),
+                    current: (state) => d,
+                    child: _renderTodoItem(onDelete(d), onTap, onDoubleTap, onItemDrop),
                     change: (state, newTodo) => state.withTodos(state.todos.withUpdated(newTodo)),
                   ))
               .toList(),
@@ -106,7 +109,8 @@ Widget _renderTodoListItems() => ImmutableView<TodoState>(
       },
     );
 
-Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTapCb) => ImmutableView<TodoData>(
+Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTapCb, Function onItemDrop) =>
+    ImmutableView<TodoData>(
       builder: (context, state) {
         // fixme: move "selected" into the todo item from the list view
         final bool isSelected = state.current.isSelected;
@@ -134,14 +138,14 @@ Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTap
         return DragTarget<TodoData>(
           onAccept: (a) {
             // returns void
-            print('**** onAccept: ' + a.title);
+            print('**** onAccept: ' + state.current.title + ' >> ' + a.title);
           },
           onLeave: (a) {
             // returns void
-            print('**** onLeave: ' + a.title);
+            print('**** onLeave: ' + state.current.title + ' >> ' + a.title);
           },
           onWillAccept: (a) {
-            print('**** onWillAccept: ' + a.title);
+            print('**** onWillAccept: ' + state.current.title + ' >> ' + a.title);
             return true;
           },
           builder: (BuildContext context, List<dynamic> candidateData, List<dynamic> rejectedData) {

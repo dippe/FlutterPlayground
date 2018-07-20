@@ -16,8 +16,8 @@ void main() {
     todosState.change((old) => Todos(idCounter: old.idCounter, items: old.items));
     todosState.change((old) {
       // add a new item
-      Map<int, TodoData> items = Map.from(old.items);
-      items.putIfAbsent(2, () => TodoData(2, 't2', false));
+      List<TodoData> items = List.from(old.items);
+      items.add(TodoData(2, 't2', false));
       return Todos(
         idCounter: old.idCounter,
         items: items,
@@ -49,15 +49,13 @@ void main() {
     var todo1 = TodoData(1, 'title', true);
     var todo2 = TodoData(2, 'title2', false);
 
-    var list0 = Todos(idCounter: 0, items: {1: todo1, 2: todo2});
-    var list1 = Todos(idCounter: 0, items: {1: todo1, 2: todo2});
-    var list2 = Todos(idCounter: 0, items: {3: todo1, 2: todo2});
-    var list3 = Todos(idCounter: 0, items: {1: null, 2: todo2});
+    var list0 = Todos(idCounter: 0, items: [todo1, todo2]);
+    var list1 = Todos(idCounter: 0, items: [todo1, todo2]);
+    var list3 = Todos(idCounter: 0, items: [null, todo2]);
     var list4 = Todos(idCounter: 0, items: null);
 
     expect(list1 == list0, isTrue);
     expect(list1 == list1, isTrue);
-    expect(list1 == list2, isFalse);
     expect(list1 == list3, isFalse);
     expect(list1 == list4, isFalse);
   });
@@ -66,8 +64,8 @@ void main() {
     var todo1 = TodoData(1, 'title', true);
     var todo2 = TodoData(2, 'title2', false);
 
-    var underTest = Todos(idCounter: 1, items: {1: todo1}).withNewItem(todo2.title);
-    var expectedList = Todos(idCounter: 2, items: {1: todo1, 2: todo2});
+    var underTest = Todos(idCounter: 1, items: [todo1]).withNewItem(todo2.title);
+    var expectedList = Todos(idCounter: 2, items: [todo1, todo2]);
 
     expect(underTest == expectedList, isTrue);
   });

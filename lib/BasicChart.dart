@@ -1,5 +1,7 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:flutter_immutable_state/flutter_immutable_state.dart';
+import 'package:todo_flutter_app/examples/state/immutable/TodoState.dart';
 import 'package:todo_flutter_app/util/memoize.dart';
 
 // simple bar chart example
@@ -10,15 +12,23 @@ class SimpleBarChart extends StatelessWidget {
 
   SimpleBarChart(this.seriesList, {this.animate});
 
-  static final withData = memoize((int done, int todo) {
+  static renderProgressChart() => ImmutableView<TodoState>.readOnly(builder: (context, state) {
+        return _withData(state.todos.lengthDone(), state.todos.lengthTodo());
+      });
+
+  static final _withData = memoize((int done, int todo) {
     final data = [
       new TodoStatus('Todo', todo),
       new TodoStatus('Done', done),
     ];
-    return new SimpleBarChart(
-      _createSeriesData(data),
-      // Disable animations for image tests.
-      animate: true,
+    return SizedBox(
+      height: 100.0,
+      width: 100.0,
+      child: SimpleBarChart(
+        _createSeriesData(data),
+        // Disable animations for image tests.
+        animate: true,
+      ),
     );
   });
 

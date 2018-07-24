@@ -13,6 +13,18 @@ final _INIT_STATE = TodoState(
   listView: TodoListView(),
 );
 
+Widget _stateTodos(Widget child) => ImmutablePropertyManager<TodoState, Todos>(
+      current: (state) => state.todos,
+      child: child,
+      change: (state, newElem) => state.withTodos(newElem),
+    );
+
+Widget _stateTodo(Widget child, int todoId) => ImmutablePropertyManager<TodoState, TodoData>(
+      current: (state) => state.todos.getById(todoId),
+      child: child,
+      change: (state, newTodo) => state.withTodos(state.todos.withUpdated(newTodo)),
+    );
+
 // This Stateful widget creates connection between the app state and the rendering
 class TodoApp extends StatelessWidget {
   @override
@@ -37,47 +49,44 @@ class TodoApp extends StatelessWidget {
 
 Widget _renderMainRoot() => ImmutableView<TodoState>.readOnly(
       builder: (context, state) => Scaffold(
-            appBar: _renderAppBar(state.todos.lengthDone(), state.todos.lengthTodo()),
+            appBar: _renderHeaderAppBar(),
             body: _renderTodoListItems(),
           ),
     );
 
-Widget _renderAppBar(int done, int todo) {
+Widget _renderHeaderAppBar() {
   return AppBar(
     actions: <Widget>[
-      new SizedBox(height: 100.0, width: 100.0, child: SimpleBarChart.withData(done, todo)),
-// map the substate to the child widgets (hide uneeded data)
-      ImmutablePropertyManager<TodoState, Todos>(
-        current: (state) => state.todos,
-        child: _renderMainBtns(),
-        change: (state, newElem) => state.withTodos(newElem),
-      ),
+      SimpleBarChart.renderProgressChart(),
+      _stateTodos(_renderMainBtns()),
     ],
   );
 }
 
-Widget _renderMainBtns() => ImmutableView<Todos>(
-      builder: (context, state) {
-        PopupMenuItemBuilder builder = (BuildContext context) => <PopupMenuEntry<ConfigMenuItems>>[
-              PopupMenuItem(value: ConfigMenuItems.About, child: const Text('About')),
-              PopupMenuItem(value: ConfigMenuItems.Config, child: const Text('Config')),
-              PopupMenuItem(value: ConfigMenuItems.DisplayFinished, child: const Text('Show finished')),
-            ];
+Widget _renderMainBtns() => Row(
+      children: [_renderAddButton(), _renderTopMenu()],
+    );
 
-        return Row(
-          children: [
-            IconButton(
-              tooltip: 'New Todo',
-              icon: Icon(Icons.add),
-              onPressed: () {
-                _debug(context, 'add clicked');
-                state.change((s) => s.withNewItem(DEFAULT_ITEM_NAME));
-              },
-            ),
-            PopupMenuButton(
-              itemBuilder: builder,
-            ),
-          ],
+Widget _renderTopMenu() {
+  PopupMenuItemBuilder builder = (BuildContext context) => <PopupMenuEntry<ConfigMenuItems>>[
+        PopupMenuItem(value: ConfigMenuItems.About, child: const Text('About')),
+        PopupMenuItem(value: ConfigMenuItems.Config, child: const Text('Config')),
+        PopupMenuItem(value: ConfigMenuItems.DisplayFinished, child: const Text('Show finished')),
+      ];
+  return PopupMenuButton(
+    itemBuilder: builder,
+  );
+}
+
+Widget _renderAddButton() => ImmutableView<Todos>(
+      builder: (context, state) {
+        return IconButton(
+          tooltip: 'New Todo',
+          icon: Icon(Icons.add),
+          onPressed: () {
+            _debug(context, 'add clicked');
+            state.change((s) => s.withNewItem(DEFAULT_ITEM_NAME));
+          },
         );
       },
     );
@@ -97,16 +106,9 @@ Widget _renderTodoListItems() => ImmutableView<TodoState>(
 
         return ListView(
           scrollDirection: Axis.vertical,
-          children: state.current.todos
-              .list()
-              .map((d) =>
-                  // map state to the item
-                  ImmutablePropertyManager<TodoState, TodoData>(
-                    current: (state) => d,
-                    child: _renderTodoItem(onDelete(d), onTap, onDoubleTap, onItemDrop),
-                    change: (state, newTodo) => state.withTodos(state.todos.withUpdated(newTodo)),
-                  ))
-              .toList(),
+          children: state.current.todos.list().map((d) =>
+              // map state to the item
+              _stateTodo(_renderTodoItem(onDelete(d), onTap, onDoubleTap, onItemDrop), d.id)).toList(),
         );
       },
     );
@@ -123,15 +125,15 @@ Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTap
           onPressed: onDelete,
         );
 
-        final dragIcon = Draggable<TodoData>(
-          child: Icon(Icons.drag_handle),
+        final draggableIcon = Draggable<TodoData>(
+          child: Icon(Icons.short_text),
           feedback: Text(
             'Dragged',
-            style: TextStyle(fontSize: 20.0),
+            style: TextStyle(fontSize: 15.0, color: Colors.white, decoration: TextDecoration.none),
           ),
           data: state.current,
           childWhenDragging: Container(
-            decoration: new BoxDecoration(color: Colors.green),
+            decoration: new BoxDecoration(color: Colors.white),
             child: Divider(height: 2.0, color: Color.fromARGB(255, 255, 0, 0)),
           ),
           onDragCompleted: () => {},
@@ -159,13 +161,15 @@ Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTap
             TodoData cd = candidateData.isNotEmpty ? candidateData.first : null;
             print('**** build: ' + rd.toString() + ' ---- ' + cd.toString());
 
-            var decoration = candidateData.isNotEmpty ? new BoxDecoration(color: Colors.green) : null;
-            var _renderHighlight = (Widget row) => Container(decoration: decoration, child: row);
+            final decoration = candidateData.isNotEmpty ? new BoxDecoration(color: Colors.green) : null;
+            final _renderHighlight = (Widget row) => Container(decoration: decoration, child: row);
 
-            var checkBox =
-                Checkbox(value: state.current.done, onChanged: (bool val) => state.change((d) => d.withToggled()));
+            final checkBox = Checkbox(
+              value: state.current.done,
+              onChanged: (bool val) => state.change((d) => d.withToggled()),
+            );
 
-            var todoName = Expanded(
+            final todoName = Expanded(
               child: isEdit
                   ? _renderEditableTitle()
                   : isSelected
@@ -173,31 +177,32 @@ Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTap
                       : _renderReadOnlyTitle(onTapCb, onDoubleTapCb),
             );
 
-            var row = isSelected && isEdit
-                ? Row(
+            final renderEditRow = () => Row(
+                  children: [
+                    todoName,
+                    deleteBtn,
+                  ],
+                );
+            final renderSelectedRow = () => Row(
+                  children: [
+                    draggableIcon,
+                    checkBox,
+                    todoName,
+                    deleteBtn,
+                  ],
+                );
+            final renderUnselectedRow = () => GestureDetector(
+                  onHorizontalDragEnd: (DragEndDetails details) => state.change((d) => d.withToggled()),
+                  child: Row(
                     children: [
+                      checkBox,
                       todoName,
-                      deleteBtn,
                     ],
-                  )
-                : isSelected
-                    ? Row(
-                        children: [
-                          dragIcon,
-                          checkBox,
-                          todoName,
-                          deleteBtn,
-                        ],
-                      )
-                    : GestureDetector(
-                        onHorizontalDragEnd: (DragEndDetails details) => state.change((d) => d.withToggled()),
-                        child: Row(
-                          children: [
-                            checkBox,
-                            todoName,
-                          ],
-                        ),
-                      );
+                  ),
+                );
+
+            final row =
+                isSelected && isEdit ? renderEditRow() : (isSelected ? renderSelectedRow() : renderUnselectedRow());
 
             return _renderHighlight(row);
           },
@@ -243,16 +248,13 @@ Widget _renderEditableTitle() => ImmutableView<TodoData>(
           decoration: const InputDecoration(
             border: const UnderlineInputBorder(),
             filled: true,
-            icon: const Icon(Icons.short_text),
+            // icon: const Icon(Icons.short_text),
             hintText: 'What would you like to remember?',
           ),
           keyboardType: TextInputType.text,
 
           onSubmitted: (String value) {
-            state.change((d) {
-              var ret = d.withSelected(false).withTitle(value);
-              return ret;
-            });
+            state.change((d) => d.withSelected(false).withTitle(value));
           },
           onChanged: (String value) {
             _debug(context, 'onchanged: ' + value);

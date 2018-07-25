@@ -113,6 +113,20 @@ Widget _renderTodoListItems() => ImmutableView<TodoState>(
       },
     );
 
+Widget _renderDraggableTodo(Widget child, TodoData data) => LongPressDraggable<TodoData>(
+      child: child,
+      feedback: Text(
+        'Dragged',
+        style: TextStyle(fontSize: 15.0, color: Colors.white, decoration: TextDecoration.none),
+      ),
+      data: data,
+      childWhenDragging: Container(
+        decoration: new BoxDecoration(color: Colors.white),
+        child: Divider(height: 2.0, color: Color.fromARGB(255, 255, 0, 0)),
+      ),
+      onDragCompleted: () => {},
+    );
+
 Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTapCb, Function onItemDrop) =>
     ImmutableView<TodoData>(
       builder: (context, state) {
@@ -123,20 +137,6 @@ Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTap
         final deleteBtn = IconButton(
           icon: Icon(Icons.delete),
           onPressed: onDelete,
-        );
-
-        final draggableIcon = Draggable<TodoData>(
-          child: Icon(Icons.short_text),
-          feedback: Text(
-            'Dragged',
-            style: TextStyle(fontSize: 15.0, color: Colors.white, decoration: TextDecoration.none),
-          ),
-          data: state.current,
-          childWhenDragging: Container(
-            decoration: new BoxDecoration(color: Colors.white),
-            child: Divider(height: 2.0, color: Color.fromARGB(255, 255, 0, 0)),
-          ),
-          onDragCompleted: () => {},
         );
 
         return DragTarget<TodoData>(
@@ -185,20 +185,22 @@ Widget _renderTodoItem(Function onDelete, Function onTapCb, Function onDoubleTap
                 );
             final renderSelectedRow = () => Row(
                   children: [
-                    draggableIcon,
                     checkBox,
                     todoName,
                     deleteBtn,
                   ],
                 );
-            final renderUnselectedRow = () => GestureDetector(
-                  onHorizontalDragEnd: (DragEndDetails details) => state.change((d) => d.withToggled()),
-                  child: Row(
-                    children: [
-                      checkBox,
-                      todoName,
-                    ],
+            final renderUnselectedRow = () => _renderDraggableTodo(
+                  GestureDetector(
+                    onHorizontalDragEnd: (DragEndDetails details) => state.change((d) => d.withToggled()),
+                    child: Row(
+                      children: [
+                        state.current.done ? Icon(Icons.done) : Icon(Icons.arrow_right),
+                        todoName,
+                      ],
+                    ),
                   ),
+                  state.current,
                 );
 
             final row =

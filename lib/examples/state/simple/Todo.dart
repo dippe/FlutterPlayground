@@ -69,7 +69,7 @@ Widget _renderTodoBody(TodoAppStore state) {
     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
     children: <Widget>[
       _renderTodoListItems(state),
-      SimpleBarChart.withData(state.lengthDone(), state.lengthTodo()),
+//      SimpleBarChart.withData(state.lengthDone(), state.lengthTodo()),
     ],
   );
 }

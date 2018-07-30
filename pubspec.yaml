@@ -11,6 +11,9 @@ dependencies:
   charts_flutter: ^0.3.0
   immutable_state: ^1.0.0
   flutter_immutable_state: ^1.0.0
+#  googleapis: any
+#  googleapis_auth: any
+  cloud_firestore: 0.7.3     # new
 
 dev_dependencies:
   flutter_test:

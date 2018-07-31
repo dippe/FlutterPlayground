@@ -12,7 +12,7 @@ class SimpleBarChart extends StatelessWidget {
 
   SimpleBarChart(this.seriesList, {this.animate});
 
-  static renderProgressChart() => ImmutableView<TodoState>.readOnly(builder: (context, state) {
+  static renderProgressChart() => ImmutableView.readOnly(builder: (context, state) {
         return _withData(state.todos.lengthDone(), state.todos.lengthTodo());
       });
 

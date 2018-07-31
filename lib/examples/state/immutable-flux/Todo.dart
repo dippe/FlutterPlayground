@@ -40,7 +40,9 @@ Widget _renderMainRoot() => ImmutableView<TodoAppState>.readOnly(
 Widget _renderHeaderAppBar() {
   return AppBar(
     actions: <Widget>[
-      SimpleBarChart.renderProgressChart(),
+      ImmutableView<TodoAppState>.readOnly(builder: (context, state) {
+        return SimpleBarChart.renderProgressChart(state.todos.lengthDone(), state.todos.lengthTodo());
+      }),
       ViewState.todos(_renderMainBtns()),
     ],
   );

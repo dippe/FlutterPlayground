@@ -1,6 +1,7 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:flutter_immutable_state/flutter_immutable_state.dart';
+import 'package:todo_flutter_app/examples/state/immutable-flux/state/domain.dart';
 import 'package:todo_flutter_app/examples/state/immutable/TodoState.dart';
 import 'package:todo_flutter_app/util/memoize.dart';
 
@@ -12,9 +13,7 @@ class SimpleBarChart extends StatelessWidget {
 
   SimpleBarChart(this.seriesList, {this.animate});
 
-  static renderProgressChart() => ImmutableView.readOnly(builder: (context, state) {
-        return _withData(state.todos.lengthDone(), state.todos.lengthTodo());
-      });
+  static var renderProgressChart = _withData;
 
   static final _withData = memoize((int done, int todo) {
     final data = [

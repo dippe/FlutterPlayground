@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:redux/redux.dart';
 import 'package:todo_flutter_app/examples/state/redux/Todo.dart';
-import 'package:todo_flutter_app/examples/state/redux/state/domain.dart';
 import 'package:todo_flutter_app/examples/state/redux/state/state.dart';
 
 void main() {
-  // redux imlementation
-  final store = new Store<TodoAppState>(todoReducer, initialState: INIT_STATE);
-
+  // redux implementation
   runApp(new FlutterReduxApp(
     store: store,
   ));

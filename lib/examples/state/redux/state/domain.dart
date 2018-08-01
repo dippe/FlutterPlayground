@@ -26,11 +26,11 @@ class TodoData {
     return new TodoData(id, title, done, isEdit: isEdit, isSelected: val);
   }
 
-  withToggled() {
+  TodoData withToggled() {
     return TodoData(id, title, !done, isEdit: isEdit, isSelected: isSelected);
   }
 
-  withTitle(String newTitle) {
+  TodoData withTitle(String newTitle) {
     return TodoData(id, newTitle, done, isEdit: false, isSelected: isSelected);
   }
 }

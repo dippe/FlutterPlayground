@@ -14,6 +14,8 @@ dependencies:
 #  googleapis: any
 #  googleapis_auth: any
   cloud_firestore: 0.7.3     # new
+  redux: ^3.0.0
+  flutter_redux: ^0.5.2
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:todo_flutter_app/examples/state/immutable-flux/Todo.dart';
+import 'package:redux/redux.dart';
+import 'package:todo_flutter_app/examples/state/redux/Todo.dart';
+import 'package:todo_flutter_app/examples/state/redux/state/domain.dart';
+import 'package:todo_flutter_app/examples/state/redux/state/state.dart';
 
-void main() => runApp(new MyApp());
+void main() {
+  // redux imlementation
+  final store = new Store<TodoAppState>(todoReducer, initialState: INIT_STATE);
+
+  runApp(new FlutterReduxApp(
+    store: store,
+  ));
+  // end of redux implementation
+
+  // enable to use "immutable", "simple" implementations
+  // runApp(new MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

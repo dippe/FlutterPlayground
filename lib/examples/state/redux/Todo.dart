@@ -4,6 +4,7 @@ import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/examples/state/redux/TodoItem.dart';
 import 'package:todo_flutter_app/examples/state/redux/action.dart' as Actions;
+import 'package:todo_flutter_app/examples/state/redux/login.dart';
 import 'package:todo_flutter_app/examples/state/redux/state/domain.dart';
 import 'package:todo_flutter_app/examples/state/redux/state/state.dart' as State;
 
@@ -46,7 +47,7 @@ class TodoApp extends StatelessWidget {
 
 Widget _renderMainRoot() => Scaffold(
       appBar: _renderHeaderAppBar(),
-      body: _renderTodoListItems(),
+      body: _renderBody(),
     );
 
 Widget _renderHeaderAppBar() {
@@ -63,19 +64,26 @@ Widget _renderHeaderAppBar() {
 }
 
 Widget _renderMainBtns() => Row(
-      children: [_renderAddButton(), _renderTopMenu()],
+      children: [_renderAddButton(), _renderTopMenu],
     );
 
-Widget _renderTopMenu() {
-  PopupMenuItemBuilder builder = (BuildContext context) => <PopupMenuEntry<ConfigMenuItems>>[
-        PopupMenuItem(value: ConfigMenuItems.About, child: const Text('About')),
-        PopupMenuItem(value: ConfigMenuItems.Config, child: const Text('Config')),
-        PopupMenuItem(value: ConfigMenuItems.DisplayFinished, child: const Text('Show finished')),
-      ];
-  return PopupMenuButton(
-    itemBuilder: builder,
-  );
-}
+Widget _renderTopMenu = StoreConnector<TodoAppState, Function>(
+    converter: State.dispatchConverter,
+    builder: (context, dispatchFn) {
+      PopupMenuItemBuilder builder = (BuildContext context) => <PopupMenuEntry<ConfigMenuItems>>[
+            PopupMenuItem(value: ConfigMenuItems.About, child: const Text('About')),
+            PopupMenuItem(value: ConfigMenuItems.Config, child: const Text('Config')),
+            PopupMenuItem(value: ConfigMenuItems.Login, child: const Text('Login')),
+          ];
+      return PopupMenuButton(
+        onSelected: (i) {
+          if (i == ConfigMenuItems.Login) {
+            dispatchFn(Actions.ShowLoginDialog(true))();
+          }
+        },
+        itemBuilder: builder,
+      );
+    });
 
 Widget _renderAddButton() => new StoreConnector<TodoAppState, Function>(
       converter: State.dispatchConverter,
@@ -100,6 +108,16 @@ Widget _renderTodoListItems() => new StoreConnector<TodoAppState, Function>(
           );
         },
       );
+    });
+
+Widget _renderBody() => new StoreConnector<TodoAppState, bool>(
+    converter: (store) => store.state.todoView.showLogin,
+    builder: (context, showLogin) {
+      if (showLogin) {
+        return renderLoginForm;
+      } else {
+        return _renderTodoListItems();
+      }
     });
 
 void _debug(BuildContext context, String msg) {

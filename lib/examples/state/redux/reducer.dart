@@ -19,6 +19,14 @@ TodoAppState todoReducer(TodoAppState state, dynamic action) {
     return state.withTodos(state.todos.withUpdated(action.item.withToggled()));
   } else if (action is Actions.Select) {
     return state.withTodos(state.todos.withAllUnselected().withUpdated(action.item.withSelected(true)));
+  } else if (action is Actions.ShowLoginDialog) {
+    return state.withTodoView(state.todoView.withShowLogin(action.show));
+  } else if (action is Actions.Login) {
+    return state.withTodoView(state.todoView.withShowLogin(false));
+  } else if (action is Actions.SetUserName) {
+    return state.withLogin(LoginData(action.name, state.login.password));
+  } else if (action is Actions.SetPwd) {
+    return state.withLogin(LoginData(state.login.user, action.pwd));
   } else {
     throw Exception("unknown action type");
   }

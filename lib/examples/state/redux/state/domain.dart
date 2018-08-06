@@ -1,6 +1,4 @@
-import 'package:immutable_state/immutable_state.dart';
-
-enum ConfigMenuItems { About, Config, DisplayFinished }
+enum ConfigMenuItems { About, Config, DisplayFinished, Login }
 
 // fixme: implement hashcodes!!
 class TodoData {
@@ -126,22 +124,79 @@ class Todos {
   }
 }
 
-class TodoListView {}
+class TodoView {
+  final bool showLogin;
+
+  TodoView(this.showLogin);
+
+  TodoView withShowLogin(bool show) {
+    return new TodoView(show);
+  }
+
+  @override
+  String toString() {
+    return 'TodoListView{showLogin: $showLogin}';
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || other is TodoView && runtimeType == other.runtimeType && showLogin == other.showLogin;
+
+  @override
+  int get hashCode => showLogin.hashCode;
+}
 
 class TodoAppState {
   final Todos todos;
-  final TodoListView listView;
+  final TodoView todoView;
+  final LoginData login;
 
-  TodoAppState({this.listView, this.todos});
+  TodoAppState({this.todoView, this.todos, this.login});
 
-  TodoAppState withTodos(Todos newElem) => new TodoAppState(listView: listView, todos: newElem);
+  TodoAppState withTodos(Todos newElem) => new TodoAppState(todoView: todoView, todos: newElem, login: login);
 
-  TodoAppState withListView(newElem) => new TodoAppState(listView: newElem, todos: todos);
+  TodoAppState withTodoView(TodoView newElem) => new TodoAppState(todoView: newElem, todos: todos, login: login);
+
+  TodoAppState withLogin(LoginData newElem) => new TodoAppState(todoView: todoView, todos: todos, login: newElem);
 
   @override
-  bool operator ==(other) =>
-      identical(this, other) || other is TodoAppState && todos == other.todos && listView == other.listView;
+  String toString() {
+    return 'TodoAppState{todos: $todos, listView: $todoView, login: $login}';
+  }
 
   @override
-  int get hashCode => todos.hashCode ^ listView.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TodoAppState &&
+          runtimeType == other.runtimeType &&
+          todos == other.todos &&
+          todoView == other.todoView &&
+          login == other.login;
+
+  @override
+  int get hashCode => todos.hashCode ^ todoView.hashCode ^ login.hashCode;
+}
+
+class LoginData {
+  final String user;
+  final String password;
+
+  LoginData(this.user, this.password);
+
+  hasLogin() {
+    return user != null && password != null;
+  }
+
+  @override
+  String toString() {
+    return 'LoginData{user: $user, password: $password}';
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LoginData && runtimeType == other.runtimeType && user == other.user && password == other.password;
+
+  @override
+  int get hashCode => user.hashCode ^ password.hashCode;
 }

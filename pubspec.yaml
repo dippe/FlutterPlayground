@@ -7,15 +7,19 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
-  charts_flutter: ^0.3.0
-  immutable_state: ^1.0.0
-  flutter_immutable_state: ^1.0.0
+  cupertino_icons: 0.1.2
+  charts_flutter: 0.3.0
+  immutable_state: 1.0.0
+  flutter_immutable_state: 1.0.0
 #  googleapis: any
 #  googleapis_auth: any
   cloud_firestore: 0.7.3     # new
-  redux: ^3.0.0
-  flutter_redux: ^0.5.2
+  # Redux:
+  redux: 3.0.0
+  flutter_redux: 0.5.2
+  # JIRA:
+#  http_auth: 0.1.3
+#  flutter_secure_storage: ^3.1.1
 
 dev_dependencies:
   flutter_test:

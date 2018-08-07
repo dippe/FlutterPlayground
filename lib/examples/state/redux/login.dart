@@ -4,43 +4,54 @@ import 'package:todo_flutter_app/examples/state/redux/state/domain.dart';
 import 'package:todo_flutter_app/examples/state/redux/action.dart' as Actions;
 import 'package:todo_flutter_app/examples/state/redux/state/state.dart';
 
-var renderLoginForm = new Column(
-  children: <Widget>[
-    Title(
-      color: Colors.greenAccent,
-      title: 'Login',
-      child: Text('JIRA Login'),
-    ),
-    const Divider(
-      height: 1.0,
-    ),
-    new ListTile(
-      leading: const Icon(Icons.person),
-      title: _Name(),
-    ),
-    new ListTile(
-      leading: const Icon(Icons.account_box),
-      title: _Pwd(),
-    ),
-    new ListTile(
-      leading: const Icon(Icons.email),
-      title: new TextField(
-        decoration: new InputDecoration(
-          hintText: "Email",
-        ),
+var renderLoginForm = new StoreConnector<TodoAppState, LoginData>(
+  converter: (state) => state.state.login,
+  builder: (context, user) => new Column(
+        children: <Widget>[
+          Title(
+            color: Colors.greenAccent,
+            title: 'Login',
+            child: Text('JIRA Login'),
+          ),
+          const Divider(
+            height: 1.0,
+          ),
+          new ListTile(
+            leading: const Icon(Icons.person),
+            title: _Name(user.user),
+          ),
+          new ListTile(
+            leading: const Icon(Icons.account_box),
+            title: _Pwd(user.password),
+          ),
+          new ListTile(
+            leading: const Icon(Icons.email),
+            title: new TextField(
+              decoration: new InputDecoration(
+                hintText: "Email",
+              ),
+            ),
+          ),
+          _renderOkBtn,
+        ],
       ),
-    ),
-    _renderOkBtn,
-  ],
 );
 
 class _Name extends StatefulWidget {
+  String txt;
+
+  _Name(this.txt);
+
   @override
-  _NameState createState() => new _NameState();
+  _NameState createState() => _NameState(txt);
 }
 
 class _NameState extends State<_Name> {
-  final TextEditingController _controller = new TextEditingController();
+  TextEditingController _controller;
+
+  _NameState(String initTxt) {
+    _controller = new TextEditingController(text: initTxt);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,12 +71,20 @@ class _NameState extends State<_Name> {
 }
 
 class _Pwd extends StatefulWidget {
+  String txt;
+
+  _Pwd(this.txt);
+
   @override
-  _PwdState createState() => new _PwdState();
+  _PwdState createState() => new _PwdState(txt);
 }
 
 class _PwdState extends State<_Pwd> {
-  final TextEditingController _controller = new TextEditingController();
+  TextEditingController _controller;
+
+  _PwdState(String initTxt) {
+    _controller = new TextEditingController(text: initTxt);
+  }
 
   @override
   Widget build(BuildContext context) {

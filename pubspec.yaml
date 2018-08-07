@@ -17,8 +17,6 @@ dependencies:
   # Redux:
   redux: 3.0.0
   flutter_redux: 0.5.2
-  # JIRA:
-#  http_auth: 0.1.3
 #  flutter_secure_storage: ^3.1.1
 
 dev_dependencies:

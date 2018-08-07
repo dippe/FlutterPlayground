@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:todo_flutter_app/examples/state/redux/Todo.dart';
 import 'package:todo_flutter_app/examples/state/redux/state/state.dart';
+import 'package:todo_flutter_app/examples/state/redux/jira/jira.dart';
 
 void main() {
+  getIssue('TEST-1');
+
   // redux implementation
   runApp(new FlutterReduxApp(
     store: store,

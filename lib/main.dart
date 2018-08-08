@@ -4,7 +4,9 @@ import 'package:todo_flutter_app/examples/state/redux/state/state.dart';
 import 'package:todo_flutter_app/examples/state/redux/jira/jira.dart';
 
 void main() {
-  getIssue('TEST-1');
+//  fetchIssue('TEST-1', (issue) => print('********* ' + issue.key));
+  fetchIssuesByJql(
+      'project=test', (res) => print('********* Result: ' + res.toString() + ' num: ' + res.total.toString()));
 
   // redux implementation
   runApp(new FlutterReduxApp(

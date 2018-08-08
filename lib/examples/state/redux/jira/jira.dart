@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart';
+import 'package:todo_flutter_app/examples/state/redux/jira/action.dart';
 import 'package:todo_flutter_app/examples/state/redux/jira/domain.dart';
 import 'package:todo_flutter_app/examples/state/redux/jira/rest.dart';
+import 'package:todo_flutter_app/examples/state/redux/state/state.dart';
 import 'package:todo_flutter_app/util/auth.dart';
 
 const TMP_USER = "dippenexus@gmail.com";
@@ -24,45 +26,56 @@ typedef void GetJqlCb(JiraJqlResult res);
 
 var client = BasicAuthClient(TMP_USER, TMP_PWD);
 
-Future<JiraIssue> fetchIssue(String key, GetIssueCb cb) {
-  return client.get(BASE_URL + URL_ISSUE + key).then((Response val) {
-    print(val.body);
+class JiraAjax {
+  static void doFetchJqlAction(String jql) => JiraAjax._fetchIssuesByJql(jql).then((res) {
+        store.dispatch(FetchJqlDone(res));
+      }).catchError((error) {
+        store.dispatch(FetchError(error.toString()));
+      });
 
-    Map issueMap = json.decode(val.body);
+  static void doFetchIssueAction(String key) => JiraAjax._fetchIssue(key).then((res) {
+        store.dispatch(FetchIssueDone(res));
+      }).catchError((error) {
+        store.dispatch(FetchError(error.toString()));
+      });
 
-    var issue = JiraIssue.fromJson(issueMap);
+  static Future<JiraIssue> _fetchIssue(String key) {
+    return client.get(BASE_URL + URL_ISSUE + key).then((Response val) {
+      print(val.body);
 
-    print('Issue processed: ' + issue.key);
-    return issue;
-  }).catchError((err) => print('*** ERROR: ' + err.toString()));
-}
+      Map issueMap = json.decode(val.body);
 
-// fixme cb type
-Future<JiraJqlResult> fetchIssuesByJql(String jql, GetJqlCb cb) {
-  // fixme: re-enable + test
+      var issue = JiraIssue.fromJson(issueMap);
+
+      print('Issue processed: ' + issue.key);
+      return issue;
+    }).catchError((err) => print('*** ERROR: ' + err.toString()));
+  }
+
+  static Future<JiraJqlResult> _fetchIssuesByJql(String jql) {
+    // fixme: re-enable + test
 //  String ncodedJql = encodeURIComponent(jql);
-  String ncodedJql = jql;
-  String url =
-      BASE_URL + URL_JQL + '?maxResults=' + MAX_RESULTS.toString() + "&fields=" + FIELDS_TO_GET + '&jql=' + ncodedJql;
+    String ncodedJql = jql;
+    String url =
+        BASE_URL + URL_JQL + '?maxResults=' + MAX_RESULTS.toString() + "&fields=" + FIELDS_TO_GET + '&jql=' + ncodedJql;
 
-  var _validateResult = (dynamic res) {
-    if (res.total > MAX_RESULTS || res.total > res.maxResults) {
-      var msg = AjaxError.LIMIT_REACHED + MAX_RESULTS.toString();
-      print(msg);
-      throw new Exception(msg);
-    }
-    // fixme: test if list is a real issue list
-  };
+    var _validateResult = (dynamic res) {
+      if (res.total > MAX_RESULTS || res.total > res.maxResults) {
+        var msg = AjaxError.LIMIT_REACHED + MAX_RESULTS.toString();
+        print(msg);
+        throw new Exception(msg);
+      }
+      // fixme: test if list is a real issue list
+    };
 
-  return client.get(url).then((Response resp) {
-    Map jqlMap = json.decode(resp.body);
+    return client.get(url).then((Response resp) {
+      Map jqlMap = json.decode(resp.body);
 
-    var res = JiraJqlResult.fromJson(jqlMap);
+      var res = JiraJqlResult.fromJson(jqlMap);
 
-    print('Jql processed: ' + jql);
+      print('Jql processed: ' + jql);
 
-    cb(res);
-
-    return res;
-  }).catchError((err) => print('*** ERROR: ' + err.toString()));
+      return res;
+    }).catchError((err) => print('*** ERROR: ' + err.toString()));
+  }
 }

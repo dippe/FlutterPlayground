@@ -212,4 +212,9 @@ class JiraJqlResult {
         total = json['total'],
         issues = (json['issues'] as List<dynamic>).map((issueJson) => JiraIssue.fromJson(issueJson)).toList()
             as List<JiraIssue>;
+
+  @override
+  String toString() {
+    return 'JiraJqlResult{expand: $expand, startAt: $startAt, maxResults: $maxResults, total: $total, issues: $issues}';
+  }
 }

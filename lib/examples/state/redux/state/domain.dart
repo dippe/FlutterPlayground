@@ -1,3 +1,6 @@
+import 'package:meta/meta.dart';
+import 'package:todo_flutter_app/examples/state/redux/jira/domain.dart';
+
 enum ConfigMenuItems { About, Config, DisplayFinished, Login }
 
 // fixme: implement hashcodes!!
@@ -147,17 +150,30 @@ class TodoView {
 }
 
 class TodoAppState {
+  final List<JiraIssue> issues;
   final Todos todos;
   final TodoView todoView;
   final LoginData login;
 
-  TodoAppState({this.todoView, this.todos, this.login});
+  TodoAppState({@required this.issues, @required this.todoView, @required this.todos, @required this.login});
 
-  TodoAppState withTodos(Todos newElem) => new TodoAppState(todoView: todoView, todos: newElem, login: login);
+  TodoAppState copyWith({issues, login, todoView, todos}) {
+    return TodoAppState(
+      issues: issues ?? this.issues,
+      login: login ?? this.login,
+      todoView: todoView ?? this.todoView,
+      todos: todos ?? this.todos,
+    );
+  }
 
-  TodoAppState withTodoView(TodoView newElem) => new TodoAppState(todoView: newElem, todos: todos, login: login);
+  // fixme: remove these because unneeded
+  TodoAppState withTodos(Todos newElem) => copyWith(todos: newElem);
 
-  TodoAppState withLogin(LoginData newElem) => new TodoAppState(todoView: todoView, todos: todos, login: newElem);
+  TodoAppState withTodoView(TodoView newElem) => copyWith(todoView: newElem);
+
+  TodoAppState withLogin(LoginData newElem) => copyWith(login: newElem);
+
+  TodoAppState withIssues(List<JiraIssue> newElem) => copyWith(issues: newElem);
 
   @override
   String toString() {

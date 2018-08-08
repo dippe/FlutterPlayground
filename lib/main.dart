@@ -5,8 +5,7 @@ import 'package:todo_flutter_app/examples/state/redux/jira/jira.dart';
 
 void main() {
 //  fetchIssue('TEST-1', (issue) => print('********* ' + issue.key));
-  fetchIssuesByJql(
-      'project=test', (res) => print('********* Result: ' + res.toString() + ' num: ' + res.total.toString()));
+  JiraAjax.doFetchJqlAction('project=test');
 
   // redux implementation
   runApp(new FlutterReduxApp(

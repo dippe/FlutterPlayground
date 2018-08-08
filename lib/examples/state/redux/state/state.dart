@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:redux/redux.dart';
+import 'package:todo_flutter_app/examples/state/redux/action.dart';
 import 'package:todo_flutter_app/examples/state/redux/jira/jira.dart';
+import 'package:todo_flutter_app/examples/state/redux/jira/reducer.dart';
 import 'package:todo_flutter_app/examples/state/redux/state/domain.dart';
 import 'package:todo_flutter_app/examples/state/redux/reducer.dart';
 
@@ -11,8 +15,21 @@ final _initState = TodoAppState(
   todoView: TodoView(false),
   // fixme: remove test data
   login: LoginData(TMP_USER, TMP_PWD),
+  issues: null,
 );
 
-final store = new Store<TodoAppState>(todoReducer, initialState: _initState);
+TodoAppState _debugReducer(TodoAppState state, dynamic action) {
+  print('Action triggered with type: ' + action.runtimeType.toString() + ' val: ' + action.toString());
+  return state;
+}
 
-final dispatchConverter = (store) => (action) => () => store.dispatch(action);
+// todo: beautify this oversimplified composing
+final _combinedReducers = (state, action) => todoReducer(jiraReducer(_debugReducer(state, action), action), action);
+
+final store = new Store<TodoAppState>(_combinedReducers, initialState: _initState);
+
+final dispatchConverter = (store) => (Action action) => () => store.dispatch(action);
+
+final dispatchAjaxConverter = (store) => (Future ajax, Function actionCreator) {
+      ajax.then((res) => store.dispatch(actionCreator(res)));
+    };

@@ -18,6 +18,7 @@ const FIELDS_TO_GET = "status,summary,components,fixVersions,project,issuelinks"
 
 class AjaxError {
   static final LIMIT_REACHED = 'Cannot get all of the issues because the MaxResults limit is reached ';
+  static final EMPTY_JQL_RESULT = 'Empty JQL result';
 }
 
 typedef void GetIssueCb(JiraIssue issue);
@@ -48,7 +49,8 @@ class JiraAjax {
 
       print('Issue processed: ' + issue.key);
       return issue;
-    }).catchError((err) => print('*** ERROR: ' + err.toString()));
+    });
+//        .catchError((err) => print('*** ERROR: ' + err.toString()));
   }
 
   static Future<JiraJqlResult> _fetchIssuesByJql(String jql) {
@@ -58,23 +60,33 @@ class JiraAjax {
     String url =
         BASE_URL + URL_JQL + '?maxResults=' + MAX_RESULTS.toString() + "&fields=" + FIELDS_TO_GET + '&jql=' + ncodedJql;
 
-    var _validateResult = (dynamic res) {
+    var _validateResult = (JiraJqlResult res) {
       if (res.total > MAX_RESULTS || res.total > res.maxResults) {
-        var msg = AjaxError.LIMIT_REACHED + MAX_RESULTS.toString();
-        print(msg);
-        throw new Exception(msg);
+        throw new Exception(AjaxError.LIMIT_REACHED + MAX_RESULTS.toString());
+      } else if (res.total == 0) {
+        throw new Exception(AjaxError.EMPTY_JQL_RESULT);
       }
-      // fixme: test if list is a real issue list
+    };
+
+    var _validateResponse = (Response resp) {
+      if (resp.statusCode > 400) {
+        throw new Exception('Reason: ' + resp.reasonPhrase ?? ' - ');
+      }
     };
 
     return client.get(url).then((Response resp) {
+      _validateResponse(resp);
+
       Map jqlMap = json.decode(resp.body);
 
       var res = JiraJqlResult.fromJson(jqlMap);
 
       print('Jql processed: ' + jql);
 
+      _validateResult(res);
+
       return res;
-    }).catchError((err) => print('*** ERROR: ' + err.toString()));
+    });
+//        .catchError((err) => print('*** ERROR: ' + err.toString()));
   }
 }

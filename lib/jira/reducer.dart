@@ -12,7 +12,7 @@ TodoAppState jiraReducer(TodoAppState state, dynamic action) {
   } else if (action is Actions.FetchIssueDone) {
     throw Exception("unimplemented reducer for Actions.FetchIssueDone");
   } else if (action is Actions.FetchError) {
-    print('*** ERROR ***: Fetch error');
+    print('*** ERROR ***: Fetch error ' + action.error);
     return state.copyWith(error: action.error);
   } else {
     print("jiraReducer: unhandled action type: " + action.runtimeType.toString());

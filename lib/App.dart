@@ -46,11 +46,15 @@ Widget _Body() => StoreConnector<TodoAppState, dynamic>(
         },
     builder: (context2, s) {
       if (s['error'] != null) {
-        return Container(
-            child: Text(
-          'ERROR: ' + s['error'],
-          style: TextStyle(color: Colors.redAccent),
-        ));
+        return SimpleDialog(
+          title: Text('Ajax Error'),
+          children: <Widget>[
+            Text(
+              'ERROR: ' + s['error'],
+              style: TextStyle(color: Colors.redAccent),
+            )
+          ],
+        );
       } else if (s['showLogin']) {
         return LoginForm();
       } else {

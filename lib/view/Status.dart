@@ -3,10 +3,10 @@ import 'package:todo_flutter_app/jira/jira.dart';
 import 'package:todo_flutter_app/view/ListItem.dart';
 
 const _COLORS = {
-  1: Colors.grey,
-  2: Colors.blue,
-  3: Colors.yellow,
-  4: Colors.green,
+  1: Colors.yellow,
+  2: Colors.grey,
+  3: Colors.green,
+  4: Colors.blue,
   5: Colors.red,
 };
 

@@ -1,5 +1,5 @@
-import 'package:todo_flutter_app/examples/state/redux/state/domain.dart';
-import 'package:todo_flutter_app/examples/state/redux/action.dart' as Actions;
+import 'package:todo_flutter_app/state/domain.dart';
+import 'package:todo_flutter_app/action.dart' as Actions;
 
 TodoAppState todoReducer(TodoAppState state, dynamic action) {
   if (action is Actions.Add) {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:todo_flutter_app/examples/state/redux/action.dart' as Actions;
-import 'package:todo_flutter_app/examples/state/redux/state/domain.dart';
+import 'package:todo_flutter_app/action.dart' as Actions;
+import 'package:todo_flutter_app/state/domain.dart';
 
-Widget renderTodoItem(TodoData todo, Function dispatchFn) {
+Widget ListItem(TodoData todo, Function dispatchFn) {
   final bool isSelected = todo.isSelected;
   final bool isEdit = todo.isEdit;
 

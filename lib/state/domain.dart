@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-import 'package:todo_flutter_app/examples/state/redux/jira/domain.dart';
+import 'package:todo_flutter_app/jira/domain.dart';
 
 enum ConfigMenuItems { About, Config, DisplayFinished, Login }
 

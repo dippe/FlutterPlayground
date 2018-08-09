@@ -1,41 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:todo_flutter_app/examples/state/redux/state/domain.dart';
-import 'package:todo_flutter_app/examples/state/redux/action.dart' as Actions;
-import 'package:todo_flutter_app/examples/state/redux/state/state.dart';
+import 'package:todo_flutter_app/action.dart' as Actions;
+import 'package:todo_flutter_app/state/domain.dart';
+import 'package:todo_flutter_app/state/state.dart';
 
-var renderLoginForm = new StoreConnector<TodoAppState, LoginData>(
-  converter: (state) => state.state.login,
-  builder: (context, user) => new Column(
-        children: <Widget>[
-          Title(
-            color: Colors.greenAccent,
-            title: 'Login',
-            child: Text('JIRA Login'),
-          ),
-          const Divider(
-            height: 1.0,
-          ),
-          new ListTile(
-            leading: const Icon(Icons.person),
-            title: _Name(user.user),
-          ),
-          new ListTile(
-            leading: const Icon(Icons.account_box),
-            title: _Pwd(user.password),
-          ),
-          new ListTile(
-            leading: const Icon(Icons.email),
-            title: new TextField(
-              decoration: new InputDecoration(
-                hintText: "Email",
+Widget LoginForm() => new StoreConnector<TodoAppState, LoginData>(
+      converter: (state) => state.state.login,
+      builder: (context, user) => new Column(
+            children: <Widget>[
+              Title(
+                color: Colors.greenAccent,
+                title: 'Login',
+                child: Text('JIRA Login'),
               ),
-            ),
+              const Divider(
+                height: 1.0,
+              ),
+              new ListTile(
+                leading: const Icon(Icons.person),
+                title: _Name(user.user),
+              ),
+              new ListTile(
+                leading: const Icon(Icons.account_box),
+                title: _Pwd(user.password),
+              ),
+              new ListTile(
+                leading: const Icon(Icons.email),
+                title: new TextField(
+                  decoration: new InputDecoration(
+                    hintText: "Email",
+                  ),
+                ),
+              ),
+              _renderOkBtn,
+            ],
           ),
-          _renderOkBtn,
-        ],
-      ),
-);
+    );
 
 class _Name extends StatefulWidget {
   String txt;

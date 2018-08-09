@@ -1,30 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:todo_flutter_app/examples/state/redux/Todo.dart';
-import 'package:todo_flutter_app/examples/state/redux/state/state.dart';
-import 'package:todo_flutter_app/examples/state/redux/jira/jira.dart';
+import 'package:todo_flutter_app/App.dart';
+import 'package:todo_flutter_app/jira/jira.dart';
+import 'package:todo_flutter_app/state/state.dart';
 
 void main() {
 //  fetchIssue('TEST-1', (issue) => print('********* ' + issue.key));
   JiraAjax.doFetchJqlAction('project=test');
 
-  // redux implementation
   runApp(new FlutterReduxApp(
     store: store,
   ));
-  // end of redux implementation
-
-  // enable to use "immutable", "simple" implementations
-  // runApp(new MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'Todo Demo',
-      theme: new ThemeData(primarySwatch: Colors.orange),
-      home: new TodoApp(),
-    );
-  }
 }

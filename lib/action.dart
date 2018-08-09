@@ -1,4 +1,4 @@
-import 'package:todo_flutter_app/examples/state/redux/state/domain.dart';
+import 'package:todo_flutter_app/state/domain.dart';
 
 // Action DTO-s
 

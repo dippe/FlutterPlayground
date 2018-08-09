@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:redux/redux.dart';
-import 'package:todo_flutter_app/examples/state/redux/action.dart';
-import 'package:todo_flutter_app/examples/state/redux/jira/jira.dart';
-import 'package:todo_flutter_app/examples/state/redux/jira/reducer.dart';
-import 'package:todo_flutter_app/examples/state/redux/state/domain.dart';
-import 'package:todo_flutter_app/examples/state/redux/reducer.dart';
+import 'package:todo_flutter_app/action.dart';
+import 'package:todo_flutter_app/jira/jira.dart';
+import 'package:todo_flutter_app/jira/reducer.dart';
+import 'package:todo_flutter_app/reducer.dart';
+import 'package:todo_flutter_app/state/domain.dart';
 
 final _initState = TodoAppState(
   todos: Todos(

@@ -2,10 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:todo_flutter_app/examples/state/redux/jira/action.dart';
-import 'package:todo_flutter_app/examples/state/redux/jira/domain.dart';
-import 'package:todo_flutter_app/examples/state/redux/jira/rest.dart';
-import 'package:todo_flutter_app/examples/state/redux/state/state.dart';
+import 'package:todo_flutter_app/jira/action.dart';
+import 'package:todo_flutter_app/jira/domain.dart';
+import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/util/auth.dart';
 
 const TMP_USER = "dippenexus@gmail.com";

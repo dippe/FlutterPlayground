@@ -1,5 +1,5 @@
-import 'package:todo_flutter_app/examples/state/redux/jira/action.dart' as Actions;
-import 'package:todo_flutter_app/examples/state/redux/state/domain.dart';
+import 'package:todo_flutter_app/jira/action.dart' as Actions;
+import 'package:todo_flutter_app/state/domain.dart';
 
 TodoAppState jiraReducer(TodoAppState state, dynamic action) {
   if (action is Actions.FetchJqlDone) {

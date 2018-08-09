@@ -17,34 +17,6 @@ Widget DraggableListItem(ListItemData item, Function dispatchFn) {
 }
 
 Widget ListItem(item, dispatchFn) {
-  final bool isSelected = item.isSelected;
-  final bool isEdit = item.isEdit;
-
-  final deleteBtn = IconButton(
-    icon: Icon(Icons.delete),
-    onPressed: dispatchFn(Actions.Delete(item)),
-  );
-
-  final checkBox = Checkbox(
-    value: item.done,
-    onChanged: (bool val) => dispatchFn(Actions.CbToggle(item))(),
-  );
-
-  final todoName = Expanded(
-    child: isEdit
-        ? _renderEditableTitle(item)
-        : isSelected
-            ? _renderReadOnlyTitle(
-                item: item,
-                onTapCb: dispatchFn(Actions.Edit(item)),
-                onDoubleTapCb: dispatchFn(Actions.Edit(item)),
-              )
-            : _renderReadOnlyTitle(
-                item: item,
-                onTapCb: dispatchFn(Actions.Select(item)),
-                onDoubleTapCb: dispatchFn(Actions.Edit(item)),
-              ),
-  );
   final renderSimpleRow = (children) => Row(
         children: children,
       );
@@ -54,7 +26,7 @@ Widget ListItem(item, dispatchFn) {
           child: Row(
             children: [
               item.done ? Icon(Icons.done) : Icon(Icons.arrow_right),
-              todoName,
+              _todoName(item, dispatchFn),
             ],
           ),
         ),
@@ -62,10 +34,10 @@ Widget ListItem(item, dispatchFn) {
         dispatchFn,
       );
 
-  if (isSelected && isEdit) {
-    return renderSimpleRow([todoName, deleteBtn]);
-  } else if (isSelected) {
-    return renderSimpleRow([checkBox, todoName, deleteBtn]);
+  if (item.isSelected && item.isEdit) {
+    return renderSimpleRow([_todoName(item, dispatchFn), _deleteBtn(item, dispatchFn)]);
+  } else if (item.isSelected) {
+    return renderSimpleRow([_checkBox(item, dispatchFn), _todoName(item, dispatchFn), _deleteBtn(item, dispatchFn)]);
   } else {
     return renderUnselectedRow();
   }
@@ -146,6 +118,34 @@ Widget _renderDraggableItem(Widget child, ListItemData data, dispatchFn) => Long
         child: Divider(height: 2.0, color: Color.fromARGB(255, 255, 0, 0)),
       ),
       onDragCompleted: () => {},
+    );
+
+typedef Widget ItemWidget(ListItemData item, Function dispatchFn);
+
+ItemWidget _deleteBtn = (item, dispatchFn) => IconButton(
+      icon: Icon(Icons.delete),
+      onPressed: dispatchFn(Actions.Delete(item)),
+    );
+
+ItemWidget _checkBox = (item, dispatchFn) => Checkbox(
+      value: item.done,
+      onChanged: (bool val) => dispatchFn(Actions.CbToggle(item))(),
+    );
+
+ItemWidget _todoName = (item, dispatchFn) => Expanded(
+      child: item.isEdit
+          ? _renderEditableTitle(item)
+          : item.isSelected
+              ? _renderReadOnlyTitle(
+                  item: item,
+                  onTapCb: dispatchFn(Actions.Edit(item)),
+                  onDoubleTapCb: dispatchFn(Actions.Edit(item)),
+                )
+              : _renderReadOnlyTitle(
+                  item: item,
+                  onTapCb: dispatchFn(Actions.Select(item)),
+                  onDoubleTapCb: dispatchFn(Actions.Edit(item)),
+                ),
     );
 
 void _debug(BuildContext context, String msg) {

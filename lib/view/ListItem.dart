@@ -178,8 +178,9 @@ const ISSUE_TYPE_ICONS = {
 //'' : URL_ISSUETYPE_ICONS + 'sales.png',
 };
 
-ItemWidget _issuetype = (item, dispatchFn) =>
-    item.issue != null ? Image.network(ISSUE_TYPE_ICONS[item.issue.fields.issuetype.name ?? 'Undefined']) : Text('');
+ItemWidget _issuetype = (item, dispatchFn) => item.issue != null
+    ? Image.network(ISSUE_TYPE_ICONS[item.issue.fields.issuetype.name] ?? ISSUE_TYPE_ICONS['Undefined'])
+    : Text('');
 
 ItemWidget _todoName = (item, dispatchFn) => Expanded(
       child: item.isEdit

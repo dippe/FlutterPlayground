@@ -26,7 +26,9 @@ Widget ListItem(item, dispatchFn) {
           child: Row(
             children: [
               item.done ? Icon(Icons.done) : Icon(Icons.arrow_right),
+              _issueKey(item, dispatchFn),
               _todoName(item, dispatchFn),
+              _status(item, dispatchFn)
             ],
           ),
         ),
@@ -132,6 +134,8 @@ ItemWidget _checkBox = (item, dispatchFn) => Checkbox(
       onChanged: (bool val) => dispatchFn(Actions.CbToggle(item))(),
     );
 
+ItemWidget _issueKey = (item, dispatchFn) => Text(item.issue.key);
+
 ItemWidget _todoName = (item, dispatchFn) => Expanded(
       child: item.isEdit
           ? _renderEditableTitle(item)
@@ -146,6 +150,22 @@ ItemWidget _todoName = (item, dispatchFn) => Expanded(
                   onTapCb: dispatchFn(Actions.Select(item)),
                   onDoubleTapCb: dispatchFn(Actions.Edit(item)),
                 ),
+    );
+
+const _COLORS = {1: Colors.grey, 2: Colors.blue, 3: Colors.yellow, 4: Colors.green, 5: Colors.red};
+
+const _COLOR_UNKNOWN = Colors.grey;
+
+Color _getColorByStatusId(int id) => _COLORS[id] ?? _COLOR_UNKNOWN;
+
+ItemWidget _status = (item, dispatchFn) => Chip(
+      label: Text(
+        item.issue.fields.status.name,
+        style: TextStyle(
+//          color: ,
+            ),
+      ),
+      backgroundColor: _getColorByStatusId(item.issue.fields.status.statusCategory.id),
     );
 
 void _debug(BuildContext context, String msg) {

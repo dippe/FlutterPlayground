@@ -1,7 +1,9 @@
 import 'package:meta/meta.dart';
-import 'package:todo_flutter_app/jira/domain.dart';
+import 'package:todo_flutter_app/jira/domain/issue.dart';
 
 enum ConfigMenuItems { About, Config, DisplayFinished, Login }
+
+enum PageTypes { Config, IssueList }
 
 class ListItemData {
   final String key;

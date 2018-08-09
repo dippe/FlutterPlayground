@@ -4,7 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/view/Header.dart';
 import 'package:todo_flutter_app/view/List.dart';
-import 'package:todo_flutter_app/view/Login.dart';
+import 'package:todo_flutter_app/view/config/Login.dart';
 
 class FlutterReduxApp extends StatelessWidget {
   final Store<TodoAppState> store;

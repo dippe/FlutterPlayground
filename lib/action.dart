@@ -1,4 +1,4 @@
-import 'package:todo_flutter_app/jira/domain.dart';
+import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 
 // Action DTO-s

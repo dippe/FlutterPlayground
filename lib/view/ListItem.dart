@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/action.dart' as Actions;
+import 'package:todo_flutter_app/view/Status.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 
 Widget DraggableListItem(ListItemData item, Function dispatchFn) {
@@ -20,16 +21,11 @@ Widget ListItem(item, dispatchFn) {
   final renderSimpleRow = (children) => Row(
         children: children,
       );
-  final renderUnselectedRow = () => _renderDraggableItem(
+  final renderUnselectedRow = (children) => _renderDraggableItem(
         GestureDetector(
           onHorizontalDragEnd: (DragEndDetails details) => dispatchFn(Actions.CbToggle(item))(),
           child: Row(
-            children: [
-              item.done ? Icon(Icons.done) : Icon(Icons.arrow_right),
-              _issueKey(item, dispatchFn),
-              _todoName(item, dispatchFn),
-              _status(item, dispatchFn)
-            ],
+            children: children,
           ),
         ),
         item,
@@ -37,11 +33,22 @@ Widget ListItem(item, dispatchFn) {
       );
 
   if (item.isSelected && item.isEdit) {
-    return renderSimpleRow([_todoName(item, dispatchFn), _deleteBtn(item, dispatchFn)]);
+    return renderSimpleRow([
+      _todoName(item, dispatchFn),
+      _deleteBtn(item, dispatchFn),
+    ]);
   } else if (item.isSelected) {
-    return renderSimpleRow([_checkBox(item, dispatchFn), _todoName(item, dispatchFn), _deleteBtn(item, dispatchFn)]);
+    return renderSimpleRow([
+      _checkBox(item, dispatchFn),
+      _todoName(item, dispatchFn),
+      _deleteBtn(item, dispatchFn),
+    ]);
   } else {
-    return renderUnselectedRow();
+    return renderUnselectedRow([
+      _issueKey(item, dispatchFn),
+      _todoName(item, dispatchFn),
+      IssueStatusChip(item, dispatchFn),
+    ]);
   }
 }
 
@@ -134,7 +141,7 @@ ItemWidget _checkBox = (item, dispatchFn) => Checkbox(
       onChanged: (bool val) => dispatchFn(Actions.CbToggle(item))(),
     );
 
-ItemWidget _issueKey = (item, dispatchFn) => Text(item.issue.key);
+ItemWidget _issueKey = (item, dispatchFn) => Text(item.key);
 
 ItemWidget _todoName = (item, dispatchFn) => Expanded(
       child: item.isEdit
@@ -150,22 +157,6 @@ ItemWidget _todoName = (item, dispatchFn) => Expanded(
                   onTapCb: dispatchFn(Actions.Select(item)),
                   onDoubleTapCb: dispatchFn(Actions.Edit(item)),
                 ),
-    );
-
-const _COLORS = {1: Colors.grey, 2: Colors.blue, 3: Colors.yellow, 4: Colors.green, 5: Colors.red};
-
-const _COLOR_UNKNOWN = Colors.grey;
-
-Color _getColorByStatusId(int id) => _COLORS[id] ?? _COLOR_UNKNOWN;
-
-ItemWidget _status = (item, dispatchFn) => Chip(
-      label: Text(
-        item.issue.fields.status.name,
-        style: TextStyle(
-//          color: ,
-            ),
-      ),
-      backgroundColor: _getColorByStatusId(item.issue.fields.status.statusCategory.id),
     );
 
 void _debug(BuildContext context, String msg) {

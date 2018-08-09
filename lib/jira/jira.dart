@@ -3,7 +3,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:todo_flutter_app/jira/action.dart';
-import 'package:todo_flutter_app/jira/domain.dart';
+import 'package:todo_flutter_app/jira/domain/issue.dart';
+import 'package:todo_flutter_app/jira/domain/responses.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/util/auth.dart';
 
@@ -14,7 +15,7 @@ const BASE_URL = "https://testdev1.atlassian.net";
 const URL_ISSUE = "/rest/api/2/issue/";
 const URL_JQL = "/rest/api/2/search";
 const MAX_RESULTS = 1000;
-const FIELDS_TO_GET = "status,summary,components,fixVersions,project,issuelinks";
+const FIELDS_TO_GET = "status,summary,components,fixVersions,project,issuelinks,issuetype";
 
 class AjaxError {
   static final LIMIT_REACHED = 'Cannot get all of the issues because the MaxResults limit is reached ';
@@ -22,7 +23,7 @@ class AjaxError {
 }
 
 typedef void GetIssueCb(JiraIssue issue);
-typedef void GetJqlCb(JiraJqlResult res);
+typedef void GetJqlCb(JiraSearch res);
 
 var client = BasicAuthClient(TMP_USER, TMP_PWD);
 
@@ -53,14 +54,14 @@ class JiraAjax {
 //        .catchError((err) => print('*** ERROR: ' + err.toString()));
   }
 
-  static Future<JiraJqlResult> _fetchIssuesByJql(String jql) {
+  static Future<JiraSearch> _fetchIssuesByJql(String jql) {
     // fixme: re-enable + test
 //  String ncodedJql = encodeURIComponent(jql);
     String ncodedJql = jql;
     String url =
         BASE_URL + URL_JQL + '?maxResults=' + MAX_RESULTS.toString() + "&fields=" + FIELDS_TO_GET + '&jql=' + ncodedJql;
 
-    var _validateResult = (JiraJqlResult res) {
+    var _validateResult = (JiraSearch res) {
       if (res.total > MAX_RESULTS || res.total > res.maxResults) {
         throw new Exception(AjaxError.LIMIT_REACHED + MAX_RESULTS.toString());
       } else if (res.total == 0) {
@@ -79,7 +80,7 @@ class JiraAjax {
 
       Map jqlMap = json.decode(resp.body);
 
-      var res = JiraJqlResult.fromJson(jqlMap);
+      var res = JiraSearch.fromJson(jqlMap);
 
       print('Jql processed: ' + jql);
 

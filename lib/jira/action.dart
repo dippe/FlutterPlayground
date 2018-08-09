@@ -1,4 +1,5 @@
-import 'package:todo_flutter_app/jira/domain.dart';
+import 'package:todo_flutter_app/jira/domain/issue.dart';
+import 'package:todo_flutter_app/jira/domain/responses.dart';
 
 abstract class Action {}
 
@@ -14,7 +15,7 @@ class FetchError implements Action {
 }
 
 class FetchJqlDone implements Action {
-  final JiraJqlResult jiraJqlResult;
+  final JiraSearch jiraJqlResult;
 
   FetchJqlDone(this.jiraJqlResult);
 

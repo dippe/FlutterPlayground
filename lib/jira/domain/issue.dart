@@ -173,53 +173,10 @@ class JiraIssue {
         fields = JiraIssueFields.fromJson(json['fields']);
 }
 
-class TScrumIssue {
-  bool done;
-  dynamic estimateStatistic;
-  List<int> fixVersions;
-  bool hasCustomUserAvatar;
-  bool hidden;
-  int id;
-  String key;
-  int linkedPagesCount;
-  String priorityName;
-  String priorityUrl;
-  int projectId;
-  IssueStatus status;
-  int statusId;
-  String statusName;
-  String statusUrl;
-  String summary;
-  int typeId;
-  String typeName;
-  String typeUrl;
-}
-
 class ChildIssue {
   String summary;
   int id;
   String key;
   String typeIconUrl;
   IssueStatus status;
-}
-
-class JiraJqlResult {
-  String expand;
-  int startAt;
-  int maxResults;
-  int total;
-  List<JiraIssue> issues;
-
-  JiraJqlResult.fromJson(Map<String, dynamic> json)
-      : expand = json['expand'],
-        startAt = json['startAt'],
-        maxResults = json['maxResults'],
-        total = json['total'],
-        issues = (json['issues'] as List<dynamic>)?.map((issueJson) => JiraIssue.fromJson(issueJson)).toList()
-            as List<JiraIssue>;
-
-  @override
-  String toString() {
-    return 'JiraJqlResult{expand: $expand, startAt: $startAt, maxResults: $maxResults, total: $total, issues: $issues}';
-  }
 }

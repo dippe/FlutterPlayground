@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:todo_flutter_app/jira/domain.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart' as State;
 import 'package:todo_flutter_app/action.dart' as Actions;
 import 'package:todo_flutter_app/view/BasicChart.dart';
 
-const DEFAULT_ITEM_NAME = 'Unnamed';
+final DEFAULT_ITEM = JiraIssue.unlinked('UNLINKED-1234', 'Unnamed issue');
 
 Widget HeaderAppBar() => AppBar(
       actions: <Widget>[
@@ -45,9 +46,9 @@ Widget _AddButton() => new StoreConnector<TodoAppState, Function>(
       converter: State.dispatchConverter,
       builder: (context, dispatch) {
         return IconButton(
-          tooltip: 'New Todo',
+          tooltip: 'New Item',
           icon: Icon(Icons.add),
-          onPressed: dispatch(Actions.Add(DEFAULT_ITEM_NAME)),
+          onPressed: dispatch(Actions.Add(DEFAULT_ITEM)),
         );
       },
     );

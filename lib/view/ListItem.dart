@@ -3,89 +3,79 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/action.dart' as Actions;
 import 'package:todo_flutter_app/state/domain.dart';
 
-Widget ListItem(TodoData todo, Function dispatchFn) {
-  final bool isSelected = todo.isSelected;
-  final bool isEdit = todo.isEdit;
-
-  final deleteBtn = IconButton(
-    icon: Icon(Icons.delete),
-    onPressed: dispatchFn(Actions.Delete(todo)),
-  );
-
-  return DragTarget<TodoData>(
-    onAccept: (dragged) {
-      // returns void
-      print('**** onAccept: ' + todo.title + ' >> ' + dragged.title);
-      if (dragged != todo) {
-        dispatchFn(Actions.Drop(dragged, todo))();
-      }
-    },
-    onLeave: (dragged) {
-      // returns void
-      print('**** onLeave: ' + todo.title + ' >> ' + dragged.title);
-    },
-    onWillAccept: (dragged) {
-      print('**** onWillAccept: ' + todo.title + ' >> ' + dragged.title);
-      return true;
-    },
+Widget DraggableListItem(ListItemData item, Function dispatchFn) {
+  return DragTarget<ListItemData>(
+    onAccept: (dragged) => (dragged != item) ? dispatchFn(Actions.Drop(dragged, item))() : null,
+    onWillAccept: (dragged) => true,
     builder: (BuildContext context, List<dynamic> candidateData, List<dynamic> rejectedData) {
-      // todo: remove these 3 debugging lines later
-//      TodoData rd = rejectedData.isNotEmpty ? rejectedData.first : null;
-//      TodoData cd = candidateData.isNotEmpty ? candidateData.first : null;
-//      print('**** build: ' + rd.toString() + ' ---- ' + cd.toString());
-
       final decoration = candidateData.isNotEmpty ? new BoxDecoration(color: Colors.green) : null;
       final _renderHighlight = (Widget row) => Container(decoration: decoration, child: row);
 
-      final checkBox = Checkbox(
-        value: todo.done,
-        onChanged: (bool val) => dispatchFn(Actions.CbToggle(todo))(),
-      );
-
-      final todoName = Expanded(
-        child: isEdit
-            ? _renderEditableTitle(todo)
-            : isSelected
-                ? _renderReadOnlyTitle(
-                    todo: todo,
-                    onTapCb: dispatchFn(Actions.Edit(todo)),
-                    onDoubleTapCb: dispatchFn(Actions.Edit(todo)),
-                  )
-                : _renderReadOnlyTitle(
-                    todo: todo,
-                    onTapCb: dispatchFn(Actions.Select(todo)),
-                    onDoubleTapCb: dispatchFn(Actions.Edit(todo)),
-                  ),
-      );
-      final renderSimpleRow = (children) => Row(
-            children: children,
-          );
-      final renderUnselectedRow = () => _renderDraggableTodo(
-            GestureDetector(
-              onHorizontalDragEnd: (DragEndDetails details) => dispatchFn(Actions.CbToggle(todo))(),
-              child: Row(
-                children: [
-                  todo.done ? Icon(Icons.done) : Icon(Icons.arrow_right),
-                  todoName,
-                ],
-              ),
-            ),
-            todo,
-            dispatchFn,
-          );
-
-      if (isSelected && isEdit) {
-        return renderSimpleRow([todoName, deleteBtn]);
-      } else if (isSelected) {
-        return renderSimpleRow([checkBox, todoName, deleteBtn]);
-      } else {
-        return _renderHighlight(renderUnselectedRow());
-      }
+      return _renderHighlight(ListItem(item, dispatchFn));
     },
   );
 }
 
-Widget _renderReadOnlyTitle({@required TodoData todo, @required Function onTapCb, @required Function onDoubleTapCb}) {
+Widget ListItem(item, dispatchFn) {
+  final bool isSelected = item.isSelected;
+  final bool isEdit = item.isEdit;
+
+  final deleteBtn = IconButton(
+    icon: Icon(Icons.delete),
+    onPressed: dispatchFn(Actions.Delete(item)),
+  );
+
+  final checkBox = Checkbox(
+    value: item.done,
+    onChanged: (bool val) => dispatchFn(Actions.CbToggle(item))(),
+  );
+
+  final todoName = Expanded(
+    child: isEdit
+        ? _renderEditableTitle(item)
+        : isSelected
+            ? _renderReadOnlyTitle(
+                item: item,
+                onTapCb: dispatchFn(Actions.Edit(item)),
+                onDoubleTapCb: dispatchFn(Actions.Edit(item)),
+              )
+            : _renderReadOnlyTitle(
+                item: item,
+                onTapCb: dispatchFn(Actions.Select(item)),
+                onDoubleTapCb: dispatchFn(Actions.Edit(item)),
+              ),
+  );
+  final renderSimpleRow = (children) => Row(
+        children: children,
+      );
+  final renderUnselectedRow = () => _renderDraggableItem(
+        GestureDetector(
+          onHorizontalDragEnd: (DragEndDetails details) => dispatchFn(Actions.CbToggle(item))(),
+          child: Row(
+            children: [
+              item.done ? Icon(Icons.done) : Icon(Icons.arrow_right),
+              todoName,
+            ],
+          ),
+        ),
+        item,
+        dispatchFn,
+      );
+
+  if (isSelected && isEdit) {
+    return renderSimpleRow([todoName, deleteBtn]);
+  } else if (isSelected) {
+    return renderSimpleRow([checkBox, todoName, deleteBtn]);
+  } else {
+    return renderUnselectedRow();
+  }
+}
+
+Widget _renderReadOnlyTitle({
+  @required ListItemData item,
+  @required Function onTapCb,
+  @required Function onDoubleTapCb,
+}) {
   // the actual substate is the proper tododata (see the PropertyManager)
   return InkWell(
     onDoubleTap: onDoubleTapCb,
@@ -95,18 +85,19 @@ Widget _renderReadOnlyTitle({@required TodoData todo, @required Function onTapCb
       padding: new EdgeInsets.all(10.0),
       // color: new Color(0X9900CCCC),
       child: Text(
-        todo.title,
-        style: TextStyle(decoration: todo.done ? TextDecoration.lineThrough : TextDecoration.none),
+        item.title,
+        style: TextStyle(decoration: item.done ? TextDecoration.lineThrough : TextDecoration.none),
       ),
     ),
   );
 }
 
-Widget _renderEditableTitle(todo) => new StoreConnector<TodoAppState, Function>(
-      converter: (store) => (TodoData d) => store.state.todos, // FIXME: implement action: (d) => d.withSelected(false)
+Widget _renderEditableTitle(item) => new StoreConnector<TodoAppState, Function>(
+      converter: (store) =>
+          (ListItemData d) => store.state.todos, // FIXME: implement action: (d) => d.withSelected(false)
       // .withTitle(value)
       builder: (context, onSubmit) {
-        final d = todo;
+        final d = item;
         final ctrl = new TextEditingController();
 
         // fixme: remove this later
@@ -142,7 +133,7 @@ Widget _renderEditableTitle(todo) => new StoreConnector<TodoAppState, Function>(
       },
     );
 
-Widget _renderDraggableTodo(Widget child, TodoData data, dispatchFn) => LongPressDraggable<TodoData>(
+Widget _renderDraggableItem(Widget child, ListItemData data, dispatchFn) => LongPressDraggable<ListItemData>(
       child: child,
       feedback: Text(
         'Dragged',

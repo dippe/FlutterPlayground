@@ -39,10 +39,19 @@ Widget _MainRoot() => Scaffold(
       body: _Body(),
     );
 
-Widget _Body() => new StoreConnector<TodoAppState, bool>(
-    converter: (store) => store.state.todoView.showLogin,
-    builder: (context, showLogin) {
-      if (showLogin) {
+Widget _Body() => StoreConnector<TodoAppState, dynamic>(
+    converter: (store) => {
+          'showLogin': store.state.todoView.showLogin,
+          'error': store.state.error,
+        },
+    builder: (context2, s) {
+      if (s['error'] != null) {
+        return Container(
+            child: Text(
+          'ERROR: ' + s['error'],
+          style: TextStyle(color: Colors.redAccent),
+        ));
+      } else if (s['showLogin']) {
         return LoginForm();
       } else {
         return TodoListItems();
@@ -51,5 +60,5 @@ Widget _Body() => new StoreConnector<TodoAppState, bool>(
 
 void _debug(BuildContext context, String msg) {
   print('**** ' + msg);
-  Scaffold.of(context).showSnackBar(SnackBar(content: Text(msg)));
+//  Scaffold.of(context).showSnackBar(SnackBar(content: Text(msg)));
 }

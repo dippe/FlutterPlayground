@@ -116,6 +116,8 @@ class JiraIssueFields {
   dynamic watches;
   dynamic workratio;
 
+  JiraIssueFields.unlinked(this.summary);
+
   JiraIssueFields.fromJson(Map<String, dynamic> json)
       : aggregateprogress = json['aggregateprogress'],
         aggregatetimeestimate = json['aggregatetimeestimate'],
@@ -153,14 +155,17 @@ class JiraIssueFields {
 }
 
 class JiraIssue {
-  String id;
-  String key;
-  String typeUrl;
-  JiraIssueFields fields;
+  final String id;
+  final String key;
+  final String typeUrl;
+  final JiraIssueFields fields;
 
-  JiraIssue();
+  JiraIssue.unlinked(key, summary)
+      : key = key,
+        fields = JiraIssueFields.unlinked(summary),
+        id = null,
+        typeUrl = null;
 
-  // simple deserialization
   JiraIssue.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         key = json['key'],

@@ -12,7 +12,7 @@ Widget TodoListItems() => new StoreConnector<TodoAppState, Function>(
         builder: (context, todos) {
           return ListView(
             scrollDirection: Axis.vertical,
-            children: todos.list().map((todo) => ListItem(todo, dispatch)).toList(),
+            children: todos.list().map((item) => DraggableListItem(item, dispatch)).toList(),
           );
         },
       );

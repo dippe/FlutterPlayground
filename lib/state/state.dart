@@ -9,7 +9,7 @@ import 'package:todo_flutter_app/state/domain.dart';
 
 final _initState = TodoAppState(
   todos: Todos(
-    items: List.unmodifiable([new TodoData(0, 'Hello world :P', false)]),
+    items: List.unmodifiable([new ListItemData(null, 'Hello world :P', 'ISSUE-1')]),
     idCounter: 1,
   ),
   todoView: TodoView(false),

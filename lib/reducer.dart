@@ -3,7 +3,7 @@ import 'package:todo_flutter_app/action.dart' as Actions;
 
 TodoAppState todoReducer(TodoAppState state, dynamic action) {
   if (action is Actions.Add) {
-    return state.withTodos(state.todos.withNewItem(action.name));
+    return state.withTodos(state.todos.withNewItem(action.issue));
   } else if (action is Actions.Delete) {
     return state.withTodos(state.todos.withDeleted(action.item));
   } else if (action is Actions.Drag) {

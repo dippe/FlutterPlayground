@@ -1,3 +1,4 @@
+import 'package:todo_flutter_app/jira/domain.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 
 // Action DTO-s
@@ -5,18 +6,18 @@ import 'package:todo_flutter_app/state/domain.dart';
 abstract class Action {}
 
 class Add implements Action {
-  String name;
+  JiraIssue issue;
 
-  Add(this.name);
+  Add(this.issue);
 
   @override
   String toString() {
-    return 'Add{name: $name}';
+    return 'Add{issue: $issue}';
   }
 }
 
 class Delete implements Action {
-  TodoData item;
+  ListItemData item;
 
   Delete(this.item);
 
@@ -27,7 +28,7 @@ class Delete implements Action {
 }
 
 class Drag implements Action {
-  TodoData item;
+  ListItemData item;
 
   Drag(this.item);
 
@@ -38,8 +39,8 @@ class Drag implements Action {
 }
 
 class Drop implements Action {
-  TodoData dragged;
-  TodoData target;
+  ListItemData dragged;
+  ListItemData target;
 
   Drop(this.dragged, this.target);
 
@@ -50,7 +51,7 @@ class Drop implements Action {
 }
 
 class Select implements Action {
-  TodoData item;
+  ListItemData item;
 
   Select(this.item);
 
@@ -63,7 +64,7 @@ class Select implements Action {
 class UnSelectAll implements Action {}
 
 class Edit implements Action {
-  TodoData item;
+  ListItemData item;
 
   Edit(this.item);
 
@@ -74,7 +75,7 @@ class Edit implements Action {
 }
 
 class CbToggle implements Action {
-  TodoData item;
+  ListItemData item;
 
   CbToggle(this.item);
 

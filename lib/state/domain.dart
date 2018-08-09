@@ -3,60 +3,65 @@ import 'package:todo_flutter_app/jira/domain.dart';
 
 enum ConfigMenuItems { About, Config, DisplayFinished, Login }
 
-// fixme: implement hashcodes!!
-class TodoData {
-  final int id;
+class ListItemData {
+  final String key;
+  final JiraIssue issue;
   final String title;
   final bool done;
   final bool isEdit;
   final bool isSelected;
 
-  const TodoData(this.id, this.title, this.done, {this.isEdit = false, this.isSelected = false});
+  const ListItemData(JiraIssue this.issue, String this.title, String this.key,
+      {this.isEdit = false, this.isSelected = false, this.done = false});
 
   @override
-  bool operator ==(other) => other is TodoData && id == (other.id) && title == other.title && done == other.done;
+  bool operator ==(other) =>
+      other is ListItemData && issue == (other.issue) && title == other.title && key == other.key;
 
   @override
-  int get hashCode => id.hashCode ^ title.hashCode ^ done.hashCode;
+  int get hashCode => issue.hashCode ^ title.hashCode ^ key.hashCode;
 
-  TodoData withEdit(bool edit) {
-    return new TodoData(id, title, done, isEdit: edit, isSelected: edit);
-  }
+  copyWith({String key, issue, title, done, isEdit, isSelected}) => ListItemData(
+        issue ?? this.issue,
+        title ?? this.title,
+        key ?? this.key,
+        done: done ?? this.done,
+        isEdit: isEdit ?? this.isEdit,
+        isSelected: isSelected ?? this.isSelected,
+      );
 
-  TodoData withSelected(bool val) {
-    return new TodoData(id, title, done, isEdit: isEdit, isSelected: val);
-  }
+  ListItemData withEdit(bool edit) => copyWith(isEdit: edit);
 
-  TodoData withToggled() {
-    return TodoData(id, title, !done, isEdit: isEdit, isSelected: isSelected);
-  }
+  ListItemData withSelected(bool val) => copyWith(isSelected: val);
 
-  TodoData withTitle(String newTitle) {
-    return TodoData(id, newTitle, done, isEdit: false, isSelected: isSelected);
-  }
+  ListItemData withToggled() => copyWith(done: !this.done);
+
+  ListItemData withTitle(String newTitle) => copyWith(title: newTitle);
 }
 
 class Todos {
-  final List<TodoData> items;
+  final List<ListItemData> items;
   final int idCounter;
 
   Todos({this.items, this.idCounter = 0});
 
-  Todos withNewItem(String title) {
-    final List<TodoData> copy = List.from(items);
+  copyWith({items, idCounter}) => Todos(items: items ?? this.items, idCounter: idCounter ?? this.idCounter);
+
+  Todos withNewItem(JiraIssue issue) {
+    final List<ListItemData> copy = List.from(items);
     var nextId = idCounter + 1;
-    copy.add(TodoData(nextId, title, false));
+    copy.add(ListItemData(issue, issue.fields.summary, issue.key));
     return new Todos(items: copy, idCounter: nextId);
   }
 
-  TodoData getById(int id) {
-    return items.firstWhere((i) => i.id == id);
+  ListItemData getByKey(String key) {
+    return items.firstWhere((i) => i.key == key);
   }
 
-  Todos withUpdated(TodoData todo) {
-    final List<TodoData> copy = List.from(items);
-    final index = copy.indexOf(getById(todo.id));
-    copy[index] = todo;
+  Todos withUpdated(ListItemData item) {
+    final List<ListItemData> copy = List.from(items);
+    final index = copy.indexOf(getByKey(item.key));
+    copy[index] = item;
     return Todos(
       items: copy,
       idCounter: idCounter,
@@ -64,8 +69,8 @@ class Todos {
   }
 
   Todos withDeleted(todo) {
-    final List<TodoData> copy = List.from(items);
-    copy.remove(getById(todo.id));
+    final List<ListItemData> copy = List.from(items);
+    copy.remove(getByKey(todo.key));
     return Todos(
       items: copy,
       idCounter: idCounter,
@@ -73,15 +78,15 @@ class Todos {
   }
 
   Todos withAllUnselected() {
-    List<TodoData> tmp = items.map((value) => value.withSelected(false).withEdit(false)).toList();
+    List<ListItemData> tmp = items.map((value) => value.withSelected(false).withEdit(false)).toList();
     return Todos(
       items: tmp,
       idCounter: idCounter,
     );
   }
 
-  Todos withMoved(TodoData what, TodoData target) {
-    final List<TodoData> copy = List.from(items);
+  Todos withMoved(ListItemData what, ListItemData target) {
+    final List<ListItemData> copy = List.from(items);
 
     copy.remove(what);
     final newIndex = copy.indexOf(target);
@@ -105,7 +110,7 @@ class Todos {
     return items.where((d) => !d.done).length;
   }
 
-  List<TodoData> list() {
+  List<ListItemData> list() {
     return items;
   }
 
@@ -117,9 +122,9 @@ class Todos {
   @override
   int get hashCode => items.hashCode ^ idCounter.hashCode;
 
-  bool _itemsEqual(List<TodoData> items, List<TodoData> otherItems) {
+  bool _itemsEqual(List<ListItemData> items, List<ListItemData> otherItems) {
     bool isEq = true;
-    if (!(otherItems is List<TodoData>)) {
+    if (!(otherItems is List<ListItemData>)) {
       return false;
     } else {
       return items.every((i) => otherItems.any((o) => o == i));
@@ -154,11 +159,14 @@ class TodoAppState {
   final Todos todos;
   final TodoView todoView;
   final LoginData login;
+  final String error;
 
-  TodoAppState({@required this.issues, @required this.todoView, @required this.todos, @required this.login});
+  TodoAppState(
+      {@required this.issues, @required this.todoView, @required this.todos, @required this.login, this.error});
 
-  TodoAppState copyWith({issues, login, todoView, todos}) {
+  TodoAppState copyWith({error, issues, login, todoView, todos}) {
     return TodoAppState(
+      error: error ?? this.error,
       issues: issues ?? this.issues,
       login: login ?? this.login,
       todoView: todoView ?? this.todoView,

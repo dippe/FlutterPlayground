@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/action.dart' as Actions;
+import 'package:todo_flutter_app/jira/jira.dart';
 import 'package:todo_flutter_app/view/Status.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 
@@ -17,7 +18,7 @@ Widget DraggableListItem(ListItemData item, Function dispatchFn) {
   );
 }
 
-Widget ListItem(item, dispatchFn) {
+Widget ListItem(ListItemData item, dispatchFn) {
   final renderSimpleRow = (children) => Row(
         children: children,
       );
@@ -45,6 +46,8 @@ Widget ListItem(item, dispatchFn) {
     ]);
   } else {
     return renderUnselectedRow([
+      _issuetype(item, dispatchFn),
+      _priority(item, dispatchFn),
       _issueKey(item, dispatchFn),
       _todoName(item, dispatchFn),
       IssueStatusChip(item, dispatchFn),
@@ -142,6 +145,41 @@ ItemWidget _checkBox = (item, dispatchFn) => Checkbox(
     );
 
 ItemWidget _issueKey = (item, dispatchFn) => Text(item.key);
+ItemWidget _priority = (item, dispatchFn) => item.issue != null
+    ? Image.network((item.issue.fields.priority['iconUrl'] as String).replaceAll('.svg', '.png'))
+    : Text('');
+
+// key: issue type name
+const ISSUE_TYPE_ICONS = {
+  'Default': URL_ISSUETYPE_ICONS + '/all_unassigned.png',
+  'Defect': URL_ISSUETYPE_ICONS + '/defect.png',
+  'Story': URL_ISSUETYPE_ICONS + '/story.png',
+  'Epic': URL_ISSUETYPE_ICONS + '/epic.png',
+  'Task': URL_ISSUETYPE_ICONS + '/task.png',
+  'Bug': URL_ISSUETYPE_ICONS + '/bug.png',
+  'Sub-task': URL_ISSUETYPE_ICONS + '/subtask.png',
+  'Undefined': URL_ISSUETYPE_ICONS + '/undefined.png',
+
+//'' : URL_ISSUETYPE_ICONS + 'documentation.png',
+//'' : URL_ISSUETYPE_ICONS + 'feedback.png',
+//'' : URL_ISSUETYPE_ICONS + 'improvement.png',
+//'' : URL_ISSUETYPE_ICONS + 'request_access.png',
+//'' : URL_ISSUETYPE_ICONS + 'task_agile.png',
+//'' : URL_ISSUETYPE_ICONS + 'blank.png',
+//'' : URL_ISSUETYPE_ICONS + 'delete.png',
+//'' : URL_ISSUETYPE_ICONS + 'genericissue.png',
+//'' : URL_ISSUETYPE_ICONS + 'newfeature.png',
+//'' : URL_ISSUETYPE_ICONS + 'requirement.png',
+//'' : URL_ISSUETYPE_ICONS + 'subtask_alternate.png',
+//'' : URL_ISSUETYPE_ICONS + 'development_task.png',
+//'' : URL_ISSUETYPE_ICONS + 'exclamation.png',
+//'' : URL_ISSUETYPE_ICONS + 'health.png',
+//'' : URL_ISSUETYPE_ICONS + 'remove_feature.png',
+//'' : URL_ISSUETYPE_ICONS + 'sales.png',
+};
+
+ItemWidget _issuetype = (item, dispatchFn) =>
+    item.issue != null ? Image.network(ISSUE_TYPE_ICONS[item.issue.fields.issuetype.name ?? 'Undefined']) : Text('');
 
 ItemWidget _todoName = (item, dispatchFn) => Expanded(
       child: item.isEdit

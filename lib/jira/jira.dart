@@ -14,8 +14,12 @@ const BASE_URL = "https://testdev1.atlassian.net";
 
 const URL_ISSUE = "/rest/api/2/issue/";
 const URL_JQL = "/rest/api/2/search";
+const URL_STATUS_ICONS = BASE_URL + '/images/icons/statuses';
+const URL_ISSUETYPE_ICONS = BASE_URL + '/images/icons/issuetypes';
+
 const MAX_RESULTS = 1000;
-const FIELDS_TO_GET = "status,summary,components,fixVersions,project,issuelinks,issuetype";
+const FIELDS_TO_GET = "*all";
+//const FIELDS_TO_GET = "status,summary,components,fixVersions,project,issuelinks,issuetype,priority";
 
 class AjaxError {
   static final LIMIT_REACHED = 'Cannot get all of the issues because the MaxResults limit is reached ';

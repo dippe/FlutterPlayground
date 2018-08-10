@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:todo_flutter_app/jira/action.dart';
+import 'package:todo_flutter_app/jira/domain/error.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/jira/domain/responses.dart';
 import 'package:todo_flutter_app/state/state.dart';
@@ -74,8 +75,12 @@ class JiraAjax {
     };
 
     var _validateResponse = (Response resp) {
-      if (resp.statusCode > 400) {
-        throw new Exception('Reason: ' + resp.reasonPhrase ?? ' - ');
+      if (resp.statusCode >= 400) {
+        var msg = (resp.body != null && resp.body.length > 0)
+            ? JiraErrorMsg.fromJson(json.decode(resp.body)).errorMessages.reduce((v, e) => v + ';  ' + e)
+            : '(No '
+            'error response)';
+        throw new Exception('Reason: ' + resp.reasonPhrase + '\n' + msg ?? ' - ');
       }
     };
 

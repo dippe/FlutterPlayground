@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
+import 'package:todo_flutter_app/jira/jira.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart' as State;
 import 'package:todo_flutter_app/action.dart' as Actions;
@@ -17,13 +18,13 @@ Widget wHeaderAppBar() => AppBar(
             builder: (context, todos) {
               return SimpleBarChart.renderProgressChart(todos.lengthDone(), todos.lengthTodo());
             }),
-        _wMainBtns(),
+        _wMainBtns,
       ],
     );
 
-Widget _wMainBtns() => Row(
-      children: [_wAddButton(), _wTopMenu],
-    );
+Widget _wMainBtns = Row(
+  children: [_wAddButton, _wTopMenu, _wRefreshButton],
+);
 
 Widget _wTopMenu = StoreConnector<TodoAppState, Function>(
     converter: State.dispatchConverter,
@@ -43,13 +44,24 @@ Widget _wTopMenu = StoreConnector<TodoAppState, Function>(
       );
     });
 
-Widget _wAddButton() => new StoreConnector<TodoAppState, Function>(
-      converter: State.dispatchConverter,
-      builder: (context, dispatch) {
-        return IconButton(
-          tooltip: 'New Item',
-          icon: Icon(Icons.add),
-          onPressed: dispatch(Actions.Add(JiraIssue.unlinked(DEFAULT_ITEM_KEY, DEFAULT_ITEM_NAME))),
-        );
-      },
+Widget _wAddButton = new StoreConnector<TodoAppState, Function>(
+  converter: State.dispatchConverter,
+  builder: (context, dispatch) {
+    return IconButton(
+      tooltip: 'New Item',
+      icon: Icon(Icons.add),
+      onPressed: dispatch(Actions.Add(JiraIssue.unlinked(DEFAULT_ITEM_KEY, DEFAULT_ITEM_NAME))),
     );
+  },
+);
+
+Widget _wRefreshButton = new StoreConnector<TodoAppState, ViewData>(
+  converter: (store) => store.state.view,
+  builder: (context, view) {
+    return IconButton(
+      tooltip: 'Refresh',
+      icon: Icon(Icons.refresh),
+      onPressed: () => JiraAjax.doFetchJqlAction(view.issueListViews[view.selectedIssueListView].filter.jql),
+    );
+  },
+);

@@ -24,6 +24,10 @@ TodoAppState todoReducer(TodoAppState state, dynamic action) {
     return state.withTodoView(state.todoView.withShowLogin(false));
   } else if (action is Actions.SetUserName) {
     return state.withLogin(LoginData(action.name, state.login.password));
+  } else if (action is Actions.SetItemTitle) {
+    var item = state.todos.items.firstWhere((item) => item.key == action.key);
+    var newTodos = state.todos.withUpdated(item.copyWith(title: action.title));
+    return state.copyWith(todos: newTodos);
   } else if (action is Actions.SetPwd) {
     return state.withLogin(LoginData(state.login.user, action.pwd));
   } else {

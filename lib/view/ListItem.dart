@@ -76,46 +76,41 @@ Widget _wReadOnlyTitle({
   );
 }
 
-Widget _wEditableTitle(item) => new StoreConnector<TodoAppState, Function>(
-      converter: (store) =>
-          (ListItemData d) => store.state.todos, // FIXME: implement action: (d) => d.withSelected(false)
-      // .withTitle(value)
-      builder: (context, onSubmit) {
-        final d = item;
-        final ctrl = new TextEditingController();
+Widget _wEditableTitle(ListItemData item, dispatchFn) {
+  final d = item;
+  final ctrl = new TextEditingController();
 
-        // fixme: remove this later
-        ctrl.addListener(() {
-          print('ctrl' + ctrl.hashCode.toString() + ' -- ' + d.hashCode.toString());
-        });
-        ctrl.text = d.title;
-        ctrl.value = TextEditingValue(text: d.title);
+  // fixme: remove this later
+  ctrl.addListener(() {
+    print('ctrl' + ctrl.hashCode.toString() + ' -- ' + d.hashCode.toString());
+  });
+  ctrl.text = d.title;
+  ctrl.value = TextEditingValue(text: d.title);
 
-        return TextField(
-          controller: ctrl,
-          enabled: true,
-          decoration: const InputDecoration(
-            border: const UnderlineInputBorder(),
-            filled: true,
-            // icon: const Icon(Icons.short_text),
-            hintText: 'What would you like to remember?',
-          ),
-          keyboardType: TextInputType.text,
+  return TextField(
+    controller: ctrl,
+    enabled: true,
+    decoration: const InputDecoration(
+      border: const UnderlineInputBorder(),
+      filled: true,
+      // icon: const Icon(Icons.short_text),
+      hintText: 'What would you like to remember?',
+    ),
+    keyboardType: TextInputType.text,
 
-          onSubmitted: (String value) {
-            onSubmit(d);
-          },
-          onChanged: (String value) {
-            _debug(context, 'onchanged: ' + value);
-            // do not change the state here!!! The auto triggered re-rendering will cause serious perf/rendering issues
-          },
-          autofocus: true,
+    onSubmitted: (String value) {
+      dispatchFn(Actions.SetItemTitle(item.key, value))();
+    },
+    onChanged: (String value) {
+//            _debug(context, 'onchanged: ' + value);
+      // do not change the state here!!! The auto triggered re-rendering will cause serious perf/rendering issues
+    },
+    autofocus: true,
 
-          // TextInputFormatters are applied in sequence.
-          inputFormatters: [],
-        );
-      },
-    );
+    // TextInputFormatters are applied in sequence.
+    inputFormatters: [],
+  );
+}
 
 Widget _wDraggableItem(Widget child, ListItemData data, dispatchFn) => LongPressDraggable<ListItemData>(
       child: child,
@@ -184,7 +179,7 @@ ItemWidget _wIssuetype = (item, dispatchFn) => item.issue != null
 
 ItemWidget _wName = (item, dispatchFn) => Expanded(
       child: item.isEdit
-          ? _wEditableTitle(item)
+          ? _wEditableTitle(item, dispatchFn)
           : item.isSelected
               ? _wReadOnlyTitle(
                   item: item,

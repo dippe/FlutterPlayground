@@ -107,6 +107,18 @@ class SetUserName implements Action {
   }
 }
 
+class SetItemTitle implements Action {
+  String key;
+  String title;
+
+  SetItemTitle(this.key, this.title);
+
+  @override
+  String toString() {
+    return 'SetItemTitle{key: $key title: $title}';
+  }
+}
+
 class SetPwd implements Action {
   String pwd;
 

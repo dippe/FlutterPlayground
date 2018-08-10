@@ -156,6 +156,7 @@ class JiraIssueFields {
         aggregatetimeoriginalestimate = json['aggregatetimeoriginalestimate'],
         aggregatetimespent = json['aggregatetimespent'],
         assignee = json['assignee'] != null ? JiraUser.fromJson(json['assignee']) : null,
+        //ignore: unnecessary_cast
         components = (json['components'] as List<dynamic>).map((item) => IssueComponent.fromJson(item)).toList()
             as List<IssueComponent>, //
         created = json['created'], // "2017-03-07T19:03:46.422+0100"

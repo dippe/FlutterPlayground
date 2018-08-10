@@ -6,7 +6,8 @@ import 'package:todo_flutter_app/state/state.dart' as State;
 import 'package:todo_flutter_app/action.dart' as Actions;
 import 'package:todo_flutter_app/view/BasicChart.dart';
 
-final DEFAULT_ITEM = JiraIssue.unlinked('UNLINKED-1234', 'Unnamed issue');
+const DEFAULT_ITEM_KEY = 'UNLINKED-1234';
+const DEFAULT_ITEM_NAME = 'Unnamed issue';
 
 Widget wHeaderAppBar() => AppBar(
       actions: <Widget>[
@@ -48,7 +49,7 @@ Widget _wAddButton() => new StoreConnector<TodoAppState, Function>(
         return IconButton(
           tooltip: 'New Item',
           icon: Icon(Icons.add),
-          onPressed: dispatch(Actions.Add(DEFAULT_ITEM)),
+          onPressed: dispatch(Actions.Add(JiraIssue.unlinked(DEFAULT_ITEM_KEY, DEFAULT_ITEM_NAME))),
         );
       },
     );

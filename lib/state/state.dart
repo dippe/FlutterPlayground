@@ -1,5 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:todo_flutter_app/action.dart';
+import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/jira/jira.dart';
 import 'package:todo_flutter_app/jira/reducer.dart';
 import 'package:todo_flutter_app/reducer.dart';
@@ -10,10 +11,17 @@ final _initState = TodoAppState(
     items: List.unmodifiable([new ListItemData(null, 'Hello world :P', 'ISSUE-1')]),
     idCounter: 1,
   ),
-  todoView: TodoView(false),
+  todoView: AppView(false),
   // fixme: remove test data
   login: LoginData(TMP_USER, TMP_PWD),
-  issues: null,
+  fetchedIssues: null,
+  view: ViewData(
+    selectedIssueListView: '1',
+    actual: PageType.IssueList,
+    issueListViews: {
+      '1': IssueListView(id: '1', filter: JiraFilter(id: '1', jql: 'project=test', name: '1FilterName')),
+    },
+  ),
 );
 
 TodoAppState _debugReducer(TodoAppState state, dynamic action) {

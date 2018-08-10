@@ -7,7 +7,7 @@ TodoAppState jiraReducer(TodoAppState state, dynamic action) {
         action.jiraJqlResult.issues.map((issue) => ListItemData(issue, issue.fields.summary, issue.key)).toList();
     return state.copyWith(
       todos: state.todos.copyWith(items: items),
-      issues: action.jiraJqlResult.issues,
+      fetchedIssues: action.jiraJqlResult.issues,
     );
   } else if (action is Actions.FetchIssueDone) {
     throw Exception("unimplemented reducer for Actions.FetchIssueDone");

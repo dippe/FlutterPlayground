@@ -1,9 +1,10 @@
 import 'package:meta/meta.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
+import 'package:todo_flutter_app/jira/domain/misc.dart';
 
 enum ConfigMenuItems { About, Config, DisplayFinished, Login }
 
-enum PageTypes { Config, IssueList }
+enum PageType { Config, IssueList }
 
 class ListItemData {
   final String key;
@@ -133,13 +134,47 @@ class Todos {
   }
 }
 
-class TodoView {
+class IssueListView {
+  final String id;
+  final String name;
+  final JiraFilter filter;
+
+  IssueListView({this.id, this.name, this.filter});
+
+  IssueListView copyWith({id, name, filter}) {
+    return IssueListView(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      filter: filter ?? this.filter,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'IssueListView{id: $id, name: $name}';
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is IssueListView &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name &&
+          filter == other.filter;
+
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode ^ filter.hashCode;
+}
+
+// fixme: remove this view, redundant with ViewData
+class AppView {
   final bool showLogin;
 
-  TodoView(this.showLogin);
+  AppView(this.showLogin);
 
-  TodoView withShowLogin(bool show) {
-    return new TodoView(show);
+  AppView withShowLogin(bool show) {
+    return new AppView(show);
   }
 
   @override
@@ -149,40 +184,66 @@ class TodoView {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is TodoView && runtimeType == other.runtimeType && showLogin == other.showLogin;
+      identical(this, other) || other is AppView && runtimeType == other.runtimeType && showLogin == other.showLogin;
 
   @override
   int get hashCode => showLogin.hashCode;
 }
 
+class ViewData {
+  final PageType actual;
+  final String selectedIssueListView;
+  final Map<String, IssueListView> issueListViews;
+
+  ViewData({this.actual, this.selectedIssueListView, this.issueListViews});
+
+  ViewData copyWith({actual, selectedIssueListView, issueListViews}) {
+    return ViewData(
+        actual: actual ?? this.actual,
+        issueListViews: issueListViews ?? this.issueListViews,
+        selectedIssueListView: selectedIssueListView ?? this.selectedIssueListView);
+  }
+}
+
 class TodoAppState {
-  final List<JiraIssue> issues;
+  final ViewData view;
+  final List<JiraIssue> fetchedIssues;
+  final List<JiraFilter> fetchedFilters;
   final Todos todos;
-  final TodoView todoView;
+  final AppView todoView;
   final LoginData login;
   final String error;
 
-  TodoAppState(
-      {@required this.issues, @required this.todoView, @required this.todos, @required this.login, this.error});
+  TodoAppState({
+    @required this.todoView,
+    @required this.todos,
+    @required this.login,
+    @required this.view,
+    this.fetchedFilters,
+    this.fetchedIssues,
+    this.error,
+  });
 
-  TodoAppState copyWith({error, issues, login, todoView, todos}) {
+  TodoAppState copyWith({error, fetchedIssues, fetchedFilters, login, appView, todos, view}) {
     return TodoAppState(
       error: error ?? this.error,
-      issues: issues ?? this.issues,
+      fetchedIssues: fetchedIssues ?? this.fetchedIssues,
+      fetchedFilters: fetchedFilters ?? this.fetchedFilters,
       login: login ?? this.login,
-      todoView: todoView ?? this.todoView,
+      todoView: appView ?? this.todoView,
       todos: todos ?? this.todos,
+      view: view ?? this.view,
     );
   }
 
   // fixme: remove these because unneeded
   TodoAppState withTodos(Todos newElem) => copyWith(todos: newElem);
 
-  TodoAppState withTodoView(TodoView newElem) => copyWith(todoView: newElem);
+  TodoAppState withTodoView(AppView newElem) => copyWith(appView: newElem);
 
   TodoAppState withLogin(LoginData newElem) => copyWith(login: newElem);
 
-  TodoAppState withIssues(List<JiraIssue> newElem) => copyWith(issues: newElem);
+  TodoAppState withIssues(List<JiraIssue> newElem) => copyWith(fetchedIssues: newElem);
 
   @override
   String toString() {

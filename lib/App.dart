@@ -20,7 +20,7 @@ class FlutterReduxApp extends StatelessWidget {
       // Widgets will find and use this value as the `Store`.
       store: store,
       child: MaterialApp(
-        home: _MainRoot(),
+        home: _wMainRoot(),
         title: 'Test title',
         theme: ThemeData.dark(),
       ),
@@ -28,18 +28,18 @@ class FlutterReduxApp extends StatelessWidget {
   }
 }
 
-/*************************************
+/* ************************************
  *
  * Renderer functions
  *
- *************************************/
+ * ************************************/
 
-Widget _MainRoot() => Scaffold(
-      appBar: HeaderAppBar(),
-      body: _Body(),
+Widget _wMainRoot() => Scaffold(
+      appBar: wHeaderAppBar(),
+      body: _wBody(),
     );
 
-Widget _Body() => StoreConnector<TodoAppState, dynamic>(
+Widget _wBody() => StoreConnector<TodoAppState, dynamic>(
     converter: (store) => {
           'showLogin': store.state.todoView.showLogin,
           'error': store.state.error,
@@ -56,13 +56,13 @@ Widget _Body() => StoreConnector<TodoAppState, dynamic>(
           ],
         );
       } else if (s['showLogin']) {
-        return LoginForm();
+        return wLoginForm();
       } else {
-        return TodoListItems();
+        return wTodoListItems();
       }
     });
 
-void _debug(BuildContext context, String msg) {
-  print('**** ' + msg);
-//  Scaffold.of(context).showSnackBar(SnackBar(content: Text(msg)));
-}
+//void _debug(BuildContext context, String msg) {
+//  print('**** ' + msg);
+////  Scaffold.of(context).showSnackBar(SnackBar(content: Text(msg)));
+//}

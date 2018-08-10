@@ -4,7 +4,7 @@ import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart' as State;
 import 'package:todo_flutter_app/view/ListItem.dart';
 
-Widget TodoListItems() => new StoreConnector<TodoAppState, Function>(
+Widget wTodoListItems() => new StoreConnector<TodoAppState, Function>(
     converter: State.dispatchConverter,
     builder: (context, dispatch) {
       return new StoreConnector<TodoAppState, Todos>(
@@ -12,7 +12,7 @@ Widget TodoListItems() => new StoreConnector<TodoAppState, Function>(
         builder: (context, todos) {
           return ListView(
             scrollDirection: Axis.vertical,
-            children: todos.list().map((item) => DraggableListItem(item, dispatch)).toList(),
+            children: todos.list().map((item) => wDraggableListItem(item, dispatch)).toList(),
           );
         },
       );

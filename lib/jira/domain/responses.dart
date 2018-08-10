@@ -44,7 +44,7 @@ class JiraSearch {
         startAt = json['startAt'],
         maxResults = json['maxResults'],
         total = json['total'],
-        issues = (json['issues'] as List<dynamic>)?.map((issueJson) => JiraIssue.fromJson(issueJson)).toList()
+        issues = (json['issues'] as List<dynamic>).map((issueJson) => JiraIssue.fromJson(issueJson)).toList()
             as List<JiraIssue>;
 
   @override

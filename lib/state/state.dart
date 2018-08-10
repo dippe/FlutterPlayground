@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:redux/redux.dart';
 import 'package:todo_flutter_app/action.dart';
 import 'package:todo_flutter_app/jira/jira.dart';
@@ -30,6 +28,6 @@ final store = new Store<TodoAppState>(_combinedReducers, initialState: _initStat
 
 final dispatchConverter = (store) => (Action action) => () => store.dispatch(action);
 
-final dispatchAjaxConverter = (store) => (Future ajax, Function actionCreator) {
-      ajax.then((res) => store.dispatch(actionCreator(res)));
-    };
+//final dispatchAjaxConverter = (store) => (Future ajax, Function actionCreator) {
+//      ajax.then((res) => store.dispatch(actionCreator(res)));
+//    };

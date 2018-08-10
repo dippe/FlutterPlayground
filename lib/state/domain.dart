@@ -13,7 +13,7 @@ class ListItemData {
   final bool isEdit;
   final bool isSelected;
 
-  const ListItemData(JiraIssue this.issue, String this.title, String this.key,
+  const ListItemData(this.issue, this.title, this.key,
       {this.isEdit = false, this.isSelected = false, this.done = false});
 
   @override
@@ -125,7 +125,6 @@ class Todos {
   int get hashCode => items.hashCode ^ idCounter.hashCode;
 
   bool _itemsEqual(List<ListItemData> items, List<ListItemData> otherItems) {
-    bool isEq = true;
     if (!(otherItems is List<ListItemData>)) {
       return false;
     } else {

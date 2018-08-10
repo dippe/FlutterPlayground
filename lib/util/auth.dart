@@ -23,6 +23,7 @@ class BasicAuthClient extends http.BaseClient {
         _inner = inner == null ? new http.Client() : inner {}
 
   static String _getAuthString(username, password) {
+    // ignore: unnecessary_brace_in_string_interps
     final token = base64.encode(latin1.encode('${username}:${password}'));
 
     final authstr = 'Basic ' + token.trim();

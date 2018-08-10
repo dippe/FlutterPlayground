@@ -22,8 +22,8 @@ const FIELDS_TO_GET = "*all";
 //const FIELDS_TO_GET = "status,summary,components,fixVersions,project,issuelinks,issuetype,priority";
 
 class AjaxError {
-  static final LIMIT_REACHED = 'Cannot get all of the issues because the MaxResults limit is reached ';
-  static final EMPTY_JQL_RESULT = 'Empty JQL result';
+  static const LIMIT_REACHED = 'Cannot get all of the issues because the MaxResults limit is reached ';
+  static const EMPTY_JQL_RESULT = 'Empty JQL result';
 }
 
 typedef void GetIssueCb(JiraIssue issue);

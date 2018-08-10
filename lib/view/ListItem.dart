@@ -5,7 +5,7 @@ import 'package:todo_flutter_app/jira/jira.dart';
 import 'package:todo_flutter_app/view/Status.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 
-Widget DraggableListItem(ListItemData item, Function dispatchFn) {
+Widget wDraggableListItem(ListItemData item, Function dispatchFn) {
   return DragTarget<ListItemData>(
     onAccept: (dragged) => (dragged != item) ? dispatchFn(Actions.Drop(dragged, item))() : null,
     onWillAccept: (dragged) => true,
@@ -13,16 +13,16 @@ Widget DraggableListItem(ListItemData item, Function dispatchFn) {
       final decoration = candidateData.isNotEmpty ? new BoxDecoration(color: Colors.green) : null;
       final _renderHighlight = (Widget row) => Container(decoration: decoration, child: row);
 
-      return _renderHighlight(ListItem(item, dispatchFn));
+      return _renderHighlight(wListItem(item, dispatchFn));
     },
   );
 }
 
-Widget ListItem(ListItemData item, dispatchFn) {
+Widget wListItem(ListItemData item, dispatchFn) {
   final renderSimpleRow = (children) => Row(
         children: children,
       );
-  final renderUnselectedRow = (children) => _renderDraggableItem(
+  final renderUnselectedRow = (children) => _wDraggableItem(
         GestureDetector(
           onHorizontalDragEnd: (DragEndDetails details) => dispatchFn(Actions.CbToggle(item))(),
           child: Row(
@@ -35,27 +35,27 @@ Widget ListItem(ListItemData item, dispatchFn) {
 
   if (item.isSelected && item.isEdit) {
     return renderSimpleRow([
-      _todoName(item, dispatchFn),
-      _deleteBtn(item, dispatchFn),
+      _wName(item, dispatchFn),
+      _wDeleteBtn(item, dispatchFn),
     ]);
   } else if (item.isSelected) {
     return renderSimpleRow([
-      _checkBox(item, dispatchFn),
-      _todoName(item, dispatchFn),
-      _deleteBtn(item, dispatchFn),
+      _wCheckBox(item, dispatchFn),
+      _wName(item, dispatchFn),
+      _wDeleteBtn(item, dispatchFn),
     ]);
   } else {
     return renderUnselectedRow([
-      _issuetype(item, dispatchFn),
-      _priority(item, dispatchFn),
-      _issueKey(item, dispatchFn),
-      _todoName(item, dispatchFn),
-      IssueStatusChip(item, dispatchFn),
+      _wIssuetype(item, dispatchFn),
+      _wPriority(item, dispatchFn),
+      _wIssueKey(item, dispatchFn),
+      _wName(item, dispatchFn),
+      wIssueStatusChip(item, dispatchFn),
     ]);
   }
 }
 
-Widget _renderReadOnlyTitle({
+Widget _wReadOnlyTitle({
   @required ListItemData item,
   @required Function onTapCb,
   @required Function onDoubleTapCb,
@@ -76,7 +76,7 @@ Widget _renderReadOnlyTitle({
   );
 }
 
-Widget _renderEditableTitle(item) => new StoreConnector<TodoAppState, Function>(
+Widget _wEditableTitle(item) => new StoreConnector<TodoAppState, Function>(
       converter: (store) =>
           (ListItemData d) => store.state.todos, // FIXME: implement action: (d) => d.withSelected(false)
       // .withTitle(value)
@@ -117,7 +117,7 @@ Widget _renderEditableTitle(item) => new StoreConnector<TodoAppState, Function>(
       },
     );
 
-Widget _renderDraggableItem(Widget child, ListItemData data, dispatchFn) => LongPressDraggable<ListItemData>(
+Widget _wDraggableItem(Widget child, ListItemData data, dispatchFn) => LongPressDraggable<ListItemData>(
       child: child,
       feedback: Text(
         'Dragged',
@@ -134,18 +134,18 @@ Widget _renderDraggableItem(Widget child, ListItemData data, dispatchFn) => Long
 
 typedef Widget ItemWidget(ListItemData item, Function dispatchFn);
 
-ItemWidget _deleteBtn = (item, dispatchFn) => IconButton(
+ItemWidget _wDeleteBtn = (item, dispatchFn) => IconButton(
       icon: Icon(Icons.delete),
       onPressed: dispatchFn(Actions.Delete(item)),
     );
 
-ItemWidget _checkBox = (item, dispatchFn) => Checkbox(
+ItemWidget _wCheckBox = (item, dispatchFn) => Checkbox(
       value: item.done,
       onChanged: (bool val) => dispatchFn(Actions.CbToggle(item))(),
     );
 
-ItemWidget _issueKey = (item, dispatchFn) => Text(item.key);
-ItemWidget _priority = (item, dispatchFn) => item.issue != null
+ItemWidget _wIssueKey = (item, dispatchFn) => Text(item.key);
+ItemWidget _wPriority = (item, dispatchFn) => item.issue != null
     ? Image.network((item.issue.fields.priority['iconUrl'] as String).replaceAll('.svg', '.png'))
     : Text('');
 
@@ -178,20 +178,20 @@ const ISSUE_TYPE_ICONS = {
 //'' : URL_ISSUETYPE_ICONS + 'sales.png',
 };
 
-ItemWidget _issuetype = (item, dispatchFn) => item.issue != null
+ItemWidget _wIssuetype = (item, dispatchFn) => item.issue != null
     ? Image.network(ISSUE_TYPE_ICONS[item.issue.fields.issuetype.name] ?? ISSUE_TYPE_ICONS['Undefined'])
     : Text('');
 
-ItemWidget _todoName = (item, dispatchFn) => Expanded(
+ItemWidget _wName = (item, dispatchFn) => Expanded(
       child: item.isEdit
-          ? _renderEditableTitle(item)
+          ? _wEditableTitle(item)
           : item.isSelected
-              ? _renderReadOnlyTitle(
+              ? _wReadOnlyTitle(
                   item: item,
                   onTapCb: dispatchFn(Actions.Edit(item)),
                   onDoubleTapCb: dispatchFn(Actions.Edit(item)),
                 )
-              : _renderReadOnlyTitle(
+              : _wReadOnlyTitle(
                   item: item,
                   onTapCb: dispatchFn(Actions.Select(item)),
                   onDoubleTapCb: dispatchFn(Actions.Edit(item)),

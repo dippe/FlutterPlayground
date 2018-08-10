@@ -29,7 +29,7 @@ const _ICON_UNKNOWN = Icons.table_chart;
 Color _getColorByStatusId(int id) => _COLORS[id] ?? _COLOR_UNKNOWN;
 Widget _getAvatarByStatusId(int id) => Icon(_ICONS[id] ?? _ICON_UNKNOWN);
 
-ItemWidget IssueStatusChip = (item, dispatchFn) {
+ItemWidget wIssueStatusChip = (item, dispatchFn) {
   return item.issue != null
       ? Chip(
           avatar: new Image.network(

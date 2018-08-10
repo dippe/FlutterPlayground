@@ -8,7 +8,7 @@ import 'package:todo_flutter_app/view/BasicChart.dart';
 
 final DEFAULT_ITEM = JiraIssue.unlinked('UNLINKED-1234', 'Unnamed issue');
 
-Widget HeaderAppBar() => AppBar(
+Widget wHeaderAppBar() => AppBar(
       actions: <Widget>[
         // fixme: generalize connectors
         new StoreConnector<TodoAppState, Todos>(
@@ -16,15 +16,15 @@ Widget HeaderAppBar() => AppBar(
             builder: (context, todos) {
               return SimpleBarChart.renderProgressChart(todos.lengthDone(), todos.lengthTodo());
             }),
-        _MainBtns(),
+        _wMainBtns(),
       ],
     );
 
-Widget _MainBtns() => Row(
-      children: [_AddButton(), _TopMenu],
+Widget _wMainBtns() => Row(
+      children: [_wAddButton(), _wTopMenu],
     );
 
-Widget _TopMenu = StoreConnector<TodoAppState, Function>(
+Widget _wTopMenu = StoreConnector<TodoAppState, Function>(
     converter: State.dispatchConverter,
     builder: (context, dispatchFn) {
       PopupMenuItemBuilder builder = (BuildContext context) => <PopupMenuEntry<ConfigMenuItems>>[
@@ -42,7 +42,7 @@ Widget _TopMenu = StoreConnector<TodoAppState, Function>(
       );
     });
 
-Widget _AddButton() => new StoreConnector<TodoAppState, Function>(
+Widget _wAddButton() => new StoreConnector<TodoAppState, Function>(
       converter: State.dispatchConverter,
       builder: (context, dispatch) {
         return IconButton(

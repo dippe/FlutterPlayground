@@ -4,7 +4,7 @@ import 'package:todo_flutter_app/action.dart' as Actions;
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
 
-Widget LoginForm() => new StoreConnector<TodoAppState, LoginData>(
+Widget wLoginForm() => new StoreConnector<TodoAppState, LoginData>(
       converter: (state) => state.state.login,
       builder: (context, user) => new Column(
             children: <Widget>[
@@ -38,7 +38,7 @@ Widget LoginForm() => new StoreConnector<TodoAppState, LoginData>(
     );
 
 class _Name extends StatefulWidget {
-  String txt;
+  final String txt;
 
   _Name(this.txt);
 
@@ -71,7 +71,7 @@ class _NameState extends State<_Name> {
 }
 
 class _Pwd extends StatefulWidget {
-  String txt;
+  final String txt;
 
   _Pwd(this.txt);
 

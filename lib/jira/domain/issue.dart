@@ -1,19 +1,19 @@
 class StatusName {
-  static final CLOSED = 'Closed';
-  static final DONE = 'Done';
-  static final IN_PROGRESS = 'In Progress';
-  static final UNDEFINED = '??';
+  static const CLOSED = 'Closed';
+  static const DONE = 'Done';
+  static const IN_PROGRESS = 'In Progress';
+  static const UNDEFINED = '??';
 }
 
 class JiraUser {
-  bool active;
-  dynamic avatarUrls; // fixme type
-  String displayName;
-  String emailAddress;
-  String key;
-  String name;
-  String self;
-  String timeZone;
+  final bool active;
+  final dynamic avatarUrls; // fixme type
+  final String displayName;
+  final String emailAddress;
+  final String key;
+  final String name;
+  final String self;
+  final String timeZone;
 
   JiraUser.fromJson(Map<String, dynamic> json)
       : active = json['active'],
@@ -27,9 +27,9 @@ class JiraUser {
 }
 
 class IssueComponent {
-  int id;
-  String name;
-  String self;
+  final int id;
+  final String name;
+  final String self;
 
   IssueComponent.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -38,12 +38,12 @@ class IssueComponent {
 }
 
 class IssueType {
-  String description;
-  String iconUrl;
-  String id; // int
-  String name;
-  String self;
-  bool subtask;
+  final String description;
+  final String iconUrl;
+  final String id; // int
+  final String name;
+  final String self;
+  final bool subtask;
 
   IssueType.fromJson(Map<String, dynamic> json)
       : description = json['description'],
@@ -55,9 +55,9 @@ class IssueType {
 }
 
 class IssueStatusCategory {
-  String colorName;
-  int id;
-  String key;
+  final String colorName;
+  final int id;
+  final String key;
 
   IssueStatusCategory.fromJson(Map<String, dynamic> json)
       : colorName = json['colorName'],
@@ -66,12 +66,12 @@ class IssueStatusCategory {
 }
 
 class IssueStatus {
-  String description;
-  String iconUrl;
-  String id; // int
-  String name;
-  IssueStatusCategory statusCategory;
-  String self;
+  final String description;
+  final String iconUrl;
+  final String id; // int
+  final String name;
+  final IssueStatusCategory statusCategory;
+  final String self;
 
   IssueStatus.fromJson(Map<String, dynamic> json)
       : description = json['description'],
@@ -83,40 +83,72 @@ class IssueStatus {
 }
 
 class JiraIssueFields {
-  dynamic aggregateprogress;
-  dynamic aggregatetimeestimate;
-  dynamic aggregatetimeoriginalestimate;
-  dynamic aggregatetimespent;
-  JiraUser assignee;
-  List<IssueComponent> components;
-  String created; // "2017-03-07T19:03:46.422+0100"
-  JiraUser creator;
-  String description;
-  dynamic duedate;
-  List<dynamic> fixVersions;
-  List<dynamic> issuelinks;
-  IssueType issuetype;
-  List<dynamic> labels;
-  String lastViewed; // "2017-03-07T19:03:46.422+0100"
-  dynamic priority;
-  dynamic progress;
-  dynamic project;
-  JiraUser reporter;
-  dynamic resolution;
-  String resolutiondate; // "2017-03-07T19:03:46.000+0100"
-  IssueStatus status;
-  List<dynamic> subtasks;
-  String summary;
-  dynamic timeestimate;
-  dynamic timeoriginalestimate;
-  dynamic timespent;
-  String updated; // "2017-03-07T19:03:46.000+0100"
-  List<dynamic> versions;
-  dynamic votes;
-  dynamic watches;
-  dynamic workratio;
+  final dynamic aggregateprogress;
+  final dynamic aggregatetimeestimate;
+  final dynamic aggregatetimeoriginalestimate;
+  final dynamic aggregatetimespent;
+  final JiraUser assignee;
+  final List<IssueComponent> components;
+  final String created; // "2017-03-07T19:03:46.422+0100"
+  final JiraUser creator;
+  final String description;
+  final dynamic duedate;
+  final List<dynamic> fixVersions;
+  final List<dynamic> issuelinks;
+  final IssueType issuetype;
+  final List<dynamic> labels;
+  final String lastViewed; // "2017-03-07T19:03:46.422+0100"
+  final dynamic priority;
+  final dynamic progress;
+  final dynamic project;
+  final JiraUser reporter;
+  final dynamic resolution;
+  final String resolutiondate; // "2017-03-07T19:03:46.000+0100"
+  final IssueStatus status;
+  final List<dynamic> subtasks;
+  final String summary;
+  final dynamic timeestimate;
+  final dynamic timeoriginalestimate;
+  final dynamic timespent;
+  final String updated; // "2017-03-07T19:03:46.000+0100"
+  final List<dynamic> versions;
+  final dynamic votes;
+  final dynamic watches;
+  final dynamic workratio;
 
-  JiraIssueFields.unlinked(this.summary);
+  JiraIssueFields.unlinked(
+      {this.aggregateprogress,
+      this.aggregatetimeestimate,
+      this.aggregatetimeoriginalestimate,
+      this.aggregatetimespent,
+      this.assignee,
+      this.components,
+      this.created,
+      this.creator,
+      this.description,
+      this.duedate,
+      this.fixVersions,
+      this.issuelinks,
+      this.issuetype,
+      this.labels,
+      this.lastViewed,
+      this.priority,
+      this.progress,
+      this.project,
+      this.reporter,
+      this.resolution,
+      this.resolutiondate,
+      this.status,
+      this.subtasks,
+      this.summary,
+      this.timeestimate,
+      this.timeoriginalestimate,
+      this.timespent,
+      this.updated,
+      this.versions,
+      this.votes,
+      this.watches,
+      this.workratio});
 
   JiraIssueFields.fromJson(Map<String, dynamic> json)
       : aggregateprogress = json['aggregateprogress'],
@@ -162,7 +194,7 @@ class JiraIssue {
 
   JiraIssue.unlinked(key, summary)
       : key = key,
-        fields = JiraIssueFields.unlinked(summary),
+        fields = JiraIssueFields.unlinked(summary: summary),
         id = null,
         typeUrl = null;
 
@@ -171,12 +203,4 @@ class JiraIssue {
         key = json['key'],
         typeUrl = json['typeUrl'],
         fields = JiraIssueFields.fromJson(json['fields']);
-}
-
-class ChildIssue {
-  String summary;
-  int id;
-  String key;
-  String typeIconUrl;
-  IssueStatus status;
 }

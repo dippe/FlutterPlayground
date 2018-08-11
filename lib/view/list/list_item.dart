@@ -9,7 +9,7 @@ typedef Widget ItemWidget(ListItemData item);
 
 ItemWidget wDraggableListItem = (ListItemData item) {
   return DragTarget<ListItemData>(
-    onAccept: (dragged) => (dragged != item) ? dispatch(Actions.Drop(dragged, item))() : null,
+    onAccept: (dragged) => (dragged != item) ? dispatch(Actions.Drop(dragged, item)) : null,
     onWillAccept: (dragged) => true,
     builder: (BuildContext context, List<dynamic> candidateData, List<dynamic> rejectedData) {
       final decoration = candidateData.isNotEmpty ? new BoxDecoration(color: Colors.green) : null;
@@ -26,13 +26,12 @@ ItemWidget wListItem = (ListItemData item) {
       );
   final renderUnselectedRow = (children) => _wDraggableItem(
         GestureDetector(
-          onHorizontalDragEnd: (DragEndDetails details) => dispatch(Actions.CbToggle(item))(),
+          onHorizontalDragEnd: (DragEndDetails details) => dispatch(Actions.CbToggle(item)),
           child: Row(
             children: children,
           ),
         ),
         item,
-        dispatch,
       );
 
   if (item.isSelected && item.isEdit) {
@@ -78,7 +77,7 @@ Widget _wReadOnlyTitle({
   );
 }
 
-Widget _wEditableTitle(ListItemData item, dispatchFn) {
+ItemWidget _wEditableTitle = (ListItemData item) {
   final d = item;
   final ctrl = new TextEditingController();
 
@@ -101,7 +100,7 @@ Widget _wEditableTitle(ListItemData item, dispatchFn) {
     keyboardType: TextInputType.text,
 
     onSubmitted: (String value) {
-      dispatchFn(Actions.SetItemTitle(item.key, value))();
+      dispatch(Actions.SetItemTitle(item.key, value));
     },
     onChanged: (String value) {
 //            _debug(context, 'onchanged: ' + value);
@@ -112,16 +111,16 @@ Widget _wEditableTitle(ListItemData item, dispatchFn) {
     // TextInputFormatters are applied in sequence.
     inputFormatters: [],
   );
-}
+};
 
-Widget _wDraggableItem(Widget child, ListItemData data, dispatchFn) => LongPressDraggable<ListItemData>(
+Widget _wDraggableItem(Widget child, ListItemData item) => LongPressDraggable<ListItemData>(
       child: child,
       feedback: Text(
         'Dragged',
         style: TextStyle(fontSize: 15.0, color: Colors.white, decoration: TextDecoration.none),
       ),
-      data: data,
-      onDragStarted: dispatchFn(Actions.UnSelectAll()),
+      data: item,
+      onDragStarted: () => dispatch(Actions.UnSelectAll()),
       childWhenDragging: Container(
         decoration: new BoxDecoration(color: Colors.white),
         child: Divider(height: 2.0, color: Color.fromARGB(255, 255, 0, 0)),
@@ -131,12 +130,12 @@ Widget _wDraggableItem(Widget child, ListItemData data, dispatchFn) => LongPress
 
 ItemWidget _wDeleteBtn = (item) => IconButton(
       icon: Icon(Icons.delete),
-      onPressed: dispatch(Actions.Delete(item)),
+      onPressed: () => dispatch(Actions.Delete(item)),
     );
 
 ItemWidget _wCheckBox = (item) => Checkbox(
       value: item.done,
-      onChanged: (bool val) => dispatch(Actions.CbToggle(item))(),
+      onChanged: (bool val) => dispatch(Actions.CbToggle(item)),
     );
 
 ItemWidget _wIssueKey = (item) => Text(item.key);
@@ -179,17 +178,17 @@ ItemWidget _wIssuetype = (item) => item.issue != null
 
 ItemWidget _wName = (item) => Expanded(
       child: item.isEdit
-          ? _wEditableTitle(item, dispatch)
+          ? _wEditableTitle(item)
           : item.isSelected
               ? _wReadOnlyTitle(
                   item: item,
-                  onTapCb: dispatch(Actions.Edit(item)),
-                  onDoubleTapCb: dispatch(Actions.Edit(item)),
+                  onTapCb: () => dispatch(Actions.Edit(item)),
+                  onDoubleTapCb: () => dispatch(Actions.Edit(item)),
                 )
               : _wReadOnlyTitle(
                   item: item,
-                  onTapCb: dispatch(Actions.Select(item)),
-                  onDoubleTapCb: dispatch(Actions.Edit(item)),
+                  onTapCb: () => dispatch(Actions.Select(item)),
+                  onDoubleTapCb: () => dispatch(Actions.Edit(item)),
                 ),
     );
 

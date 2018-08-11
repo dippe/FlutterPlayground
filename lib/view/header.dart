@@ -35,7 +35,7 @@ Widget _wTopMenu() {
   return PopupMenuButton(
     onSelected: (i) {
       if (i == ConfigMenuItems.Login) {
-        dispatch(Actions.ShowLoginDialog(true))();
+        dispatch(Actions.ShowLoginDialog(true));
       }
     },
     itemBuilder: builder,
@@ -45,7 +45,7 @@ Widget _wTopMenu() {
 Widget _wAddButton = IconButton(
   tooltip: 'New Item',
   icon: Icon(Icons.add),
-  onPressed: dispatch(Actions.Add(JiraIssue.unlinked(DEFAULT_ITEM_KEY, DEFAULT_ITEM_NAME))),
+  onPressed: () => dispatch(Actions.Add(JiraIssue.unlinked(DEFAULT_ITEM_KEY, DEFAULT_ITEM_NAME))),
 );
 
 Widget _wRefreshButton = new StoreConnector<TodoAppState, ViewData>(

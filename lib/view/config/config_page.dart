@@ -58,10 +58,7 @@ class _NameState extends State<_Name> {
     return TextField(
       controller: _controller,
       decoration: new InputDecoration(labelText: 'Name'),
-      onSubmitted: (txt) {
-        dispatch(Actions.SetUserName(txt))();
-//              _controller.text = '';
-      },
+      onSubmitted: (txt) => dispatch(Actions.SetUserName(txt)),
     );
   }
 }
@@ -87,15 +84,12 @@ class _PwdState extends State<_Pwd> {
     return new TextField(
       controller: _controller,
       decoration: new InputDecoration(labelText: 'Pwd'),
-      onSubmitted: (txt) {
-        dispatch(Actions.SetPwd(txt))();
-//              _controller.text = txt;
-      },
+      onSubmitted: (txt) => dispatch(Actions.SetPwd(txt)),
     );
   }
 }
 
 Widget _renderOkBtn = new FlatButton(
   child: Text('Ok-Mok'),
-  onPressed: () => dispatch(Actions.Login())(),
+  onPressed: () => dispatch(Actions.Login()),
 );

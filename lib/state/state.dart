@@ -10,7 +10,8 @@ import 'package:todo_flutter_app/state/domain.dart';
 final store = new Store<TodoAppState>(_combinedReducers, initialState: _initState);
 
 /// dispatch action into the global store
-final dispatch = (Action action) => () => store.dispatch(action);
+//final dispatchFn = (Action action) => () => store.dispatch(action);
+final dispatch = (Action action) => store.dispatch(action);
 
 final _initState = TodoAppState(
   todos: Todos(

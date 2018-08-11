@@ -66,49 +66,6 @@ class IssueListView {
     );
   }
 
-  IssueListView withNewItem(JiraIssue issue) {
-    final List<ListItemData> copy = List.from(items);
-    var nextId = idCounter + 1;
-    copy.add(ListItemData(issue, issue.fields.summary, issue.key));
-    return copyWith(items: copy, idCounter: nextId);
-  }
-
-  ListItemData getByKey(String key) {
-    return items.firstWhere((i) => i.key == key);
-  }
-
-  // fixme: move to reducer
-  IssueListView withUpdated(ListItemData item) {
-    final List<ListItemData> copy = List.from(items);
-    final index = copy.indexOf(getByKey(item.key));
-    copy[index] = item;
-    return copyWith(items: copy);
-  }
-
-  // fixme: move to reducer
-  IssueListView withDeleted(todo) {
-    final List<ListItemData> copy = List.from(items);
-    copy.remove(getByKey(todo.key));
-    return copyWith(items: copy);
-  }
-
-  // fixme: move to reducer
-  IssueListView withAllUnselected() {
-    List<ListItemData> tmp = items.map((value) => value.withSelected(false).withEdit(false)).toList();
-    return copyWith(items: tmp);
-  }
-
-  // fixme: move to reducer
-  IssueListView withMoved(ListItemData what, ListItemData target) {
-    final List<ListItemData> copy = List.from(items);
-
-    copy.remove(what);
-    final newIndex = copy.indexOf(target);
-    copy.insert(newIndex, what);
-
-    return copyWith(items: copy);
-  }
-
   @deprecated
   int length() {
     return items.length;
@@ -154,7 +111,7 @@ class ViewState {
   final PageType actPage;
   final List<IssueListView> issueListViews;
 
-  ViewState({this.actPage, this.issueListViews});
+  ViewState({@required this.actPage, @required this.issueListViews});
 
   ViewState copyWith({actual, selectedIssueListView, issueListViews, showLogin}) {
     return ViewState(

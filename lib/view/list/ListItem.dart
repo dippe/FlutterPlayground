@@ -1,59 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
+import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/action.dart' as Actions;
 import 'package:todo_flutter_app/jira/jira.dart';
 import 'package:todo_flutter_app/view/list/IssueStatus.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 
-Widget wDraggableListItem(ListItemData item, Function dispatchFn) {
+typedef Widget ItemWidget(ListItemData item);
+
+ItemWidget wDraggableListItem = (ListItemData item) {
   return DragTarget<ListItemData>(
-    onAccept: (dragged) => (dragged != item) ? dispatchFn(Actions.Drop(dragged, item))() : null,
+    onAccept: (dragged) => (dragged != item) ? dispatch(Actions.Drop(dragged, item))() : null,
     onWillAccept: (dragged) => true,
     builder: (BuildContext context, List<dynamic> candidateData, List<dynamic> rejectedData) {
       final decoration = candidateData.isNotEmpty ? new BoxDecoration(color: Colors.green) : null;
       final _renderHighlight = (Widget row) => Container(decoration: decoration, child: row);
 
-      return _renderHighlight(wListItem(item, dispatchFn));
+      return _renderHighlight(wListItem(item));
     },
   );
-}
+};
 
-Widget wListItem(ListItemData item, dispatchFn) {
+ItemWidget wListItem = (ListItemData item) {
   final renderSimpleRow = (children) => Row(
         children: children,
       );
   final renderUnselectedRow = (children) => _wDraggableItem(
         GestureDetector(
-          onHorizontalDragEnd: (DragEndDetails details) => dispatchFn(Actions.CbToggle(item))(),
+          onHorizontalDragEnd: (DragEndDetails details) => dispatch(Actions.CbToggle(item))(),
           child: Row(
             children: children,
           ),
         ),
         item,
-        dispatchFn,
+        dispatch,
       );
 
   if (item.isSelected && item.isEdit) {
     return renderSimpleRow([
-      _wName(item, dispatchFn),
-      _wDeleteBtn(item, dispatchFn),
+      _wName(item),
+      _wDeleteBtn(item),
     ]);
   } else if (item.isSelected) {
     return renderSimpleRow([
-      _wCheckBox(item, dispatchFn),
-      _wName(item, dispatchFn),
-      _wDeleteBtn(item, dispatchFn),
+      _wCheckBox(item),
+      _wName(item),
+      _wDeleteBtn(item),
     ]);
   } else {
     return renderUnselectedRow([
-      _wIssuetype(item, dispatchFn),
-      _wPriority(item, dispatchFn),
-      _wIssueKey(item, dispatchFn),
-      _wName(item, dispatchFn),
-      wIssueStatusChip(item, dispatchFn),
+      _wIssuetype(item),
+      _wPriority(item),
+      _wIssueKey(item),
+      _wName(item),
+      wIssueStatusChip(item),
     ]);
   }
-}
+};
 
 Widget _wReadOnlyTitle({
   @required ListItemData item,
@@ -127,20 +129,18 @@ Widget _wDraggableItem(Widget child, ListItemData data, dispatchFn) => LongPress
       onDragCompleted: () => {},
     );
 
-typedef Widget ItemWidget(ListItemData item, Function dispatchFn);
-
-ItemWidget _wDeleteBtn = (item, dispatchFn) => IconButton(
+ItemWidget _wDeleteBtn = (item) => IconButton(
       icon: Icon(Icons.delete),
-      onPressed: dispatchFn(Actions.Delete(item)),
+      onPressed: dispatch(Actions.Delete(item)),
     );
 
-ItemWidget _wCheckBox = (item, dispatchFn) => Checkbox(
+ItemWidget _wCheckBox = (item) => Checkbox(
       value: item.done,
-      onChanged: (bool val) => dispatchFn(Actions.CbToggle(item))(),
+      onChanged: (bool val) => dispatch(Actions.CbToggle(item))(),
     );
 
-ItemWidget _wIssueKey = (item, dispatchFn) => Text(item.key);
-ItemWidget _wPriority = (item, dispatchFn) => item.issue != null
+ItemWidget _wIssueKey = (item) => Text(item.key);
+ItemWidget _wPriority = (item) => item.issue != null
     ? Image.network((item.issue.fields.priority['iconUrl'] as String).replaceAll('.svg', '.png'))
     : Text('');
 
@@ -173,23 +173,23 @@ const ISSUE_TYPE_ICONS = {
 //'' : URL_ISSUETYPE_ICONS + 'sales.png',
 };
 
-ItemWidget _wIssuetype = (item, dispatchFn) => item.issue != null
+ItemWidget _wIssuetype = (item) => item.issue != null
     ? Image.network(ISSUE_TYPE_ICONS[item.issue.fields.issuetype.name] ?? ISSUE_TYPE_ICONS['Undefined'])
     : Text('');
 
-ItemWidget _wName = (item, dispatchFn) => Expanded(
+ItemWidget _wName = (item) => Expanded(
       child: item.isEdit
-          ? _wEditableTitle(item, dispatchFn)
+          ? _wEditableTitle(item, dispatch)
           : item.isSelected
               ? _wReadOnlyTitle(
                   item: item,
-                  onTapCb: dispatchFn(Actions.Edit(item)),
-                  onDoubleTapCb: dispatchFn(Actions.Edit(item)),
+                  onTapCb: dispatch(Actions.Edit(item)),
+                  onDoubleTapCb: dispatch(Actions.Edit(item)),
                 )
               : _wReadOnlyTitle(
                   item: item,
-                  onTapCb: dispatchFn(Actions.Select(item)),
-                  onDoubleTapCb: dispatchFn(Actions.Edit(item)),
+                  onTapCb: dispatch(Actions.Select(item)),
+                  onDoubleTapCb: dispatch(Actions.Edit(item)),
                 ),
     );
 

@@ -31,7 +31,7 @@ Color _getColorByStatusId(int id) => _COLORS[id] ?? _COLOR_UNKNOWN;
 // ignore: unused_element
 Widget _getAvatarByStatusId(int id) => Icon(_ICONS[id] ?? _ICON_UNKNOWN);
 
-ItemWidget wIssueStatusChip = (item, dispatchFn) {
+ItemWidget wIssueStatusChip = (item) {
   return item.issue != null
       ? Chip(
           avatar: new Image.network(

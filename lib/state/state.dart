@@ -6,6 +6,12 @@ import 'package:todo_flutter_app/jira/reducer.dart';
 import 'package:todo_flutter_app/reducer.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 
+/// global store "singleton"
+final store = new Store<TodoAppState>(_combinedReducers, initialState: _initState);
+
+/// dispatch action into the global store
+final dispatch = (Action action) => () => store.dispatch(action);
+
 final _initState = TodoAppState(
   todos: Todos(
     items: List.unmodifiable([new ListItemData(null, 'Hello world :P', 'ISSUE-1')]),
@@ -56,10 +62,6 @@ TodoAppState _debugReducer(TodoAppState state, dynamic action) {
 
 // todo: beautify this oversimplified composing
 final _combinedReducers = (state, action) => todoReducer(jiraReducer(_debugReducer(state, action), action), action);
-
-final store = new Store<TodoAppState>(_combinedReducers, initialState: _initState);
-
-final dispatchConverter = (store) => (Action action) => () => store.dispatch(action);
 
 //final dispatchAjaxConverter = (store) => (Future ajax, Function actionCreator) {
 //      ajax.then((res) => store.dispatch(actionCreator(res)));

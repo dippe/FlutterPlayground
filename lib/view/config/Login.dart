@@ -55,17 +55,13 @@ class _NameState extends State<_Name> {
 
   @override
   Widget build(BuildContext context) {
-    return new StoreConnector<TodoAppState, Function>(
-      distinct: true,
-      converter: dispatchConverter,
-      builder: (context, dispatchFn) => new TextField(
-            controller: _controller,
-            decoration: new InputDecoration(labelText: 'Name'),
-            onSubmitted: (txt) {
-              dispatchFn(Actions.SetUserName(txt))();
+    return TextField(
+      controller: _controller,
+      decoration: new InputDecoration(labelText: 'Name'),
+      onSubmitted: (txt) {
+        dispatch(Actions.SetUserName(txt))();
 //              _controller.text = '';
-            },
-          ),
+      },
     );
   }
 }
@@ -88,26 +84,18 @@ class _PwdState extends State<_Pwd> {
 
   @override
   Widget build(BuildContext context) {
-    return new StoreConnector<TodoAppState, Function>(
-      distinct: true,
-      converter: dispatchConverter,
-      builder: (context, dispatchFn) => new TextField(
-            controller: _controller,
-            decoration: new InputDecoration(labelText: 'Pwd'),
-            onSubmitted: (txt) {
-              dispatchFn(Actions.SetPwd(txt))();
+    return new TextField(
+      controller: _controller,
+      decoration: new InputDecoration(labelText: 'Pwd'),
+      onSubmitted: (txt) {
+        dispatch(Actions.SetPwd(txt))();
 //              _controller.text = txt;
-            },
-          ),
+      },
     );
   }
 }
 
-Widget _renderOkBtn = StoreConnector<TodoAppState, Function>(
-  distinct: true,
-  converter: dispatchConverter,
-  builder: (context, dispatchFn) => new FlatButton(
-        child: Text('Ok-Mok'),
-        onPressed: () => dispatchFn(Actions.Login())(),
-      ),
+Widget _renderOkBtn = new FlatButton(
+  child: Text('Ok-Mok'),
+  onPressed: () => dispatch(Actions.Login())(),
 );

@@ -1,22 +1,26 @@
 import 'package:redux/redux.dart';
-import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/state/domain.dart';
-import 'package:todo_flutter_app/util/types.dart';
-import 'package:todo_flutter_app/view/list/action.dart' as Actions;
 import 'package:todo_flutter_app/view/config/action.dart' as Actions;
+import 'package:todo_flutter_app/view/list/action.dart' as Actions;
 
 /**
  * All of the view reducers are working on the actually selected list view!!
  *
  */
 typedef ViewState ViewReducer(ViewState, dynamic);
-typedef List ListModifierFn(List l);
+typedef List<ListItemData> ListModifierFn(List<ListItemData> l);
 
 Reducer<ViewState> listViewReducer = combineReducers<ViewState>([
-  new TypedReducer<ViewState, Actions.Add>(_add),
+  TypedReducer<ViewState, Actions.Add>(_add),
+  TypedReducer<ViewState, Actions.Edit>(_edit),
+  TypedReducer<ViewState, Actions.Drag>(_drag),
+  TypedReducer<ViewState, Actions.Drop>(_drop),
+  TypedReducer<ViewState, Actions.Delete>(_delete),
+  TypedReducer<ViewState, Actions.SetItemTitle>(_setItemTitle),
+  TypedReducer<ViewState, Actions.CbToggle>(_toggle),
+  TypedReducer<ViewState, Actions.Select>(_select),
+  TypedReducer<ViewState, Actions.UnSelectAll>(_unSelectAll),
 ]);
-
-//IssueListView _getViewState(ViewState state, Action action) => state.issueListViews[action.targetIdx];
 
 /// do modification on the inner items via an immutable way
 ViewState _changeActualItemList(ViewState state, ListModifierFn fn) {
@@ -45,83 +49,83 @@ ViewState _changeActualItemList(ViewState state, ListModifierFn fn) {
 
 ViewState _add(ViewState state, Actions.Add action) {
   final newItem = ListItemData(action.issue, action.issue.fields.summary, action.issue.key);
-  ListModifierFn addTolistFn = (List l) => l..add(newItem);
+  ListModifierFn addTolistFn = (l) => l..add(newItem);
   return _changeActualItemList(state, addTolistFn);
 }
 
-//Reducer<ViewState> listViewReducer = (ViewState state, dynamic action) {
-//  if (action is Actions.Add) {
-//    throw UnimplementedError('Issue add to list reducer');
-////    return state.withTodos(state.todos.withNewItem(action.issue));
-//  } else if (action is Actions.Delete) {
-//    throw UnimplementedError('Issue delete from list reducer');
-////    return state.withTodos(state.todos.withDeleted(action.item));
-//  } else if (action is Actions.Drag) {
-//    throw UnimplementedError('Drag');
-//  } else if (action is Actions.Drop) {
-//    throw UnimplementedError('Drop');
-////    return state.withTodos(state.todos.withAllUnselected().withMoved(action.dragged, action.target));
-//  } else if (action is Actions.Edit) {
-//    throw UnimplementedError('Edit');
-////    return state.withTodos(state.todos.withAllUnselected().withUpdated(action.item.withTitle('').withEdit(true)));
-//  } else if (action is Actions.UnSelectAll) {
-//    throw UnimplementedError('Unselectall');
-////    return state.withTodos(state.todos.withAllUnselected());
-//  } else if (action is Actions.CbToggle) {
-//    throw UnimplementedError('Toggle');
-////    return state.withTodos(state.todos.withUpdated(action.item.withToggled()));
-//  } else if (action is Actions.Select) {
-//    throw UnimplementedError('Select');
-////    return state.withTodos(state.todos.withAllUnselected().withUpdated(action.item.withSelected(true)));
-//  } else if (action is Actions.SetItemTitle) {
-//    throw UnimplementedError('SetItemTitle');
-////    var item = state.todos.items.firstWhere((item) => item.key == action.key);
-////    var newTodos = state.todos.withUpdated(item.copyWith(title: action.title));
-////    return state.copyWith(todos: newTodos);
-//  } else {
-//    print("listReducer: unhandled action type: " + action.runtimeType.toString());
-//    return state;
-//  }
-//};
+ViewState _delete(ViewState state, Actions.Delete action) {
+  ListModifierFn addTolistFn = (l) => l..remove(action.item);
+  return _changeActualItemList(state, addTolistFn);
+}
 
-//IssueListView withNewItem(items, JiraIssue issue) {
-//  final List<ListItemData> copy = List.from(items);
-//  copy.add(ListItemData(issue, issue.fields.summary, issue.key));
-//  return items.copyWith(items: copy);
-//}
+ViewState _drag(ViewState state, Actions.Drag action) {
+  throw UnimplementedError('Drag action');
+}
+
+ViewState _drop(ViewState state, Actions.Drop action) {
+  final ListModifierFn addTolistFn = (l) => _withMoved(l, action.dragged, action.target);
+  final unselectedState = _unSelectAll(state, Actions.UnSelectAll());
+  return _changeActualItemList(unselectedState, addTolistFn);
+}
+
+ViewState _edit(ViewState state, Actions.Edit action) {
+  final ListModifierFn edit = (l) {
+    var idx = l.indexOf(_getByKey(l, action.item.key));
+    l[idx] = l[idx].copyWith(isEdit: true);
+    return l;
+  };
+
+  final unselectedState = _unSelectAll(state, Actions.UnSelectAll());
+  return _changeActualItemList(unselectedState, edit);
+}
+
+ViewState _unSelectAll(ViewState state, Actions.UnSelectAll action) {
+  ListModifierFn unSelectAll = (List<ListItemData> l) =>
+      l.map((ListItemData value) => value.copyWith(isSelected: false, isEdit: false)).toList() as List<ListItemData>;
+  return _changeActualItemList(state, unSelectAll);
+}
+
+ViewState _toggle(ViewState state, Actions.CbToggle action) {
+  final ListModifierFn set = (l) {
+    var idx = l.indexOf(_getByKey(l, action.item.key));
+    l[idx] = l[idx].copyWith(done: !l[idx].done);
+    return l;
+  };
+  final unselectedState = _unSelectAll(state, Actions.UnSelectAll());
+  return _changeActualItemList(unselectedState, set);
+}
+
+// fixme: change action payload to key instead of item
+ViewState _select(ViewState state, Actions.Select action) {
+  final ListModifierFn select = (l) {
+    var idx = l.indexOf(_getByKey(l, action.item.key));
+    l[idx] = l[idx].copyWith(isSelected: true);
+    return l;
+  };
+  final unselectedState = _unSelectAll(state, Actions.UnSelectAll());
+  return _changeActualItemList(unselectedState, select);
+}
+
+ViewState _setItemTitle(ViewState state, Actions.SetItemTitle action) {
+  final ListModifierFn set = (l) {
+    var idx = l.indexOf(_getByKey(l, action.key));
+    l[idx] = l[idx].copyWith(title: action.title);
+    return l;
+  };
+  final unselectedState = _unSelectAll(state, Actions.UnSelectAll());
+  return _changeActualItemList(unselectedState, set);
+}
 
 ListItemData _getByKey(items, String key) {
   return items.firstWhere((i) => i.key == key);
 }
 
-// fixme: move to reducer
-IssueListView withUpdated(items, ListItemData item) {
-  final List<ListItemData> copy = List.from(items);
-  final index = copy.indexOf(_getByKey(items, item.key));
-  copy[index] = item;
-  return items.copyWith(items: copy);
-}
-
-// fixme: move to reducer
-IssueListView withDeleted(items, ListItemData todo) {
-  final List<ListItemData> copy = List.from(items);
-  copy.remove(_getByKey(items, todo.key));
-  return items.copyWith(items: copy);
-}
-
-// fixme: move to reducer
-IssueListView withAllUnselected(items) {
-  List<ListItemData> tmp = items.map((value) => value.withSelected(false).withEdit(false)).toList();
-  return items.copyWith(items: tmp);
-}
-
-// fixme: move to reducer
-IssueListView withMoved(items, ListItemData what, ListItemData target) {
+List<ListItemData> _withMoved(items, ListItemData what, ListItemData target) {
   final List<ListItemData> copy = List.from(items);
 
   copy.remove(what);
   final newIndex = copy.indexOf(target);
   copy.insert(newIndex, what);
 
-  return items.copyWith(items: copy);
+  return copy;
 }

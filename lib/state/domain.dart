@@ -25,7 +25,7 @@ class ListItemData {
   @override
   int get hashCode => issue.hashCode ^ title.hashCode ^ key.hashCode;
 
-  copyWith({String key, issue, title, done, isEdit, isSelected}) => ListItemData(
+  ListItemData copyWith({String key, issue, title, done, isEdit, isSelected}) => ListItemData(
         issue ?? this.issue,
         title ?? this.title,
         key ?? this.key,
@@ -34,13 +34,13 @@ class ListItemData {
         isSelected: isSelected ?? this.isSelected,
       );
 
-  ListItemData withEdit(bool edit) => copyWith(isEdit: edit);
-
-  ListItemData withSelected(bool val) => copyWith(isSelected: val);
-
-  ListItemData withToggled() => copyWith(done: !this.done);
-
-  ListItemData withTitle(String newTitle) => copyWith(title: newTitle);
+//  ListItemData withEdit(bool edit) => copyWith(isEdit: edit);
+//
+//  ListItemData withSelected(bool val) => copyWith(isSelected: val);
+//
+//  ListItemData withToggled() => copyWith(done: !this.done);
+//
+//  ListItemData withTitle(String newTitle) => copyWith(title: newTitle);
 }
 
 class IssueListView {

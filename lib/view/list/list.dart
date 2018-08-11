@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
-import 'package:todo_flutter_app/view/list/ListItem.dart';
+import 'package:todo_flutter_app/view/list/list_item.dart';
 
 Widget wListPage() => DefaultTabController(
       length: 3,

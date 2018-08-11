@@ -4,7 +4,7 @@ import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/jira/jira.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/action.dart' as Actions;
-import 'package:todo_flutter_app/view/BasicChart.dart';
+import 'package:todo_flutter_app/view/basic_chart.dart';
 import 'package:todo_flutter_app/state/state.dart';
 
 const DEFAULT_ITEM_KEY = 'UNLINKED-1234';

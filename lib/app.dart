@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
-import 'package:todo_flutter_app/view/AppDrawer.dart';
-import 'package:todo_flutter_app/view/Header.dart';
-import 'package:todo_flutter_app/view/list/List.dart';
-import 'package:todo_flutter_app/view/config/Login.dart';
+import 'package:todo_flutter_app/view/app_drawer.dart';
+import 'package:todo_flutter_app/view/header.dart';
+import 'package:todo_flutter_app/view/list/list.dart';
+import 'package:todo_flutter_app/view/config/config_page.dart';
 
 class FlutterReduxApp extends StatelessWidget {
   final Store<TodoAppState> store;

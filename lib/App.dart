@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
+import 'package:todo_flutter_app/view/AppDrawer.dart';
 import 'package:todo_flutter_app/view/Header.dart';
-import 'package:todo_flutter_app/view/List.dart';
+import 'package:todo_flutter_app/view/list/List.dart';
 import 'package:todo_flutter_app/view/config/Login.dart';
 
 class FlutterReduxApp extends StatelessWidget {
@@ -20,7 +21,7 @@ class FlutterReduxApp extends StatelessWidget {
       // Widgets will find and use this value as the `Store`.
       store: store,
       child: MaterialApp(
-        home: _wMainRoot(),
+        home: _wMainRoot(context),
         title: 'Test title',
         theme: ThemeData.dark(),
       ),
@@ -34,9 +35,10 @@ class FlutterReduxApp extends StatelessWidget {
  *
  * ************************************/
 
-Widget _wMainRoot() => Scaffold(
+Widget _wMainRoot(context) => Scaffold(
       appBar: wHeaderAppBar(),
       body: _wBody(),
+      drawer: wDrawer(context),
     );
 
 Widget _wBody() => StoreConnector<TodoAppState, dynamic>(
@@ -56,9 +58,9 @@ Widget _wBody() => StoreConnector<TodoAppState, dynamic>(
           ],
         );
       } else if (s['showLogin']) {
-        return wLoginForm();
+        return wLoginFormPage();
       } else {
-        return wTodoListItems();
+        return wListPage();
       }
     });
 

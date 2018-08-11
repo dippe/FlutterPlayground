@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/action.dart' as Actions;
 import 'package:todo_flutter_app/jira/jira.dart';
-import 'package:todo_flutter_app/view/Status.dart';
+import 'package:todo_flutter_app/view/list/IssueStatus.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 
 Widget wDraggableListItem(ListItemData item, Function dispatchFn) {

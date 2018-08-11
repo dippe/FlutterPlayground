@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_flutter_app/jira/jira.dart';
-import 'package:todo_flutter_app/view/ListItem.dart';
+import 'package:todo_flutter_app/view/list/ListItem.dart';
 
 const _COLORS = {
   1: Colors.yellow,

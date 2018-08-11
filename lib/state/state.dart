@@ -1,25 +1,27 @@
 import 'package:redux/redux.dart';
-import 'package:todo_flutter_app/action.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/jira/jira.dart';
-import 'package:todo_flutter_app/jira/reducer.dart';
 import 'package:todo_flutter_app/reducer.dart';
+import 'package:todo_flutter_app/util/types.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 
 /// global store "singleton"
-final store = new Store<TodoAppState>(_combinedReducers, initialState: _initState);
+final store = new Store<AppState>(appReducer, initialState: _initState);
 
 /// dispatch action into the global store
 //final dispatchFn = (Action action) => () => store.dispatch(action);
 final dispatch = (Action action) => store.dispatch(action);
 
-final _initState = TodoAppState(
-  appView: AppView(false),
+final _initState = AppState(
+  jira: JiraData(
+    error: null,
+    fetchedIssues: null,
+    fetchedFilters: null,
+  ),
   // fixme: remove test data
-  config: ConfigData(TMP_USER, TMP_PWD),
-  fetchedIssues: null,
-  view: ViewData(
-    actual: PageType.IssueList,
+  config: ConfigState(user: TMP_USER, password: TMP_PWD),
+  view: ViewState(
+    actPage: PageType.IssueList,
     issueListViews: [
       IssueListView(
         id: '1',
@@ -78,13 +80,10 @@ final _initState = TodoAppState(
   ),
 );
 
-TodoAppState _debugReducer(TodoAppState state, dynamic action) {
+AppState _debugReducer(AppState state, dynamic action) {
   print('Action triggered with type: ' + action.runtimeType.toString() + ' val: ' + action.toString());
   return state;
 }
-
-// todo: beautify this oversimplified composing
-final _combinedReducers = (state, action) => todoReducer(jiraReducer(_debugReducer(state, action), action), action);
 
 //final dispatchAjaxConverter = (store) => (Future ajax, Function actionCreator) {
 //      ajax.then((res) => store.dispatch(actionCreator(res)));

@@ -1,9 +1,8 @@
 import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/state/domain.dart';
+import 'package:todo_flutter_app/util/types.dart';
 
 // Action DTO-s
-
-abstract class Action {}
 
 class Add implements Action {
   JiraIssue issue;
@@ -85,28 +84,6 @@ class CbToggle implements Action {
   }
 }
 
-class ShowLoginDialog implements Action {
-  bool show;
-
-  ShowLoginDialog(this.show);
-
-  @override
-  String toString() {
-    return 'ShowLoginDialog{show: $show}';
-  }
-}
-
-class SetUserName implements Action {
-  String name;
-
-  SetUserName(this.name);
-
-  @override
-  String toString() {
-    return 'SetUserName{name: $name}';
-  }
-}
-
 class SetItemTitle implements Action {
   String key;
   String title;
@@ -116,25 +93,5 @@ class SetItemTitle implements Action {
   @override
   String toString() {
     return 'SetItemTitle{key: $key title: $title}';
-  }
-}
-
-class SetPwd implements Action {
-  String pwd;
-
-  SetPwd(this.pwd);
-
-  @override
-  String toString() {
-    return 'SetPwd{pwd: $pwd}';
-  }
-}
-
-class Login implements Action {
-  Login();
-
-  @override
-  String toString() {
-    return 'Login{}';
   }
 }

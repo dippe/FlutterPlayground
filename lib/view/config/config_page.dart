@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:todo_flutter_app/action.dart' as Actions;
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
+import 'package:todo_flutter_app/view/config/action.dart' as Actions;
 
-Widget wLoginFormPage() => new StoreConnector<TodoAppState, ConfigData>(
+Widget wLoginFormPage() => new StoreConnector<AppState, ConfigState>(
       converter: (state) => state.state.config,
       builder: (context, user) => new Column(
             children: <Widget>[
@@ -91,5 +91,5 @@ class _PwdState extends State<_Pwd> {
 
 Widget _renderOkBtn = new FlatButton(
   child: Text('Ok-Mok'),
-  onPressed: () => dispatch(Actions.Login()),
+  onPressed: () => dispatch(Actions.HideLoginDialog()),
 );

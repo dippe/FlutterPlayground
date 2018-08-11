@@ -150,92 +150,81 @@ class IssueListView {
       items.hashCode ^ id.hashCode ^ name.hashCode ^ filter.hashCode ^ result.hashCode ^ idCounter.hashCode;
 }
 
-// fixme: remove this view, redundant with ViewData
-class AppView {
-  final bool showLogin;
-
-  AppView(this.showLogin);
-
-  AppView withShowLogin(bool show) {
-    return new AppView(show);
-  }
-
-  @override
-  String toString() {
-    return 'TodoListView{showLogin: $showLogin}';
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is AppView && runtimeType == other.runtimeType && showLogin == other.showLogin;
-
-  @override
-  int get hashCode => showLogin.hashCode;
-}
-
-class ViewData {
-  final PageType actual;
+class ViewState {
+  final PageType actPage;
   final List<IssueListView> issueListViews;
 
-  ViewData({this.actual, this.issueListViews});
+  ViewState({this.actPage, this.issueListViews});
 
-  ViewData copyWith({actual, selectedIssueListView, issueListViews}) {
-    return ViewData(
-      actual: actual ?? this.actual,
+  ViewState copyWith({actual, selectedIssueListView, issueListViews, showLogin}) {
+    return ViewState(
+      actPage: actual ?? this.actPage,
       issueListViews: issueListViews ?? this.issueListViews,
     );
   }
 }
 
-class TodoAppState {
-  final ViewData view;
+class JiraData {
   final List<JiraIssue> fetchedIssues;
   final List<JiraFilter> fetchedFilters;
-  final AppView appView;
-  final ConfigData config;
   final String error;
 
-  TodoAppState({
-    @required this.appView,
-    @required this.config,
-    @required this.view,
-    this.fetchedFilters,
-    this.fetchedIssues,
-    this.error,
-  });
+  JiraData({this.fetchedIssues, this.fetchedFilters, this.error});
 
-  TodoAppState copyWith({error, fetchedIssues, fetchedFilters, config, appView, view}) {
-    return TodoAppState(
-      error: error ?? this.error,
+  JiraData copyWith({fetchedIssues, fetchedFilters}) {
+    return JiraData(
       fetchedIssues: fetchedIssues ?? this.fetchedIssues,
       fetchedFilters: fetchedFilters ?? this.fetchedFilters,
+      error: error ?? this.error,
+    );
+  }
+}
+
+class AppState {
+  final JiraData jira;
+  final ViewState view;
+  final ConfigState config;
+
+  AppState({
+    @required this.config,
+    @required this.view,
+    @required this.jira,
+  });
+
+  AppState copyWith({fetchedIssues, fetchedFilters, config, appView, view}) {
+    return AppState(
+      jira: jira ?? this.jira,
       config: config ?? this.config,
-      appView: appView ?? this.appView,
       view: view ?? this.view,
     );
   }
 
-  TodoAppState withTodoView(AppView newElem) => copyWith(appView: newElem);
+  @deprecated
+  AppState withLogin(ConfigState newElem) => copyWith(config: newElem);
 
-  TodoAppState withLogin(ConfigData newElem) => copyWith(config: newElem);
-
-  TodoAppState withIssues(List<JiraIssue> newElem) => copyWith(fetchedIssues: newElem);
+  @deprecated
+  AppState withIssues(List<JiraIssue> newElem) => copyWith(fetchedIssues: newElem);
 
   @override
   String toString() {
-    return 'TodoAppState{view: $view, fetchedIssues: $fetchedIssues, fetchedFilters: $fetchedFilters, appView: $appView, config: $config, error: $error}';
+    return 'AppState{view: $view, jira: $jira, config: $config}';
   }
 }
 
-class ConfigData {
+class ConfigState {
   final String user;
   final String password;
 
-  ConfigData(this.user, this.password);
+  ConfigState({this.user, this.password});
 
   hasLogin() {
     return user != null && password != null;
   }
+
+  ConfigState copyWith({user, password}) => ConfigState(
+        user: user ?? this.user,
+        password: password ?? this.password,
+      );
 
   @override
   String toString() {
@@ -245,7 +234,7 @@ class ConfigData {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ConfigData && runtimeType == other.runtimeType && user == other.user && password == other.password;
+      other is ConfigState && runtimeType == other.runtimeType && user == other.user && password == other.password;
 
   @override
   int get hashCode => user.hashCode ^ password.hashCode;

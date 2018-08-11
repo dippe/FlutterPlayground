@@ -3,7 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/view/list/list_item.dart';
 
-Widget wListPage() => StoreConnector<TodoAppState, ViewData>(
+Widget wListPage() => StoreConnector<AppState, ViewState>(
       converter: (store) => store.state.view,
       builder: (context, view) {
         var tabs = view.issueListViews.map((i) {

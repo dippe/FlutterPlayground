@@ -3,9 +3,10 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/jira/jira.dart';
 import 'package:todo_flutter_app/state/domain.dart';
-import 'package:todo_flutter_app/action.dart' as Actions;
-import 'package:todo_flutter_app/view/basic_chart.dart';
+import 'package:todo_flutter_app/view/list/action.dart' as Actions;
+import 'package:todo_flutter_app/view/app/basic_chart.dart';
 import 'package:todo_flutter_app/state/state.dart';
+import 'package:todo_flutter_app/view/config/action.dart' as Actions;
 
 const DEFAULT_ITEM_KEY = 'UNLINKED-1234';
 const DEFAULT_ITEM_NAME = 'Unnamed issue';
@@ -13,7 +14,7 @@ const DEFAULT_ITEM_NAME = 'Unnamed issue';
 Widget wHeaderAppBar() => AppBar(
       actions: <Widget>[
         // fixme: generalize connectors
-        new StoreConnector<TodoAppState, TodoAppState>(
+        new StoreConnector<AppState, AppState>(
             converter: (store) => store.state,
             builder: (context, todos) {
               return Text('-');
@@ -50,7 +51,7 @@ Widget _wAddButton = IconButton(
   onPressed: () => dispatch(Actions.Add(JiraIssue.unlinked(DEFAULT_ITEM_KEY, DEFAULT_ITEM_NAME))),
 );
 
-Widget _wRefreshButton = new StoreConnector<TodoAppState, ViewData>(
+Widget _wRefreshButton = new StoreConnector<AppState, ViewState>(
   converter: (store) => store.state.view,
   builder: (context, view) {
     return IconButton(

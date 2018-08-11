@@ -1,7 +1,6 @@
 import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/jira/domain/responses.dart';
-
-abstract class Action {}
+import 'package:todo_flutter_app/util/types.dart';
 
 class FetchError implements Action {
   String error;

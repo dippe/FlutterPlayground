@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_flutter_app/state/state.dart';
-import 'package:todo_flutter_app/action.dart' as Actions;
+import 'package:todo_flutter_app/view/list/action.dart' as Actions;
 import 'package:todo_flutter_app/jira/jira.dart';
 import 'package:todo_flutter_app/view/list/issue_status.dart';
 import 'package:todo_flutter_app/state/domain.dart';

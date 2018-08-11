@@ -32,7 +32,7 @@ Color _getColorByStatusId(int id) => _COLORS[id] ?? _COLOR_UNKNOWN;
 Widget _getAvatarByStatusId(int id) => Icon(_ICONS[id] ?? _ICON_UNKNOWN);
 
 ItemWidget wIssueStatusChip = (item) {
-  return item.issue != null
+  return item.issue?.fields?.status != null
       ? Chip(
           avatar: new Image.network(
             _JIRA_ICON_URLS[item.issue.fields.status.statusCategory.key],

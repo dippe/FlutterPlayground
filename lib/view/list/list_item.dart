@@ -46,6 +46,7 @@ ItemWidget wListItem = (ListItemData item) {
       _wDeleteBtn(item),
     ]);
   } else {
+    // fixme: rethink: only JiraIssue or manually created should processed here too?
     return renderUnselectedRow([
       _wIssuetype(item),
       _wPriority(item),
@@ -139,7 +140,8 @@ ItemWidget _wCheckBox = (item) => Checkbox(
     );
 
 ItemWidget _wIssueKey = (item) => Text(item.key);
-ItemWidget _wPriority = (item) => item.issue != null
+
+ItemWidget _wPriority = (item) => item?.issue?.fields?.priority != null
     ? Image.network((item.issue.fields.priority['iconUrl'] as String).replaceAll('.svg', '.png'))
     : Text('');
 
@@ -172,9 +174,14 @@ const ISSUE_TYPE_ICONS = {
 //'' : URL_ISSUETYPE_ICONS + 'sales.png',
 };
 
-ItemWidget _wIssuetype = (item) => item.issue != null
-    ? Image.network(ISSUE_TYPE_ICONS[item.issue.fields.issuetype.name] ?? ISSUE_TYPE_ICONS['Undefined'])
-    : Text('');
+ItemWidget _wIssuetype = (item) {
+  if (item.issue != null && item.issue.fields?.issuetype?.name != null) {
+    return Image.network(ISSUE_TYPE_ICONS[item.issue.fields.issuetype.name]);
+  } else {
+    return Image.network(ISSUE_TYPE_ICONS['Undefined']);
+//    return Text('');
+  }
+};
 
 ItemWidget _wName = (item) => Expanded(
       child: item.isEdit

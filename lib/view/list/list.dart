@@ -3,35 +3,42 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/view/list/list_item.dart';
 
-Widget wListPage() => DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          bottom: TabBar(
-            tabs: [
-              Tab(icon: Icon(Icons.directions_car)),
-              Tab(icon: Icon(Icons.directions_transit)),
-              Tab(icon: Icon(Icons.directions_bike)),
-            ],
-          ),
-          title: Text('Issue Lists: Valami'),
-        ),
-        body: TabBarView(
-          children: [
-            wList(),
-            Icon(Icons.directions_transit),
-            Icon(Icons.directions_bike),
-          ],
-        ),
-      ),
-    );
+Widget wListPage() => StoreConnector<TodoAppState, ViewData>(
+      converter: (store) => store.state.view,
+      builder: (context, view) {
+        var tabs = view.issueListViews.map((i) {
+          print(i.name);
+          return Tab(
+            icon: Icon(Icons.directions_car),
+            text: i.name,
+          );
+        }).toList();
 
-Widget wList() => StoreConnector<TodoAppState, Todos>(
-      converter: (store) => store.state.todos,
-      builder: (context, todos) {
-        return ListView(
-          scrollDirection: Axis.vertical,
-          children: todos.list().map((item) => wDraggableListItem(item)).toList(),
+        var children = view.issueListViews.map((i) {
+          print(i.name);
+          return wList(i.items);
+        }).toList();
+//        var selected = List.of(view.issueListViews.values).indexOf(view.selectedIssueListView)
+
+        return DefaultTabController(
+//          initialIndex: ,
+          length: 3,
+          child: Scaffold(
+            appBar: AppBar(
+              bottom: TabBar(
+                tabs: tabs,
+              ),
+              title: Text('Issue Lists: Valami'),
+            ),
+            body: TabBarView(
+              children: children,
+            ),
+          ),
         );
       },
+    );
+
+Widget wList(List<ListItemData> issues) => ListView(
+      scrollDirection: Axis.vertical,
+      children: issues.map((item) => wDraggableListItem(item)).toList(),
     );

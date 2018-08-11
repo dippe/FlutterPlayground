@@ -4,8 +4,8 @@ import 'package:todo_flutter_app/action.dart' as Actions;
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
 
-Widget wLoginFormPage() => new StoreConnector<TodoAppState, LoginData>(
-      converter: (state) => state.state.login,
+Widget wLoginFormPage() => new StoreConnector<TodoAppState, ConfigData>(
+      converter: (state) => state.state.config,
       builder: (context, user) => new Column(
             children: <Widget>[
               Title(

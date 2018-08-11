@@ -1,6 +1,7 @@
 import 'package:meta/meta.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
+import 'package:todo_flutter_app/jira/domain/responses.dart';
 
 enum ConfigMenuItems { About, Config, DisplayFinished, Login }
 
@@ -42,129 +43,111 @@ class ListItemData {
   ListItemData withTitle(String newTitle) => copyWith(title: newTitle);
 }
 
-class Todos {
+class IssueListView {
   final List<ListItemData> items;
+
+  final String id;
+  final String name;
+  final JiraFilter filter;
+  final List<JiraSearch> result; // link to the ajax result
   final int idCounter;
 
-  Todos({this.items, this.idCounter = 0});
+  IssueListView(
+      {this.id, @required this.name, @required this.filter, this.result, this.idCounter = 0, @required this.items});
 
-  copyWith({items, idCounter}) => Todos(items: items ?? this.items, idCounter: idCounter ?? this.idCounter);
+  IssueListView copyWith({id, name, filter, result, items, idCounter}) {
+    return IssueListView(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      filter: filter ?? this.filter,
+      result: result ?? this.result,
+      items: items ?? this.items,
+      idCounter: idCounter ?? this.idCounter,
+    );
+  }
 
-  Todos withNewItem(JiraIssue issue) {
+  IssueListView withNewItem(JiraIssue issue) {
     final List<ListItemData> copy = List.from(items);
     var nextId = idCounter + 1;
     copy.add(ListItemData(issue, issue.fields.summary, issue.key));
-    return new Todos(items: copy, idCounter: nextId);
+    return copyWith(items: copy, idCounter: nextId);
   }
 
   ListItemData getByKey(String key) {
     return items.firstWhere((i) => i.key == key);
   }
 
-  Todos withUpdated(ListItemData item) {
+  // fixme: move to reducer
+  IssueListView withUpdated(ListItemData item) {
     final List<ListItemData> copy = List.from(items);
     final index = copy.indexOf(getByKey(item.key));
     copy[index] = item;
-    return Todos(
-      items: copy,
-      idCounter: idCounter,
-    );
+    return copyWith(items: copy);
   }
 
-  Todos withDeleted(todo) {
+  // fixme: move to reducer
+  IssueListView withDeleted(todo) {
     final List<ListItemData> copy = List.from(items);
     copy.remove(getByKey(todo.key));
-    return Todos(
-      items: copy,
-      idCounter: idCounter,
-    );
+    return copyWith(items: copy);
   }
 
-  Todos withAllUnselected() {
+  // fixme: move to reducer
+  IssueListView withAllUnselected() {
     List<ListItemData> tmp = items.map((value) => value.withSelected(false).withEdit(false)).toList();
-    return Todos(
-      items: tmp,
-      idCounter: idCounter,
-    );
+    return copyWith(items: tmp);
   }
 
-  Todos withMoved(ListItemData what, ListItemData target) {
+  // fixme: move to reducer
+  IssueListView withMoved(ListItemData what, ListItemData target) {
     final List<ListItemData> copy = List.from(items);
 
     copy.remove(what);
     final newIndex = copy.indexOf(target);
     copy.insert(newIndex, what);
 
-    return Todos(
-      items: copy,
-      idCounter: idCounter,
-    );
+    return copyWith(items: copy);
   }
 
+  @deprecated
   int length() {
     return items.length;
   }
 
+  @deprecated
   int lengthDone() {
     return items.where((d) => d.done).length;
   }
 
+  @deprecated
   int lengthTodo() {
     return items.where((d) => !d.done).length;
   }
 
-  List<ListItemData> list() {
-    return items;
-  }
-
-  @override
-  bool operator ==(other) =>
-      identical(this, other) ||
-      other is Todos && other.items != null && _itemsEqual(items, other.items) && idCounter == other.idCounter;
-
-  @override
-  int get hashCode => items.hashCode ^ idCounter.hashCode;
-
-  bool _itemsEqual(List<ListItemData> items, List<ListItemData> otherItems) {
-    if (!(otherItems is List<ListItemData>)) {
-      return false;
-    } else {
-      return items.every((i) => otherItems.any((o) => o == i));
-    }
-  }
-}
-
-class IssueListView {
-  final String id;
-  final String name;
-  final JiraFilter filter;
-
-  IssueListView({this.id, this.name, this.filter});
-
-  IssueListView copyWith({id, name, filter}) {
-    return IssueListView(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      filter: filter ?? this.filter,
-    );
-  }
-
-  @override
-  String toString() {
-    return 'IssueListView{id: $id, name: $name}';
-  }
+  // fixme remove later if unneeded
+  //  bool _itemsEqual(List<ListItemData> items, List<ListItemData> otherItems) {
+  //    if (!(otherItems is List<ListItemData>)) {
+  //      return false;
+  //    } else {
+  //      return items.every((i) => otherItems.any((o) => o == i));
+  //    }
+  //  }
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is IssueListView &&
           runtimeType == other.runtimeType &&
+          items == other.items &&
           id == other.id &&
           name == other.name &&
-          filter == other.filter;
+          filter == other.filter &&
+          result == other.result &&
+          idCounter == other.idCounter;
 
   @override
-  int get hashCode => id.hashCode ^ name.hashCode ^ filter.hashCode;
+  int get hashCode =>
+      items.hashCode ^ id.hashCode ^ name.hashCode ^ filter.hashCode ^ result.hashCode ^ idCounter.hashCode;
 }
 
 // fixme: remove this view, redundant with ViewData
@@ -192,16 +175,15 @@ class AppView {
 
 class ViewData {
   final PageType actual;
-  final String selectedIssueListView;
-  final Map<String, IssueListView> issueListViews;
+  final List<IssueListView> issueListViews;
 
-  ViewData({this.actual, this.selectedIssueListView, this.issueListViews});
+  ViewData({this.actual, this.issueListViews});
 
   ViewData copyWith({actual, selectedIssueListView, issueListViews}) {
     return ViewData(
-        actual: actual ?? this.actual,
-        issueListViews: issueListViews ?? this.issueListViews,
-        selectedIssueListView: selectedIssueListView ?? this.selectedIssueListView);
+      actual: actual ?? this.actual,
+      issueListViews: issueListViews ?? this.issueListViews,
+    );
   }
 }
 
@@ -209,65 +191,47 @@ class TodoAppState {
   final ViewData view;
   final List<JiraIssue> fetchedIssues;
   final List<JiraFilter> fetchedFilters;
-  final Todos todos;
-  final AppView todoView;
-  final LoginData login;
+  final AppView appView;
+  final ConfigData config;
   final String error;
 
   TodoAppState({
-    @required this.todoView,
-    @required this.todos,
-    @required this.login,
+    @required this.appView,
+    @required this.config,
     @required this.view,
     this.fetchedFilters,
     this.fetchedIssues,
     this.error,
   });
 
-  TodoAppState copyWith({error, fetchedIssues, fetchedFilters, login, appView, todos, view}) {
+  TodoAppState copyWith({error, fetchedIssues, fetchedFilters, config, appView, view}) {
     return TodoAppState(
       error: error ?? this.error,
       fetchedIssues: fetchedIssues ?? this.fetchedIssues,
       fetchedFilters: fetchedFilters ?? this.fetchedFilters,
-      login: login ?? this.login,
-      todoView: appView ?? this.todoView,
-      todos: todos ?? this.todos,
+      config: config ?? this.config,
+      appView: appView ?? this.appView,
       view: view ?? this.view,
     );
   }
 
-  // fixme: remove these because unneeded
-  TodoAppState withTodos(Todos newElem) => copyWith(todos: newElem);
-
   TodoAppState withTodoView(AppView newElem) => copyWith(appView: newElem);
 
-  TodoAppState withLogin(LoginData newElem) => copyWith(login: newElem);
+  TodoAppState withLogin(ConfigData newElem) => copyWith(config: newElem);
 
   TodoAppState withIssues(List<JiraIssue> newElem) => copyWith(fetchedIssues: newElem);
 
   @override
   String toString() {
-    return 'TodoAppState{todos: $todos, listView: $todoView, login: $login}';
+    return 'TodoAppState{view: $view, fetchedIssues: $fetchedIssues, fetchedFilters: $fetchedFilters, appView: $appView, config: $config, error: $error}';
   }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TodoAppState &&
-          runtimeType == other.runtimeType &&
-          todos == other.todos &&
-          todoView == other.todoView &&
-          login == other.login;
-
-  @override
-  int get hashCode => todos.hashCode ^ todoView.hashCode ^ login.hashCode;
 }
 
-class LoginData {
+class ConfigData {
   final String user;
   final String password;
 
-  LoginData(this.user, this.password);
+  ConfigData(this.user, this.password);
 
   hasLogin() {
     return user != null && password != null;
@@ -281,7 +245,7 @@ class LoginData {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is LoginData && runtimeType == other.runtimeType && user == other.user && password == other.password;
+      other is ConfigData && runtimeType == other.runtimeType && user == other.user && password == other.password;
 
   @override
   int get hashCode => user.hashCode ^ password.hashCode;

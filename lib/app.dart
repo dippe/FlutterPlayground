@@ -43,7 +43,7 @@ Widget _wMainRoot(context) => Scaffold(
 
 Widget _wBody() => StoreConnector<TodoAppState, dynamic>(
     converter: (store) => {
-          'showLogin': store.state.todoView.showLogin,
+          'showLogin': store.state.appView.showLogin,
           'error': store.state.error,
         },
     builder: (context2, s) {

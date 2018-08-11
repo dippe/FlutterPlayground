@@ -14,45 +14,67 @@ final store = new Store<TodoAppState>(_combinedReducers, initialState: _initStat
 final dispatch = (Action action) => store.dispatch(action);
 
 final _initState = TodoAppState(
-  todos: Todos(
-    items: List.unmodifiable([new ListItemData(null, 'Hello world :P', 'ISSUE-1')]),
-    idCounter: 1,
-  ),
-  todoView: AppView(false),
+  appView: AppView(false),
   // fixme: remove test data
-  login: LoginData(TMP_USER, TMP_PWD),
+  config: ConfigData(TMP_USER, TMP_PWD),
   fetchedIssues: null,
   view: ViewData(
-    selectedIssueListView: '2',
     actual: PageType.IssueList,
-    issueListViews: {
-      '1': IssueListView(id: '1', filter: JiraFilter(id: '1', jql: 'project=test', name: '1 Project Test')),
-      '2': IssueListView(id: '2', filter: JiraFilter(id: '2', jql: 'status in ("To Do")', name: '2 Status Todo')),
+    issueListViews: [
+      IssueListView(
+        id: '1',
+        name: '1 Project Test',
+        filter: JiraFilter(id: '1', jql: 'project=test'),
+        items: List.unmodifiable([new ListItemData(null, 'Hello world :P', 'ISSUE-1')]),
+        result: [],
+      ),
+      IssueListView(
+        id: '2',
+        name: '2 Status Todo',
+        filter: JiraFilter(id: '2', jql: 'status in ("To Do")'),
+        result: [],
+        items: [],
+      ),
       // Usable predefined filters:
-      '3': IssueListView(
+      IssueListView(
         id: '3',
-        filter: JiraFilter(id: '3', jql: 'resolutiondate >= -1w order by updated DESC', name: 'Resolved recently'),
+        name: 'Resolved recently',
+        filter: JiraFilter(id: '3', jql: 'resolutiondate >= -1w order by updated DESC'),
+        result: [],
+        items: [],
       ),
-      '4': IssueListView(
+      IssueListView(
         id: '4',
-        filter: JiraFilter(id: '4', jql: 'updated >= -1w order by updated DESC', name: 'Updated recently'),
+        name: 'Updated recently',
+        filter: JiraFilter(id: '4', jql: 'updated >= -1w order by updated DESC'),
+        result: [],
+        items: [],
       ),
-      '5': IssueListView(
+      IssueListView(
         id: '5',
-        filter: JiraFilter(id: '5', jql: 'created >= -1w order by created DESC', name: 'Created recently'),
+        name: 'Created recently',
+        filter: JiraFilter(id: '5', jql: 'created >= -1w order by created DESC'),
+        result: [],
+        items: [],
       ),
-      '6': IssueListView(
+      IssueListView(
         id: '6',
-        filter: JiraFilter(id: '6', jql: 'reporter = currentUser() order by created DESC', name: 'Reported by me'),
+        name: 'Reported by me',
+        filter: JiraFilter(id: '6', jql: 'reporter = currentUser() order by created DESC'),
+        result: [],
+        items: [],
       ),
-      '7': IssueListView(
-          id: '7',
-          filter: JiraFilter(
-              id: '7',
-              jql: 'assignee = currentUser() AND resolution = Unresolved order by updated '
-                  'DESC',
-              name: 'My open issues')),
-    },
+      IssueListView(
+        id: '7',
+        name: 'My open issues',
+        filter: JiraFilter(
+            id: '7',
+            jql: 'assignee = currentUser() AND resolution = Unresolved order by updated '
+                'DESC'),
+        result: [],
+        items: [],
+      ),
+    ],
   ),
 );
 

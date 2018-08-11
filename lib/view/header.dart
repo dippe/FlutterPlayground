@@ -13,10 +13,12 @@ const DEFAULT_ITEM_NAME = 'Unnamed issue';
 Widget wHeaderAppBar() => AppBar(
       actions: <Widget>[
         // fixme: generalize connectors
-        new StoreConnector<TodoAppState, Todos>(
-            converter: (store) => store.state.todos,
+        new StoreConnector<TodoAppState, TodoAppState>(
+            converter: (store) => store.state,
             builder: (context, todos) {
-              return SimpleBarChart.renderProgressChart(todos.lengthDone(), todos.lengthTodo());
+              return Text('-');
+              // fixme- re-enable
+//              return SimpleBarChart.renderProgressChart(todos.lengthDone(), todos.lengthTodo());
             }),
         _wMainBtns,
       ],
@@ -54,7 +56,7 @@ Widget _wRefreshButton = new StoreConnector<TodoAppState, ViewData>(
     return IconButton(
       tooltip: 'Refresh',
       icon: Icon(Icons.refresh),
-      onPressed: () => JiraAjax.doFetchJqlAction(view.issueListViews[view.selectedIssueListView].filter.jql),
+      onPressed: () => JiraAjax.doFetchJqlAction(view.issueListViews[0].filter.jql),
     );
   },
 );

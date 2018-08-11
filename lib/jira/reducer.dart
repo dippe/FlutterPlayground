@@ -5,8 +5,10 @@ TodoAppState jiraReducer(TodoAppState state, dynamic action) {
   if (action is Actions.FetchJqlDone) {
     var items =
         action.jiraJqlResult.issues.map((issue) => ListItemData(issue, issue.fields.summary, issue.key)).toList();
+
     return state.copyWith(
-      todos: state.todos.copyWith(items: items),
+      // fixme: remove (deprecated)
+//      todos: state.view.issueListViews[0].copyWith(items: items),
       fetchedIssues: action.jiraJqlResult.issues,
     );
   } else if (action is Actions.FetchIssueDone) {

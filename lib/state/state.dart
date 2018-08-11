@@ -6,11 +6,16 @@ import 'package:todo_flutter_app/util/types.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 
 /// global store "singleton"
-final store = new Store<AppState>(appReducer, initialState: _initState);
+final store = new Store<AppState>(_debugReducer(appReducer), initialState: _initState);
 
 /// dispatch action into the global store
 //final dispatchFn = (Action action) => () => store.dispatch(action);
 final dispatch = (Action action) => store.dispatch(action);
+
+Reducer<AppState> _debugReducer(r) => (AppState state, dynamic action) {
+      print('Action triggered with type: ' + action.runtimeType.toString() + ' val: ' + action.toString());
+      return r(state, action);
+    };
 
 final _initState = AppState(
   jira: JiraData(
@@ -79,12 +84,3 @@ final _initState = AppState(
     ],
   ),
 );
-
-AppState _debugReducer(AppState state, dynamic action) {
-  print('Action triggered with type: ' + action.runtimeType.toString() + ' val: ' + action.toString());
-  return state;
-}
-
-//final dispatchAjaxConverter = (store) => (Future ajax, Function actionCreator) {
-//      ajax.then((res) => store.dispatch(actionCreator(res)));
-//    };

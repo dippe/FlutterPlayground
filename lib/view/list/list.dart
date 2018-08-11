@@ -7,7 +7,8 @@ Widget wListPage() => StoreConnector<AppState, ViewState>(
       converter: (store) => store.state.view,
       builder: (context, view) {
         var tabs = view.issueListViews.map((i) {
-          print(i.name);
+          // fixme: re-rendered on every minor change!!
+//          print(i.name);
           return Tab(
             icon: Icon(Icons.directions_car),
             text: i.name,
@@ -15,7 +16,7 @@ Widget wListPage() => StoreConnector<AppState, ViewState>(
         }).toList();
 
         var children = view.issueListViews.map((i) {
-          print(i.name);
+//          print(i.name);
           return wList(i.items);
         }).toList();
 //        var selected = List.of(view.issueListViews.values).indexOf(view.selectedIssueListView)

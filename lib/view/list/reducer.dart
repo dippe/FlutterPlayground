@@ -39,10 +39,7 @@ ViewState _changeActualItemList(ViewState state, ListModifierFn fn) {
 
   final updatedItems = fn(itemsCopy);
 
-  listViewsCopy[targetIdx] = listViewsCopy[targetIdx].copyWith(items: itemsCopy);
-
-//  listViewsCopy = updatedItems;
-//  listViewsCopy[targetIdx].copyWith(items: updatedItems);
+  listViewsCopy[targetIdx] = listViewsCopy[targetIdx].copyWith(items: updatedItems);
 
   return state.copyWith(issueListViews: listViewsCopy);
 }
@@ -53,7 +50,8 @@ ViewState _add(ViewState state, Actions.Add action) {
     if (action.issue != null && _getByKey(l, action.issue.key) != null) {
       throw ArgumentError('Item already exists with the same key!');
     }
-    l..add(newItem);
+    l.add(newItem);
+    return l;
   };
   return _changeActualItemList(state, addTolistFn);
 }

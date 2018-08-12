@@ -49,7 +49,12 @@ ViewState _changeActualItemList(ViewState state, ListModifierFn fn) {
 
 ViewState _add(ViewState state, Actions.Add action) {
   final newItem = ListItemData(action.issue, action.issue.fields.summary, action.issue.key);
-  ListModifierFn addTolistFn = (l) => l..add(newItem);
+  ListModifierFn addTolistFn = (l) {
+    if (action.issue != null && _getByKey(l, action.issue.key) != null) {
+      throw ArgumentError('Item already exists with the same key!');
+    }
+    l..add(newItem);
+  };
   return _changeActualItemList(state, addTolistFn);
 }
 
@@ -98,8 +103,9 @@ ViewState _toggle(ViewState state, Actions.CbToggle action) {
 // fixme: change action payload to key instead of item
 ViewState _select(ViewState state, Actions.Select action) {
   final ListModifierFn select = (l) {
-    var idx = l.indexOf(_getByKey(l, action.item.key));
-    l[idx] = l[idx].copyWith(isSelected: true);
+    var item = _getByKey(l, action.item.key);
+    var idx = _getIdxByKey(l, action.item.key);
+    l[idx] = item.copyWith(isSelected: true);
     return l;
   };
   final unselectedState = _unSelectAll(state, Actions.UnSelectAll());
@@ -116,8 +122,15 @@ ViewState _setItemTitle(ViewState state, Actions.SetItemTitle action) {
   return _changeActualItemList(unselectedState, set);
 }
 
-ListItemData _getByKey(items, String key) {
-  return items.firstWhere((i) => i.key == key);
+ListItemData _getByKey(List<ListItemData> items, String key) {
+  return items.firstWhere((i) => i.key == key, orElse: () => null);
+}
+
+int _getIdxByKey(items, String key) {
+  var item = _getByKey(items, key);
+  var idx = items.indexOf(item);
+
+  return idx;
 }
 
 List<ListItemData> _withMoved(items, ListItemData what, ListItemData target) {

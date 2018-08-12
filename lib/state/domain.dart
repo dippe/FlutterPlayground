@@ -28,7 +28,7 @@ class ListItemData {
   ListItemData copyWith({String key, issue, title, done, isEdit, isSelected}) => ListItemData(
         issue ?? this.issue,
         title ?? this.title,
-        key ?? this.key,
+        this.key,
         done: done ?? this.done,
         isEdit: isEdit ?? this.isEdit,
         isSelected: isSelected ?? this.isSelected,

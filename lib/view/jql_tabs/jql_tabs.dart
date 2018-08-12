@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
-import 'package:todo_flutter_app/view/list/list_item.dart';
+import 'package:todo_flutter_app/view/issue_list/issue_list.dart';
 
-Widget wListPage() => StoreConnector<AppState, ViewState>(
+Widget wJqlTabsPage() => StoreConnector<AppState, ViewState>(
       converter: (store) => store.state.view,
       builder: (context, view) {
         var tabs = view.issueListViews.map((i) {
@@ -16,8 +16,8 @@ Widget wListPage() => StoreConnector<AppState, ViewState>(
         }).toList();
 
         var children = view.issueListViews.map((i) {
-//          print(i.name);
-          return wList(i.items);
+          print(i.name);
+          return wIssueList(i.items);
         }).toList();
 //        var selected = List.of(view.issueListViews.values).indexOf(view.selectedIssueListView)
 
@@ -37,9 +37,4 @@ Widget wListPage() => StoreConnector<AppState, ViewState>(
           ),
         );
       },
-    );
-
-Widget wList(List<ListItemData> issues) => ListView(
-      scrollDirection: Axis.vertical,
-      children: issues.map((item) => wDraggableListItem(item)).toList(),
     );

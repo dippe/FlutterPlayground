@@ -1,6 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
-import 'package:todo_flutter_app/jira/jira.dart';
+import 'package:todo_flutter_app/jira/jira_ajax.dart';
 import 'package:todo_flutter_app/reducer.dart';
 import 'package:todo_flutter_app/util/types.dart';
 import 'package:todo_flutter_app/state/domain.dart';
@@ -32,7 +32,7 @@ final _initState = AppState(
         id: '1',
         name: '1 Project Test',
         filter: JiraFilter(id: '1', jql: 'project=test'),
-        items: List.unmodifiable([new ListItemData(null, 'Hello world :P', 'ISSUE-1')]),
+        items: List.from([new ListItemData(null, 'Hello world :P', 'ISSUE-1')]),
         result: [],
       ),
       IssueListView(

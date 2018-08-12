@@ -1,10 +1,12 @@
 import 'package:redux/redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/view/config/action.dart' as Actions;
-import 'package:todo_flutter_app/view/list/action.dart' as Actions;
+import 'package:todo_flutter_app/view/issue_list/action.dart' as Actions;
 
-/**
+/*
+ *
  * All of the view reducers are working on the actually selected list view!!
+ * So the actual item list is extracted using the current state's actually selected list idx.
  *
  */
 typedef ViewState ViewReducer(ViewState, dynamic);
@@ -22,27 +24,11 @@ Reducer<ViewState> listViewReducer = combineReducers<ViewState>([
   TypedReducer<ViewState, Actions.UnSelectAll>(_unSelectAll),
 ]);
 
-/// do modification on the inner items via an immutable way
-ViewState _changeActualItemList(ViewState state, ListModifierFn fn) {
-  // FIXME: add state
-  final targetIdx = 0;
-  print('MISSING STATE FOR INDEX IN VIEW REDUCER!!!!');
-
-  // leokádia ... tiszta jáva f@s az elb@szott stream api miatt :D
-
-  if (targetIdx == null) throw ArgumentError('invalid targetIdx: ' + targetIdx.toString());
-
-  final List<IssueListView> listViewsCopy =
-      List<IssueListView>.from(state.issueListViews).toList() as List<IssueListView>;
-  final origItems = listViewsCopy[targetIdx].items;
-  final itemsCopy = List<ListItemData>.of(origItems).toList() as List<ListItemData>; // rethink if this really needed
-
-  final updatedItems = fn(itemsCopy);
-
-  listViewsCopy[targetIdx] = listViewsCopy[targetIdx].copyWith(items: updatedItems);
-
-  return state.copyWith(issueListViews: listViewsCopy);
-}
+/* **********************
+*
+*    Reducer functions
+*
+* ***********************/
 
 ViewState _add(ViewState state, Actions.Add action) {
   final newItem = ListItemData(action.issue, action.issue.fields.summary, action.issue.key);
@@ -106,6 +92,9 @@ ViewState _select(ViewState state, Actions.Select action) {
     l[idx] = item.copyWith(isSelected: true);
     return l;
   };
+  // fixme? optimization of state change somehow?
+  //  return state..issueListViews[0].items[0] = state.issueListViews[0].items[0].copyWith(title: '1234');
+
   final unselectedState = _unSelectAll(state, Actions.UnSelectAll());
   return _changeActualItemList(unselectedState, select);
 }
@@ -119,6 +108,12 @@ ViewState _setItemTitle(ViewState state, Actions.SetItemTitle action) {
   final unselectedState = _unSelectAll(state, Actions.UnSelectAll());
   return _changeActualItemList(unselectedState, set);
 }
+
+/* ***********
+*
+*    Utils
+*
+* ************/
 
 ListItemData _getByKey(List<ListItemData> items, String key) {
   return items.firstWhere((i) => i.key == key, orElse: () => null);
@@ -139,4 +134,26 @@ List<ListItemData> _withMoved(items, ListItemData what, ListItemData target) {
   copy.insert(newIndex, what);
 
   return copy;
+}
+
+/// do modification on the inner items via an immutable way
+ViewState _changeActualItemList(ViewState state, ListModifierFn fn) {
+  // FIXME: add state
+  final targetIdx = 0;
+  print('MISSING STATE FOR INDEX IN VIEW REDUCER!!!!');
+
+  // leokádia ... tiszta jáva f@s az elb@szott stream api miatt :D
+
+  if (targetIdx == null) throw ArgumentError('invalid targetIdx: ' + targetIdx.toString());
+
+  final List<IssueListView> listViewsCopy =
+      List<IssueListView>.from(state.issueListViews).toList() as List<IssueListView>;
+  final origItems = listViewsCopy[targetIdx].items;
+  final itemsCopy = List<ListItemData>.of(origItems).toList() as List<ListItemData>; // rethink if this really needed
+
+  final updatedItems = fn(itemsCopy);
+
+  listViewsCopy[targetIdx] = listViewsCopy[targetIdx].copyWith(items: updatedItems);
+
+  return state.copyWith(issueListViews: listViewsCopy);
 }

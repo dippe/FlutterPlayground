@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
-import 'package:todo_flutter_app/jira/jira.dart';
+import 'package:todo_flutter_app/jira/jira_ajax.dart';
 import 'package:todo_flutter_app/state/domain.dart';
-import 'package:todo_flutter_app/view/list/action.dart' as Actions;
+import 'package:todo_flutter_app/view/issue_list/action.dart' as Actions;
 import 'package:todo_flutter_app/view/app/basic_chart.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/config/action.dart' as Actions;

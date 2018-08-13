@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 import 'package:todo_flutter_app/jira/action.dart';
 import 'package:todo_flutter_app/jira/domain/error.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
+import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/jira/domain/responses.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/util/auth.dart';
@@ -33,8 +34,8 @@ typedef void GetJqlCb(JiraSearch res);
 var client = BasicAuthClient(TMP_USER, TMP_PWD);
 
 class JiraAjax {
-  static void doFetchJqlAction(String jql) => JiraAjax._fetchIssuesByJql(jql).then((res) {
-        store.dispatch(FetchJqlDone(res));
+  static void doFetchJqlAction(JiraFilter filter) => JiraAjax._fetchIssuesByJql(filter).then((res) {
+        store.dispatch(FetchJqlDone(res, filter));
       }).catchError((error) {
         store.dispatch(FetchError(error.toString()));
       });
@@ -59,12 +60,11 @@ class JiraAjax {
 //        .catchError((err) => print('*** ERROR: ' + err.toString()));
   }
 
-  static Future<JiraSearch> _fetchIssuesByJql(String jql) {
+  static Future<JiraSearch> _fetchIssuesByJql(JiraFilter filter) {
     // fixme: re-enable + test
 //  String ncodedJql = encodeURIComponent(jql);
-    String ncodedJql = jql;
-    String url =
-        BASE_URL + URL_JQL + '?maxResults=' + MAX_RESULTS.toString() + "&fields=" + FIELDS_TO_GET + '&jql=' + ncodedJql;
+    String ncodedJql = filter.jql;
+    String url = BASE_URL + URL_JQL + '?maxResults=' + MAX_RESULTS.toString() + "&fields=" + FIELDS_TO_GET + '&jql=' + ncodedJql;
 
     var _validateResult = (JiraSearch res) {
       if (res.total > MAX_RESULTS || res.total > res.maxResults) {
@@ -91,7 +91,7 @@ class JiraAjax {
 
       var res = JiraSearch.fromJson(jqlMap);
 
-      print('Jql processed: ' + jql);
+      print('Jql processed: ' + filter.jql);
 
       _validateResult(res);
 

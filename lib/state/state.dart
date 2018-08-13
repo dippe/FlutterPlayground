@@ -30,6 +30,16 @@ final _initState = AppState(
     actPage: PageType.IssueList,
     issueListViews: [
       IssueListView(
+        id: '0',
+        name: 'My open issues',
+        filter: JiraFilter(
+            id: '0',
+            jql: 'assignee = currentUser() AND resolution = Unresolved order by updated '
+                'DESC'),
+        result: [],
+        items: [],
+      ),
+      IssueListView(
         id: '1',
         name: '1 Project Test',
         filter: JiraFilter(id: '1', jql: 'project=test'),
@@ -69,16 +79,6 @@ final _initState = AppState(
         id: '6',
         name: 'Reported by me',
         filter: JiraFilter(id: '6', jql: 'reporter = currentUser() order by created DESC'),
-        result: [],
-        items: [],
-      ),
-      IssueListView(
-        id: '7',
-        name: 'My open issues',
-        filter: JiraFilter(
-            id: '7',
-            jql: 'assignee = currentUser() AND resolution = Unresolved order by updated '
-                'DESC'),
         result: [],
         items: [],
       ),

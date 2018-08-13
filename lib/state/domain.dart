@@ -58,7 +58,7 @@ class IssueListView {
       name: name ?? this.name,
       filter: filter ?? this.filter,
       result: result != null ? List<JiraSearch>.unmodifiable(result).toList() : this.result,
-      items: items ?? this.items,
+      items: items != null ? List<ListItemData>.unmodifiable(items).toList() : this.items,
       idCounter: idCounter ?? this.idCounter,
     );
   }

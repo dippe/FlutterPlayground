@@ -1,7 +1,8 @@
 import 'package:redux/redux.dart';
+import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/state/domain.dart';
-import 'package:todo_flutter_app/view/config/action.dart' as Actions;
 import 'package:todo_flutter_app/view/issue_list/action.dart' as Actions;
+import 'package:todo_flutter_app/jira/action.dart' as JiraActions;
 
 /*
  *
@@ -13,6 +14,7 @@ typedef ViewState ViewReducer(ViewState, dynamic);
 typedef List<ListItemData> ListModifierFn(List<ListItemData> l);
 
 Reducer<ViewState> listViewReducer = combineReducers<ViewState>([
+  TypedReducer<ViewState, JiraActions.FetchJqlDone>(_addItemsFromJqlFetch),
   TypedReducer<ViewState, Actions.Add>(_add),
   TypedReducer<ViewState, Actions.Edit>(_edit),
   TypedReducer<ViewState, Actions.Drag>(_drag),
@@ -39,7 +41,34 @@ ViewState _add(ViewState state, Actions.Add action) {
     l.add(newItem);
     return l;
   };
+
   return _changeActualItemList(state, addTolistFn);
+}
+
+ViewState _addItemsFromJqlFetch(ViewState state, JiraActions.FetchJqlDone action) {
+  final mapToItems = (List<JiraIssue> issues) {
+    final List<ListItemData> listItems = issues
+        .map((jiraIssue) => ListItemData(
+              jiraIssue,
+              jiraIssue.fields?.summary,
+              jiraIssue.key,
+            ))
+        .toList();
+
+    return listItems;
+  };
+
+  // throw exception when when no element has been found
+  bool sameFilterId(IssueListView i) => i.filter.id == action.jiraFilter.id;
+//  final IssueListView getViewByFilter = state.issueListViews.firstWhere(sameFilterId);
+
+  final List<IssueListView> listViewsCopy = List<IssueListView>.from(state.issueListViews).toList() as List<IssueListView>;
+
+  final idx = state.issueListViews.indexWhere(sameFilterId);
+
+  listViewsCopy[idx] = listViewsCopy[idx].copyWith(items: mapToItems(action.jiraJqlResult.issues));
+
+  return state.copyWith(issueListViews: listViewsCopy);
 }
 
 ViewState _delete(ViewState state, Actions.Delete action) {
@@ -69,8 +98,8 @@ ViewState _edit(ViewState state, Actions.Edit action) {
 }
 
 ViewState _unSelectAll(ViewState state, Actions.UnSelectAll action) {
-  ListModifierFn unSelectAll = (List<ListItemData> l) =>
-      l.map((ListItemData value) => value.copyWith(isSelected: false, isEdit: false)).toList() as List<ListItemData>;
+  ListModifierFn unSelectAll =
+      (List<ListItemData> l) => l.map((ListItemData value) => value.copyWith(isSelected: false, isEdit: false)).toList() as List<ListItemData>;
   return _changeActualItemList(state, unSelectAll);
 }
 
@@ -138,16 +167,14 @@ List<ListItemData> _withMoved(items, ListItemData what, ListItemData target) {
 
 /// do modification on the inner items via an immutable way
 ViewState _changeActualItemList(ViewState state, ListModifierFn fn) {
-  // FIXME: add state
-  final targetIdx = 0;
+  final targetIdx = state.actListIdx;
   print('MISSING STATE FOR INDEX IN VIEW REDUCER!!!!');
 
   // leokádia ... tiszta jáva f@s az elb@szott stream api miatt :D
 
   if (targetIdx == null) throw ArgumentError('invalid targetIdx: ' + targetIdx.toString());
 
-  final List<IssueListView> listViewsCopy =
-      List<IssueListView>.from(state.issueListViews).toList() as List<IssueListView>;
+  final List<IssueListView> listViewsCopy = List<IssueListView>.from(state.issueListViews).toList() as List<IssueListView>;
   final origItems = listViewsCopy[targetIdx].items;
   final itemsCopy = List<ListItemData>.of(origItems).toList() as List<ListItemData>; // rethink if this really needed
 

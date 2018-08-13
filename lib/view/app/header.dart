@@ -57,7 +57,8 @@ Widget _wRefreshButton = new StoreConnector<AppState, ViewState>(
     return IconButton(
       tooltip: 'Refresh',
       icon: Icon(Icons.refresh),
-      onPressed: () => JiraAjax.doFetchJqlAction(view.issueListViews[0].filter.jql),
+      // fixme: re-think this overcomplicated line >> probably a new action is required e.g. fetchCurrentPage...
+      onPressed: () => JiraAjax.doFetchJqlAction(view.issueListViews[view.actListIdx].filter),
     );
   },
 );

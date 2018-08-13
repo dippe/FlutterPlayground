@@ -35,7 +35,7 @@ ItemWidget wIssueStatusChip = (item) {
   return item.issue?.fields?.status != null
       ? Chip(
           avatar: new Image.network(
-            _JIRA_ICON_URLS[item.issue.fields.status.statusCategory.key],
+            _JIRA_ICON_URLS[item.issue.fields.status.statusCategory.key] ?? Text('x'),
             color: Colors.white,
 //            width: 10.0,
 //            height: 10.0,

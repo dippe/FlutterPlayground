@@ -141,12 +141,12 @@ ItemWidget _wCheckBox = (item) => Checkbox(
 
 ItemWidget _wIssueKey = (item) => Text(item.key);
 
-ItemWidget _wPriority = (item) => item?.issue?.fields?.priority != null
-    ? Image.network((item.issue.fields.priority['iconUrl'] as String).replaceAll('.svg', '.png'))
-    : Text('');
+ItemWidget _wPriority = (item) =>
+    item?.issue?.fields?.priority != null ? Image.network((item.issue.fields.priority['iconUrl'] as String).replaceAll('.svg', '.png')) : Text('');
 
 // key: issue type name
 const ISSUE_TYPE_ICONS = {
+  null: URL_ISSUETYPE_ICONS + '/all_unassigned.png',
   'Default': URL_ISSUETYPE_ICONS + '/all_unassigned.png',
   'Defect': URL_ISSUETYPE_ICONS + '/defect.png',
   'Story': URL_ISSUETYPE_ICONS + '/story.png',
@@ -176,7 +176,7 @@ const ISSUE_TYPE_ICONS = {
 
 ItemWidget _wIssuetype = (item) {
   if (item.issue != null && item.issue.fields?.issuetype?.name != null) {
-    return Image.network(ISSUE_TYPE_ICONS[item.issue.fields.issuetype.name]);
+    return Image.network(ISSUE_TYPE_ICONS[item.issue.fields.issuetype.name] ?? ISSUE_TYPE_ICONS['Undefined']);
   } else {
     return Image.network(ISSUE_TYPE_ICONS['Undefined']);
 //    return Text('');

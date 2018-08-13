@@ -14,6 +14,8 @@ typedef ViewState ViewReducer(ViewState, dynamic);
 typedef List<ListItemData> ListModifierFn(List<ListItemData> l);
 
 Reducer<ViewState> listViewReducer = combineReducers<ViewState>([
+  // fixme: move _actListIdx to jql_tabs reducer
+  TypedReducer<ViewState, Actions.SetActListIdx>(_actListIdx),
   TypedReducer<ViewState, JiraActions.FetchJqlDone>(_addItemsFromJqlFetch),
   TypedReducer<ViewState, Actions.Add>(_add),
   TypedReducer<ViewState, Actions.Edit>(_edit),
@@ -31,6 +33,10 @@ Reducer<ViewState> listViewReducer = combineReducers<ViewState>([
 *    Reducer functions
 *
 * ***********************/
+
+ViewState _actListIdx(ViewState state, Actions.SetActListIdx action) {
+  return state.copyWith(actListIdx: action.idx);
+}
 
 ViewState _add(ViewState state, Actions.Add action) {
   final newItem = ListItemData(action.issue, action.issue.fields.summary, action.issue.key);

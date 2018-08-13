@@ -4,6 +4,17 @@ import 'package:todo_flutter_app/util/types.dart';
 
 // Action DTO-s
 
+class SetActListIdx implements Action {
+  final int idx;
+
+  SetActListIdx(this.idx);
+
+  @override
+  String toString() {
+    return 'SetActListIdx{idx: $idx}';
+  }
+}
+
 class Add implements Action {
   JiraIssue issue;
 

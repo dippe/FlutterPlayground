@@ -4,7 +4,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/view/app/app_drawer.dart';
 import 'package:todo_flutter_app/view/app/header.dart';
-import 'package:todo_flutter_app/view/issue_list/issue_list.dart';
 import 'package:todo_flutter_app/view/config/config_page.dart';
 import 'package:todo_flutter_app/view/jql_tabs/jql_tabs.dart';
 

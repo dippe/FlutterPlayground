@@ -42,6 +42,7 @@ class ListItemData {
 }
 
 class IssueListView {
+  final int lastFetched;
   final List<ListItemData> items;
 
   final String id;
@@ -50,7 +51,15 @@ class IssueListView {
   final List<JiraSearch> result; // link to the ajax result
   final int idCounter;
 
-  IssueListView({this.id, @required this.name, @required this.filter, this.result, this.idCounter = 0, @required this.items});
+  IssueListView({
+    @required this.id,
+    @required this.name,
+    @required this.filter,
+    @required this.items,
+    this.result,
+    this.idCounter = 0,
+    this.lastFetched = null,
+  });
 
   IssueListView copyWith({id, name, filter, result, items, idCounter}) {
     return IssueListView(
@@ -58,6 +67,7 @@ class IssueListView {
       name: name ?? this.name,
       filter: filter ?? this.filter,
       result: result != null ? List<JiraSearch>.unmodifiable(result).toList() : this.result,
+      lastFetched: result != null ? DateTime.now().millisecondsSinceEpoch : this.lastFetched,
       items: items != null ? List<ListItemData>.unmodifiable(items).toList() : this.items,
       idCounter: idCounter ?? this.idCounter,
     );

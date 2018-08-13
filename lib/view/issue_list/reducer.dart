@@ -35,7 +35,11 @@ Reducer<ViewState> listViewReducer = combineReducers<ViewState>([
 * ***********************/
 
 ViewState _actListIdx(ViewState state, Actions.SetActListIdx action) {
-  return state.copyWith(actListIdx: action.idx);
+  if (state.actListIdx == action.idx) {
+    return state;
+  } else {
+    return state.copyWith(actListIdx: action.idx);
+  }
 }
 
 ViewState _add(ViewState state, Actions.Add action) {

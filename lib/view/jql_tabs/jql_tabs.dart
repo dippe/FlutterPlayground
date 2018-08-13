@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
+import 'package:todo_flutter_app/jira/jira_ajax.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/issue_list/issue_list.dart';
@@ -12,15 +14,40 @@ class wJqlTabsPage extends StatefulWidget {
 }
 
 class _wJqlTabsPageState extends State<wJqlTabsPage> with SingleTickerProviderStateMixin {
-  List<Tab> myTabs;
+  List<Tab> _myTabs;
+  List<Widget> _children;
+  List<IssueListView> _recent;
+  Store<AppState> _appStore;
+  int _currIdx = 0;
 
   TabController _tabController;
 
+  _wJqlTabsPageState() {
+    this._appStore = store;
+  }
+
   @override
   void initState() {
-    this.myTabs = _tabsFromStore(store.state);
+    _recent = _appStore.state.view.issueListViews;
+
+    _appStore.onChange.listen((appState) {
+      if (appState.view.issueListViews != _recent) {
+        setState(() {
+          _recent = appState.view.issueListViews;
+          // ?? this line seem inappropriate here
+          _children = _renderChildren(_appStore);
+        });
+      }
+    });
+
+    this._myTabs = _tabsFromStore(_appStore.state);
+    this._children = _renderChildren(_appStore);
+
     super.initState();
-    _tabController = new TabController(vsync: this, length: myTabs.length);
+    _tabController = new TabController(vsync: this, length: _myTabs.length);
+    _tabController.addListener(() {
+      setState(() => _currIdx = this._tabController.index);
+    });
   }
 
   @override
@@ -31,22 +58,27 @@ class _wJqlTabsPageState extends State<wJqlTabsPage> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    var currIdx = this._tabController.index;
-    dispatch(Actions.SetActListIdx(currIdx));
+    // fixme: this logic should be refactored out somehow
+    if (_appStore.state.view.actListIdx != _currIdx) {
+      dispatch(Actions.SetActListIdx(_currIdx));
 
-    var children = store.state.view.issueListViews.map((i) {
-      print(i.name);
-      return wIssueList(i.items);
-    }).toList();
+      // lazy loading like solution:
+      if (_appStore.state.view.issueListViews[_currIdx].lastFetched == null) {
+        var currFilter = _appStore.state.view.issueListViews[_currIdx].filter;
+        JiraAjax.doFetchJqlAction(currFilter);
+      }
+
+      this._children = _renderChildren(_appStore);
+    }
 
     return new Scaffold(
       appBar: new AppBar(
         bottom: new TabBar(
           controller: _tabController,
-          tabs: myTabs,
+          tabs: _myTabs,
         ),
       ),
-      body: new TabBarView(controller: _tabController, children: children
+      body: new TabBarView(controller: _tabController, children: _children
 //        myTabs.map((Tab tab) {
 //          return new Center(child: new Text(tab.text));
 //        }).toList(),
@@ -61,3 +93,12 @@ List<Tab> _tabsFromStore(AppState appState) => appState.view.issueListViews.map(
         text: i.name,
       );
     }).toList();
+
+List<Widget> _renderChildren(Store<AppState> store) => store.state.view.issueListViews.map((i) {
+      print(i.name);
+      if (i.items != null) {
+        return wIssueList(i.items) as Widget;
+      } else {
+        return Text('Loading ...') as Widget;
+      }
+    }).toList() as List<Widget>;

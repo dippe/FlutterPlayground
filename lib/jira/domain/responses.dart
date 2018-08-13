@@ -34,11 +34,12 @@ the JIRA property 'jira.search.views.default.max'. If you specify a value that i
 - expand	string A comma-separated list of the parameters to expand.
  */
 class JiraSearch {
-  String expand;
-  int startAt;
-  int maxResults;
-  int total;
-  List<JiraIssue> issues;
+  final DateTime fetchTime;
+  final String expand;
+  final int startAt;
+  final int maxResults;
+  final int total;
+  final List<JiraIssue> issues;
 
   JiraSearch.fromJson(Map<String, dynamic> json)
       : expand = json['expand'],
@@ -46,8 +47,8 @@ class JiraSearch {
         maxResults = json['maxResults'],
         total = json['total'],
         //ignore: unnecessary_cast
-        issues = (json['issues'] as List<dynamic>)?.map((issueJson) => JiraIssue.fromJson(issueJson))?.toList()
-            as List<JiraIssue>;
+        issues = (json['issues'] as List<dynamic>)?.map((issueJson) => JiraIssue.fromJson(issueJson))?.toList() as List<JiraIssue>,
+        fetchTime = DateTime.now();
 
   @override
   String toString() {

@@ -26,6 +26,7 @@ final _initState = AppState(
   // fixme: remove test data
   config: ConfigState(user: TMP_USER, password: TMP_PWD),
   view: ViewState(
+    actListIdx: 0,
     actPage: PageType.IssueList,
     issueListViews: [
       IssueListView(

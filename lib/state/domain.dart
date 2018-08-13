@@ -15,12 +15,10 @@ class ListItemData {
   final bool isEdit;
   final bool isSelected;
 
-  const ListItemData(this.issue, this.title, this.key,
-      {this.isEdit = false, this.isSelected = false, this.done = false});
+  const ListItemData(this.issue, this.title, this.key, {this.isEdit = false, this.isSelected = false, this.done = false});
 
   @override
-  bool operator ==(other) =>
-      other is ListItemData && issue == (other.issue) && title == other.title && key == other.key;
+  bool operator ==(other) => other is ListItemData && issue == (other.issue) && title == other.title && key == other.key;
 
   @override
   int get hashCode => issue.hashCode ^ title.hashCode ^ key.hashCode;
@@ -52,15 +50,14 @@ class IssueListView {
   final List<JiraSearch> result; // link to the ajax result
   final int idCounter;
 
-  IssueListView(
-      {this.id, @required this.name, @required this.filter, this.result, this.idCounter = 0, @required this.items});
+  IssueListView({this.id, @required this.name, @required this.filter, this.result, this.idCounter = 0, @required this.items});
 
   IssueListView copyWith({id, name, filter, result, items, idCounter}) {
     return IssueListView(
       id: id ?? this.id,
       name: name ?? this.name,
       filter: filter ?? this.filter,
-      result: result ?? this.result,
+      result: result != null ? List<JiraSearch>.unmodifiable(result).toList() : this.result,
       items: items ?? this.items,
       idCounter: idCounter ?? this.idCounter,
     );
@@ -103,20 +100,21 @@ class IssueListView {
           idCounter == other.idCounter;
 
   @override
-  int get hashCode =>
-      items.hashCode ^ id.hashCode ^ name.hashCode ^ filter.hashCode ^ result.hashCode ^ idCounter.hashCode;
+  int get hashCode => items.hashCode ^ id.hashCode ^ name.hashCode ^ filter.hashCode ^ result.hashCode ^ idCounter.hashCode;
 }
 
 class ViewState {
   final PageType actPage;
   final List<IssueListView> issueListViews;
+  final int actListIdx; // the actual visible list to work on
 
-  ViewState({@required this.actPage, @required this.issueListViews});
+  ViewState({@required this.actPage, @required this.issueListViews, @required this.actListIdx});
 
-  ViewState copyWith({actual, selectedIssueListView, issueListViews, showLogin}) {
+  ViewState copyWith({PageType actPage, int actListIdx, issueListViews}) {
     return ViewState(
-      actPage: actual ?? this.actPage,
-      issueListViews: issueListViews ?? this.issueListViews,
+      actPage: actPage ?? this.actPage,
+      issueListViews: issueListViews != null ? List<IssueListView>.unmodifiable(issueListViews).toList() : this.issueListViews,
+      actListIdx: actListIdx ?? this.actListIdx,
     );
   }
 }
@@ -130,8 +128,8 @@ class JiraData {
 
   JiraData copyWith({fetchedIssues, fetchedFilters}) {
     return JiraData(
-      fetchedIssues: fetchedIssues ?? this.fetchedIssues,
-      fetchedFilters: fetchedFilters ?? this.fetchedFilters,
+      fetchedIssues: fetchedIssues != null ? List<JiraIssue>.unmodifiable(fetchedIssues).toList() : this.fetchedIssues,
+      fetchedFilters: fetchedFilters != null ? List<JiraFilter>.unmodifiable(fetchedFilters).toList() : this.fetchedFilters,
       error: error ?? this.error,
     );
   }
@@ -190,8 +188,7 @@ class ConfigState {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ConfigState && runtimeType == other.runtimeType && user == other.user && password == other.password;
+      identical(this, other) || other is ConfigState && runtimeType == other.runtimeType && user == other.user && password == other.password;
 
   @override
   int get hashCode => user.hashCode ^ password.hashCode;

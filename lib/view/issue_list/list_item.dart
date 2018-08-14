@@ -24,12 +24,13 @@ ItemWidget wListItem = (ListItemData item) {
   final renderSimpleRow = (children) => Row(
         children: children,
       );
-  final renderUnselectedRow = (children) => _wDraggableItem(
+  final renderUnselectedRow = (children) => Row(
+        children: children,
+      );
+  final renderUnselectedRowWithSwipeToggle = (children) => _wDraggableItem(
         GestureDetector(
           onHorizontalDragEnd: (DragEndDetails details) => dispatch(Actions.CbToggle(item)),
-          child: Row(
-            children: children,
-          ),
+          child: renderUnselectedRow(children),
         ),
         item,
       );

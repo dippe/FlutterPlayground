@@ -6,6 +6,7 @@ import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/issue_list/issue_list.dart';
 import 'package:todo_flutter_app/view/issue_list/action.dart' as Actions;
+import 'package:todo_flutter_app/view/jql_tabs/action.dart' as Actions;
 
 class wJqlTabsPage extends StatefulWidget {
   const wJqlTabsPage({Key key}) : super(key: key);
@@ -14,7 +15,7 @@ class wJqlTabsPage extends StatefulWidget {
 }
 
 class _wJqlTabsPageState extends State<wJqlTabsPage> with SingleTickerProviderStateMixin {
-  List<Tab> _myTabs;
+  List<Widget> _myTabs;
   List<Widget> _children;
   List<IssueListView> _recent;
   Store<AppState> _appStore;
@@ -85,9 +86,12 @@ class _wJqlTabsPageState extends State<wJqlTabsPage> with SingleTickerProviderSt
   }
 }
 
-List<Tab> _tabsFromStore(AppState appState) => appState.view.issueListViews.map((i) {
+List<Widget> _tabsFromStore(AppState appState) => appState.view.issueListViews.map((i) {
       return Tab(
-        icon: Icon(Icons.directions_car),
+        icon: GestureDetector(
+          onLongPress: () => dispatch(Actions.ShowJqlEditDialog()),
+          child: Icon(Icons.directions_car),
+        ),
         text: i.name,
       );
     }).toList();

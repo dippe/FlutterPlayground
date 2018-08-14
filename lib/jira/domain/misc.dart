@@ -39,4 +39,9 @@ class JiraFilter {
         favourite = json['favourite'],
         sharePermissions = json['sharePermissions'],
         subscriptions = json['subscriptions'];
+
+  @override
+  String toString() {
+    return 'JiraFilter{id: $id, name: $name}';
+  }
 }

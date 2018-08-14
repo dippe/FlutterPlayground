@@ -178,7 +178,6 @@ List<ListItemData> _withMoved(items, ListItemData what, ListItemData target) {
 /// do modification on the inner items via an immutable way
 ViewState _changeActualItemList(ViewState state, ListModifierFn fn) {
   final targetIdx = state.actListIdx;
-  print('MISSING STATE FOR INDEX IN VIEW REDUCER!!!!');
 
   // leokádia ... tiszta jáva f@s az elb@szott stream api miatt :D
 

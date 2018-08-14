@@ -5,6 +5,7 @@ import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/view/app/app_drawer.dart';
 import 'package:todo_flutter_app/view/app/header.dart';
 import 'package:todo_flutter_app/view/config/config_page.dart';
+import 'package:todo_flutter_app/view/jql_tab_edit/jql_edit_form.dart';
 import 'package:todo_flutter_app/view/jql_tabs/jql_tabs.dart';
 
 class FlutterReduxApp extends StatelessWidget {
@@ -44,6 +45,7 @@ Widget _wMainRoot(context) => Scaffold(
 Widget _wBody() => StoreConnector<AppState, dynamic>(
     converter: (store) => {
           // fixme: rethink page handling
+          'showJqlEdit': store.state.view.actPage == PageType.JqlEditDialog,
           'showConfig': store.state.view.actPage == PageType.Config,
           // fixme: rethink error handling
           'error': store.state.jira.error,
@@ -59,6 +61,8 @@ Widget _wBody() => StoreConnector<AppState, dynamic>(
             )
           ],
         );
+      } else if (s['showJqlEdit']) {
+        return wJqlEditForm();
       } else if (s['showConfig']) {
         return wLoginFormPage();
       } else {

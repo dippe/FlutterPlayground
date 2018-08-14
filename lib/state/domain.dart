@@ -5,7 +5,7 @@ import 'package:todo_flutter_app/jira/domain/responses.dart';
 
 enum ConfigMenuItems { About, Config, DisplayFinished, Login }
 
-enum PageType { Config, IssueList }
+enum PageType { Config, IssueList, JqlEditDialog }
 
 class ListItemData {
   final String key;

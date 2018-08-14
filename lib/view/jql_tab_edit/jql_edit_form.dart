@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
-import 'package:todo_flutter_app/view/generic/redux_date_field.dart';
+import 'package:todo_flutter_app/view/common/common_date_field.dart';
+import 'package:todo_flutter_app/view/common/common_text_field.dart';
 import 'package:todo_flutter_app/view/jql_tab_edit/action.dart' as Actions;
 
 wJqlEditForm() => MyHomePage();
@@ -77,7 +78,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ),
-                  ReduxDateField(
+                  CommonTextField(
+                    labelText: 'Labelka',
+                    onChange: (txt) => print('submitted: ' + txt),
+                    initValue: 'initTxt',
+                    inputType: FieldInputType.TEXT,
+                  ),
+                  CommonDateField(
                     title: 'Dátumocska',
                     onChange: (res) => print('Choosed Date: ' + res.toIso8601String()),
                   ),
@@ -87,29 +94,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: const Text('Submit'),
                         onPressed: null,
                       )),
-/*
-Further input type examples:
-
-                  new TextFormField(
-                    decoration: const InputDecoration(
-                      icon: const Icon(Icons.phone),
-                      hintText: 'Enter a phone number',
-                      labelText: 'Phone',
-                    ),
-                    keyboardType: TextInputType.phone,
-                    inputFormatters: [
-                      WhitelistingTextInputFormatter.digitsOnly,
-                    ],
-                  ),
-                  new TextFormField(
-                    decoration: const InputDecoration(
-                      icon: const Icon(Icons.email),
-                      hintText: 'Enter a email address',
-                      labelText: 'Email',
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-*/
                 ],
               ))),
     );

@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 /**
  * Example:
  *
- * ReduxDateField(
+ * CommonDateField(
  *   title: 'Dátumocska',
  *   onChange: (res) => print('Choosed Date: ' + res.toIso8601String()),
  *   ),
@@ -16,17 +16,17 @@ import 'package:intl/intl.dart';
 
 typedef void _OnChangeCallBack(DateTime res);
 
-class ReduxDateField extends StatefulWidget {
+class CommonDateField extends StatefulWidget {
   final _OnChangeCallBack onChange;
   final String title;
 
-  ReduxDateField({Key key, @required this.onChange, @required this.title}) : super(key: key);
+  CommonDateField({Key key, @required this.onChange, @required this.title}) : super(key: key);
 
   @override
-  _ReduxDateFieldState createState() => new _ReduxDateFieldState();
+  _CommonDateFieldState createState() => new _CommonDateFieldState();
 }
 
-class _ReduxDateFieldState extends State<ReduxDateField> {
+class _CommonDateFieldState extends State<CommonDateField> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   final _dateFormat = DateFormat.yMd();

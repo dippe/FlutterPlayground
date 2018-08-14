@@ -72,11 +72,9 @@ class _wJqlTabsPageState extends State<wJqlTabsPage> with SingleTickerProviderSt
     }
 
     return new Scaffold(
-      appBar: new AppBar(
-        bottom: new TabBar(
-          controller: _tabController,
-          tabs: _myTabs,
-        ),
+      appBar: new TabBar(
+        controller: _tabController,
+        tabs: _myTabs,
       ),
       body: new TabBarView(controller: _tabController, children: _children
 //        myTabs.map((Tab tab) {

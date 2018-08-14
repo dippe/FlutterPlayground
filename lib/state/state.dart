@@ -37,18 +37,11 @@ final _initState = AppState(
             jql: 'assignee = currentUser() AND resolution = Unresolved order by updated '
                 'DESC'),
         result: null,
-        items: null,
-      ),
-      IssueListView(
-        id: '1',
-        name: '1 Project Test',
-        filter: JiraFilter(id: '1', jql: 'project=test'),
         items: List.from([new ListItemData(null, 'Hello world :P', 'ISSUE-1')]),
-        result: null,
       ),
       IssueListView(
         id: '2',
-        name: '2 Status Todo',
+        name: 'Status Todo',
         filter: JiraFilter(id: '2', jql: 'status in ("To Do")'),
         result: null,
         items: null,
@@ -64,10 +57,11 @@ final _initState = AppState(
       IssueListView(
         id: '4',
         name: 'Updated recently',
-        filter: JiraFilter(id: '4', jql: 'updated >= -1w order by updated DESC'),
+        filter: JiraFilter(id: '4', jql: 'updated >= -1w or created >= -1w order by updated DESC'),
         result: null,
         items: null,
       ),
+/*
       IssueListView(
         id: '5',
         name: 'Created recently',
@@ -75,6 +69,7 @@ final _initState = AppState(
         result: null,
         items: null,
       ),
+*/
       IssueListView(
         id: '6',
         name: 'Reported by me',

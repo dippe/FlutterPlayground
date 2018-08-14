@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
+import 'package:todo_flutter_app/view/generic/redux_date_field.dart';
 import 'package:todo_flutter_app/view/jql_tab_edit/action.dart' as Actions;
 
 wJqlEditForm() => MyHomePage();
@@ -76,22 +77,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ),
-                  new TextFormField(
-                    decoration: new InputDecoration(
-                      icon: const Icon(Icons.calendar_today),
-                      hintText: 'Enter your date of birth',
-                      labelText: 'Dob',
-                    ),
-                    controller: _dateFieldController,
-                    keyboardType: TextInputType.datetime,
-                    enabled: false,
-                  ),
-                  new IconButton(
-                    icon: new Icon(Icons.date_range),
-                    tooltip: 'Choose date',
-                    onPressed: (() {
-                      _chooseDate(context, _dateFieldController.text);
-                    }),
+                  ReduxDateField(
+                    title: 'Dátumocska',
+                    onChange: (res) => print('Choosed Date: ' + res.toIso8601String()),
                   ),
                   new Container(
                       padding: const EdgeInsets.only(left: 40.0, top: 20.0),
@@ -100,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         onPressed: null,
                       )),
 /*
-Forther input type examples:
+Further input type examples:
 
                   new TextFormField(
                     decoration: const InputDecoration(
@@ -125,30 +113,5 @@ Forther input type examples:
                 ],
               ))),
     );
-  }
-
-  final TextEditingController _dateFieldController = new TextEditingController();
-
-  Future _chooseDate(BuildContext context, String initialDateString) async {
-    var now = new DateTime.now();
-    var initialDate = convertToDate(initialDateString) ?? now;
-    initialDate = (initialDate.year >= 1900 && initialDate.isBefore(now) ? initialDate : now);
-
-    var result = await showDatePicker(context: context, initialDate: initialDate, firstDate: new DateTime(1900), lastDate: new DateTime.now());
-
-    if (result == null) return;
-
-    setState(() {
-      _dateFieldController.text = new DateFormat.yMd().format(result);
-    });
-  }
-
-  DateTime convertToDate(String input) {
-    try {
-      var d = new DateFormat.yMd().parseStrict(input);
-      return d;
-    } catch (e) {
-      return null;
-    }
   }
 }

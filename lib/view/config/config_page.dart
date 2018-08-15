@@ -3,49 +3,46 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/common/common_text_field.dart';
-import 'package:todo_flutter_app/view/config/action.dart' as Actions;
-import 'package:todo_flutter_app/view/action.dart' as ViewActions;
+import 'package:todo_flutter_app/view/config/action.dart';
+import 'package:todo_flutter_app/view/action.dart';
 
 Widget wConfigPage() => new StoreConnector<AppState, ConfigState>(
       converter: (state) => state.state.config,
-      builder: (context, user) => new Column(
+      builder: (context, config) => new Column(
             children: <Widget>[
               Title(
                 color: Colors.greenAccent,
                 title: 'Login',
-                child: Text('JIRA Login'),
+                child: Text('Configure JIRA Login'),
               ),
               const Divider(
-                height: 1.0,
+                color: Colors.white,
+                height: 15.0,
               ),
-              new ListTile(
-                leading: const Icon(Icons.person),
-                title: _Name(user.user),
+              CommonTextField(
+                inputType: FieldInputType.TEXT,
+                initValue: config.baseUrl != null && config.baseUrl.isNotEmpty ? config.baseUrl : 'https://',
+                labelText: 'JIRA BaseURL',
+                onChange: (txt) => dispatch(SetBaseUrl(txt)),
+                icon: Icons.input,
               ),
-              new ListTile(
-                leading: const Icon(Icons.person),
-                title: CommonTextField(
-                  inputType: FieldInputType.TEXT,
-                  initValue: user.user,
-                  onChange: (txt) => dispatch(Actions.SetUserName(txt)),
-                  labelText: 'Name',
-                ),
+              CommonTextField(
+                inputType: FieldInputType.TEXT,
+                initValue: config.user,
+                labelText: 'Username',
+                onChange: (txt) => dispatch(SetUserName(txt)),
+                icon: Icons.person,
               ),
-              new ListTile(
-                leading: const Icon(Icons.account_box),
-                title: _Pwd(user.password),
-              ),
-              new ListTile(
-                leading: const Icon(Icons.email),
-                title: new TextField(
-                  decoration: new InputDecoration(
-                    hintText: "Email",
-                  ),
-                ),
+              CommonTextField(
+                inputType: FieldInputType.TEXT,
+                initValue: config.password,
+                labelText: 'Password',
+                onChange: (txt) => dispatch(SetPwd(txt)),
+                icon: Icons.input,
               ),
               new FlatButton(
                 child: Text('Ok-Mok'),
-                onPressed: () => dispatch(ViewActions.HideConfigPage()),
+                onPressed: () => dispatch(HideConfigPage()),
               ),
             ],
           ),
@@ -72,7 +69,7 @@ class _NameState extends State<_Name> {
     return TextField(
       controller: _controller,
       decoration: new InputDecoration(labelText: 'Name'),
-      onSubmitted: (txt) => dispatch(Actions.SetUserName(txt)),
+      onSubmitted: (txt) => dispatch(SetUserName(txt)),
     );
   }
 }
@@ -98,7 +95,7 @@ class _PwdState extends State<_Pwd> {
     return new TextField(
       controller: _controller,
       decoration: new InputDecoration(labelText: 'Pwd'),
-      onSubmitted: (txt) => dispatch(Actions.SetPwd(txt)),
+      onSubmitted: (txt) => dispatch(SetPwd(txt)),
     );
   }
 }

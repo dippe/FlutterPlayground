@@ -12,12 +12,10 @@ import 'package:todo_flutter_app/util/auth.dart';
 
 const TMP_USER = "dippenexus@gmail.com";
 const TMP_PWD = "KGRCC7h58fgfwKO3ZjKN62C9";
-const BASE_URL = "https://testdev1.atlassian.net";
+const TMP_BASE_URL = "https://testdev1.atlassian.net";
 
 const URL_ISSUE = "/rest/api/2/issue/";
 const URL_JQL = "/rest/api/2/search";
-const URL_STATUS_ICONS = BASE_URL + '/images/icons/statuses';
-const URL_ISSUETYPE_ICONS = BASE_URL + '/images/icons/issuetypes';
 
 const MAX_RESULTS = 1000;
 const FIELDS_TO_GET = "*all";
@@ -31,23 +29,32 @@ class AjaxError {
 typedef void GetIssueCb(JiraIssue issue);
 typedef void GetJqlCb(JiraSearch res);
 
-var client = BasicAuthClient(TMP_USER, TMP_PWD);
-
 class JiraAjax {
+  static Future<Response> _jiraGet(String path) {
+    // fixme: rethink this direct store access hack
+    final user = store.state.config.user;
+    final password = store.state.config.password;
+    final baseUrl = store.state.config.baseUrl;
+    final fullUrl = baseUrl + path;
+
+    print('*** JIRA get request: ' + fullUrl);
+    return BasicAuthClient(user, password).get(fullUrl);
+  }
+
   static void doFetchJqlAction(JiraFilter filter) => JiraAjax._fetchIssuesByJql(filter).then((res) {
         store.dispatch(FetchJqlDone(res, filter));
       }).catchError((error) {
         store.dispatch(FetchError(error.toString()));
       });
 
-  static void doFetchIssueAction(String key) => JiraAjax._fetchIssue(key).then((res) {
+  static void doFetchIssueAction(String baseUrl, String key) => JiraAjax._fetchIssue(key).then((res) {
         store.dispatch(FetchIssueDone(res));
       }).catchError((error) {
         store.dispatch(FetchError(error.toString()));
       });
 
   static Future<JiraIssue> _fetchIssue(String key) {
-    return client.get(BASE_URL + URL_ISSUE + key).then((Response val) {
+    return _jiraGet(URL_ISSUE + key).then((Response val) {
       print(val.body);
 
       Map issueMap = json.decode(val.body);
@@ -61,10 +68,11 @@ class JiraAjax {
   }
 
   static Future<JiraSearch> _fetchIssuesByJql(JiraFilter filter) {
-    // fixme: re-enable + test
-//  String ncodedJql = encodeURIComponent(jql);
+    // fixme: re-enable encoding
+    //  String ncodedJql = encodeURIComponent(jql);
     String ncodedJql = filter.jql;
-    String url = BASE_URL + URL_JQL + '?maxResults=' + MAX_RESULTS.toString() + "&fields=" + FIELDS_TO_GET + '&jql=' + ncodedJql;
+
+    String path = URL_JQL + '?maxResults=' + MAX_RESULTS.toString() + "&fields=" + FIELDS_TO_GET + '&jql=' + ncodedJql;
 
     var _validateResult = (JiraSearch res) {
       if (res.total > MAX_RESULTS || res.total > res.maxResults) {
@@ -84,7 +92,7 @@ class JiraAjax {
       }
     };
 
-    return client.get(url).then((Response resp) {
+    return _jiraGet(path).then((Response resp) {
       _validateResponse(resp);
 
       Map jqlMap = json.decode(resp.body);

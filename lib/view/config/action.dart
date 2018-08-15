@@ -23,3 +23,14 @@ class SetPwd implements Action {
     return 'SetPwd{pwd: $pwd}';
   }
 }
+
+class SetBaseUrl implements Action {
+  String url;
+
+  SetBaseUrl(this.url);
+
+  @override
+  String toString() {
+    return 'SetBaseUrl{url: $url}';
+  }
+}

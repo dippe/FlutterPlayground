@@ -179,21 +179,23 @@ class AppState {
 class ConfigState {
   final String user;
   final String password;
+  final String baseUrl;
 
-  ConfigState({this.user, this.password});
+  ConfigState({@required this.user, @required this.password, @required this.baseUrl});
 
   hasLogin() {
-    return user != null && password != null;
+    return user != null && password != null && baseUrl != null;
   }
 
-  ConfigState copyWith({user, password}) => ConfigState(
+  ConfigState copyWith({user, password, baseUrl}) => ConfigState(
         user: user ?? this.user,
         password: password ?? this.password,
+        baseUrl: baseUrl ?? this.baseUrl,
       );
 
   @override
   String toString() {
-    return 'LoginData{user: $user, password: $password}';
+    return 'ConfigState{server: $baseUrl, user: $user, password: $password}';
   }
 
   @override

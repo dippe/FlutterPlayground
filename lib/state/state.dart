@@ -33,7 +33,11 @@ final _initState = AppState(
     predefinedFilters: _predefinedFilters,
   ),
   // fixme: remove test data
-  config: ConfigState(user: TMP_USER, password: TMP_PWD),
+  config: ConfigState(
+    user: TMP_USER,
+    password: TMP_PWD,
+    baseUrl: TMP_BASE_URL,
+  ),
   view: ViewState(
     actListIdx: 0,
     actPage: PageType.IssueList,

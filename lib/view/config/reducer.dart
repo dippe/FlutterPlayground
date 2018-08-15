@@ -6,6 +6,8 @@ import 'package:todo_flutter_app/view/config/action.dart' as Actions;
 Reducer<ConfigState> configReducer = (ConfigState state, dynamic action) {
   if (action is Actions.SetUserName) {
     return state.copyWith(user: action.name);
+  } else if (action is Actions.SetBaseUrl) {
+    return state.copyWith(baseUrl: action.url);
   } else if (action is Actions.SetPwd) {
     return state.copyWith(password: action.pwd);
   } else {

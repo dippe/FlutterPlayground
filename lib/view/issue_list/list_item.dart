@@ -148,7 +148,7 @@ ItemWidget _wPriority = (item) =>
     item?.issue?.fields?.priority != null ? Image.network((item.issue.fields.priority['iconUrl'] as String).replaceAll('.svg', '.png')) : Text('');
 
 // key: issue type name
-const ISSUE_TYPE_ICONS = {
+const URL_ISSUE_TYPE_ICONS = {
   null: URL_ISSUETYPE_ICONS + '/all_unassigned.png',
   'Default': URL_ISSUETYPE_ICONS + '/all_unassigned.png',
   'Defect': URL_ISSUETYPE_ICONS + '/defect.png',
@@ -178,10 +178,12 @@ const ISSUE_TYPE_ICONS = {
 };
 
 ItemWidget _wIssuetype = (item) {
+  final baseUrl = store.state.config.baseUrl;
   if (item.issue != null && item.issue.fields?.issuetype?.name != null) {
-    return Image.network(ISSUE_TYPE_ICONS[item.issue.fields.issuetype.name] ?? ISSUE_TYPE_ICONS['Undefined']);
+    final icon = URL_ISSUE_TYPE_ICONS[item.issue.fields.issuetype.name] ?? URL_ISSUE_TYPE_ICONS['Undefined'];
+    return Image.network(baseUrl + icon);
   } else {
-    return Image.network(ISSUE_TYPE_ICONS['Undefined']);
+    return Image.network(baseUrl + URL_ISSUE_TYPE_ICONS['Undefined']);
 //    return Text('');
   }
 };

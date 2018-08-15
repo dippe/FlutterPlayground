@@ -45,7 +45,7 @@ Widget _wMainRoot(context) => Scaffold(
 Widget _wBody() => StoreConnector<AppState, dynamic>(
     converter: (store) => {
           // fixme: rethink page handling
-          'showJqlEdit': store.state.view.actPage == PageType.JqlEditDialog,
+          'showJqlEdit': store.state.view.actPage == PageType.JqlEdit,
           'showConfig': store.state.view.actPage == PageType.Config,
           // fixme: rethink error handling
           'error': store.state.jira.error,
@@ -62,9 +62,9 @@ Widget _wBody() => StoreConnector<AppState, dynamic>(
           ],
         );
       } else if (s['showJqlEdit']) {
-        return wJqlEditForm();
+        return wJqlEditPage();
       } else if (s['showConfig']) {
-        return wLoginFormPage();
+        return wConfigPage();
       } else {
         return wJqlTabsPage();
       }

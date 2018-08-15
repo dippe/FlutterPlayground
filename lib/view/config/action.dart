@@ -2,17 +2,6 @@ import 'package:todo_flutter_app/util/types.dart';
 
 // Action DTO-s
 
-class ShowLoginDialog implements Action {
-  bool show;
-
-  ShowLoginDialog(this.show);
-
-  @override
-  String toString() {
-    return 'ShowLoginDialog{show: $show}';
-  }
-}
-
 class SetUserName implements Action {
   String name;
 
@@ -32,14 +21,5 @@ class SetPwd implements Action {
   @override
   String toString() {
     return 'SetPwd{pwd: $pwd}';
-  }
-}
-
-class HideLoginDialog implements Action {
-  HideLoginDialog();
-
-  @override
-  String toString() {
-    return 'Login{}';
   }
 }

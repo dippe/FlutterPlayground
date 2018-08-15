@@ -12,6 +12,9 @@ final store = new Store<AppState>(_debugReducer(appReducer), initialState: _init
 //final dispatchFn = (Action action) => () => store.dispatch(action);
 final dispatch = (Action action) => store.dispatch(action);
 
+/// call multiple reducers of the same state
+E callReducers<E>(List<Reducer<E>> reducers, E state, Action action) => reducers.fold(state, (E state, fn) => fn(state, action));
+
 Reducer<AppState> _debugReducer(r) => (AppState state, dynamic action) {
       print('Action triggered with type: ' + action.runtimeType.toString() + ' val: ' + action.toString());
       return r(state, action);

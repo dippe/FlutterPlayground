@@ -11,7 +11,7 @@ import 'package:todo_flutter_app/view/jql_tab_edit//action.dart' as Actions;
 typedef ViewState ViewReducer(ViewState, dynamic);
 typedef IssueListView ItemModifierFn(IssueListView d);
 
-Reducer<ViewState> listViewReducer = combineReducers<ViewState>([
+Reducer<ViewState> jqlEditReducer = combineReducers<ViewState>([
   TypedReducer<ViewState, Actions.SelectFilter>(_selectFilter),
   TypedReducer<ViewState, Actions.SetName>(_setName),
 ]);

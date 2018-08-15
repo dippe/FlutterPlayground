@@ -1,14 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:intl/intl.dart';
+import 'package:todo_flutter_app/view/action.dart';
 import 'package:todo_flutter_app/view/common/common_date_field.dart';
 import 'package:todo_flutter_app/view/common/common_text_field.dart';
-import 'package:todo_flutter_app/view/jql_tab_edit/action.dart' as Actions;
+import 'package:todo_flutter_app/state/state.dart';
 
-wJqlEditForm() => MyHomePage();
+wJqlEditPage() => MyHomePage();
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.name}) : super(key: key);
@@ -92,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: const EdgeInsets.only(left: 40.0, top: 20.0),
                       child: new RaisedButton(
                         child: const Text('Submit'),
-                        onPressed: null,
+                        onPressed: () => dispatch(HideConfigPage()),
                       )),
                 ],
               ))),

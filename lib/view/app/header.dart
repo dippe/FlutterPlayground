@@ -5,7 +5,7 @@ import 'package:todo_flutter_app/jira/jira_ajax.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/view/issue_list/action.dart' as Actions;
 import 'package:todo_flutter_app/state/state.dart';
-import 'package:todo_flutter_app/view/config/action.dart' as Actions;
+import 'package:todo_flutter_app/view/action.dart' as Actions;
 
 const DEFAULT_ITEM_KEY = 'UNLINKED-1234';
 const DEFAULT_ITEM_NAME = 'Unnamed issue';
@@ -37,7 +37,7 @@ Widget _wTopMenu() {
   return PopupMenuButton(
     onSelected: (i) {
       if (i == ConfigMenuItems.Login) {
-        dispatch(Actions.ShowLoginDialog(true));
+        dispatch(Actions.ShowConfigPage());
       }
     },
     itemBuilder: builder,

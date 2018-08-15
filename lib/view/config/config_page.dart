@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
+import 'package:todo_flutter_app/view/common/common_text_field.dart';
 import 'package:todo_flutter_app/view/config/action.dart' as Actions;
+import 'package:todo_flutter_app/view/action.dart' as ViewActions;
 
-Widget wLoginFormPage() => new StoreConnector<AppState, ConfigState>(
+Widget wConfigPage() => new StoreConnector<AppState, ConfigState>(
       converter: (state) => state.state.config,
       builder: (context, user) => new Column(
             children: <Widget>[
@@ -21,6 +23,15 @@ Widget wLoginFormPage() => new StoreConnector<AppState, ConfigState>(
                 title: _Name(user.user),
               ),
               new ListTile(
+                leading: const Icon(Icons.person),
+                title: CommonTextField(
+                  inputType: FieldInputType.TEXT,
+                  initValue: user.user,
+                  onChange: (txt) => dispatch(Actions.SetUserName(txt)),
+                  labelText: 'Name',
+                ),
+              ),
+              new ListTile(
                 leading: const Icon(Icons.account_box),
                 title: _Pwd(user.password),
               ),
@@ -32,7 +43,10 @@ Widget wLoginFormPage() => new StoreConnector<AppState, ConfigState>(
                   ),
                 ),
               ),
-              _renderOkBtn,
+              new FlatButton(
+                child: Text('Ok-Mok'),
+                onPressed: () => dispatch(ViewActions.HideConfigPage()),
+              ),
             ],
           ),
     );
@@ -88,8 +102,3 @@ class _PwdState extends State<_Pwd> {
     );
   }
 }
-
-Widget _renderOkBtn = new FlatButton(
-  child: Text('Ok-Mok'),
-  onPressed: () => dispatch(Actions.HideLoginDialog()),
-);

@@ -21,8 +21,16 @@ class CommonTextField extends StatefulWidget {
   final String initValue;
   final _OnChange onChange;
   final String Function(dynamic) validator;
+  final IconData icon;
 
-  CommonTextField({@required this.labelText, @required this.initValue, @required this.inputType, @required this.onChange, this.validator});
+  CommonTextField({
+    @required this.labelText,
+    @required this.initValue,
+    @required this.inputType,
+    @required this.onChange,
+    this.validator = null,
+    this.icon = null,
+  });
 
   @override
   _FieldState createState() => _FieldState(initValue);
@@ -36,13 +44,20 @@ class _FieldState extends State<CommonTextField> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListTile(
         title: TextField(
       controller: _controller,
       decoration: new InputDecoration(
         labelText: widget.labelText,
-        icon: _predefinedTypes[widget.inputType].icon,
+        icon: Icon(widget.icon) ?? _predefinedTypes[widget.inputType].icon,
         hintText: _predefinedTypes[widget.inputType].hintText ?? '',
       ),
       keyboardType: _predefinedTypes[widget.inputType].keyboardType,

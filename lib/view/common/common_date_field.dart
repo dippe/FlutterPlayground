@@ -28,6 +28,7 @@ class CommonDateField extends StatefulWidget {
 
 class _CommonDateFieldState extends State<CommonDateField> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  final TextEditingController _dateFieldController = new TextEditingController();
 
   final _dateFormat = DateFormat.yMd();
 
@@ -58,7 +59,12 @@ class _CommonDateFieldState extends State<CommonDateField> {
     );
   }
 
-  final TextEditingController _dateFieldController = new TextEditingController();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _dateFieldController.dispose();
+    super.dispose();
+  }
 
   Future _chooseDate(BuildContext context, String initialDateString) async {
     var now = new DateTime.now();

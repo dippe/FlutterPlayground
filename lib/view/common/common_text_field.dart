@@ -20,8 +20,9 @@ class CommonTextField extends StatefulWidget {
   final String labelText;
   final String initValue;
   final _OnChange onChange;
+  final String Function(dynamic) validator;
 
-  CommonTextField({@required this.labelText, @required this.initValue, @required this.inputType, @required this.onChange});
+  CommonTextField({@required this.labelText, @required this.initValue, @required this.inputType, @required this.onChange, this.validator});
 
   @override
   _FieldState createState() => _FieldState(initValue);

@@ -1,11 +1,13 @@
 import 'package:redux/redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
+import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/action.dart';
 import 'package:todo_flutter_app/view/issue_list/reducer.dart';
 import 'package:todo_flutter_app/view/jql_tab_edit/reducer.dart';
 import 'package:todo_flutter_app/view/jql_tabs/reducer.dart';
 
 Reducer<ViewState> viewReducer = combineReducers<ViewState>([
+  debugReducer<ViewState>('viewReducer'),
   jqlTabsReducer,
   listViewReducer,
   jqlEditReducer,

@@ -1,24 +1,24 @@
 import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/util/types.dart';
 
-class SetName implements Action {
+class SetFilterNameAction implements Action {
   final String name;
 
-  SetName(this.name);
+  SetFilterNameAction(this.name);
 
   @override
   String toString() {
-    return 'SetName{name: $name}';
+    return this.runtimeType.toString() + '{name: $name}';
   }
 }
 
-class SelectFilter implements Action {
+class SelectFilterAction implements Action {
   final JiraFilter filter;
 
-  SelectFilter(this.filter);
+  SelectFilterAction(this.filter);
 
   @override
   String toString() {
-    return 'SelectFilter{filter: $filter}';
+    return 'SelectFilterAction{filter: $filter}';
   }
 }

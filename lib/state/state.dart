@@ -6,7 +6,7 @@ import 'package:todo_flutter_app/util/types.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 
 /// global store "singleton"
-final store = new Store<AppState>(_debugReducer(appReducer), initialState: _initState);
+final store = new Store<AppState>(combineReducers([_debugReducer, appReducer]), initialState: _initState);
 
 /// dispatch action into the global store
 //final dispatchFn = (Action action) => () => store.dispatch(action);
@@ -15,16 +15,24 @@ final dispatch = (Action action) => store.dispatch(action);
 /// call multiple reducers of the same state
 E callReducers<E>(List<Reducer<E>> reducers, E state, Action action) => reducers.fold(state, (E state, fn) => fn(state, action));
 
-Reducer<AppState> _debugReducer(r) => (AppState state, dynamic action) {
-      print('Action triggered with type: ' + action.runtimeType.toString() + ' val: ' + action.toString());
-      return r(state, action);
+Reducer<AppState> _debugReducer = (AppState state, action) {
+  print('*** Action triggered with type: ' + action.runtimeType.toString() + ' val: ' + action.toString());
+  return state;
+};
+
+Reducer<E> debugReducer<E>(name) => (E state, action) {
+      print('*** Reducer: $name  >>> get action: ${action.toString()}');
+      return state;
     };
 
 final _initState = AppState(
   jira: JiraData(
     error: null,
     fetchedIssues: null,
-    fetchedFilters: null,
+    fetchedFilters: [
+      JiraFilter(name: 'TF1', id: '3', jql: 'resolutiondate >= -1w order by updated DESC'),
+      JiraFilter(name: 'TF2', id: '4', jql: 'updated >= -1w or created >= -1w order by updated DESC'),
+    ],
   ),
   // fixme: remove test data
   config: ConfigState(user: TMP_USER, password: TMP_PWD),

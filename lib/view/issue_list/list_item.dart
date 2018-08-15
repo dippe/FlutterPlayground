@@ -9,6 +9,8 @@ typedef Widget ItemWidget(ListItemData item);
 
 ItemWidget wDraggableListItem = (ListItemData item) {
   return DragTarget<ListItemData>(
+    // fixme:re-think keying! perf/ref?
+    key: ObjectKey(item),
     onAccept: (dragged) => (dragged != item) ? dispatch(Actions.Drop(dragged, item)) : null,
     onWillAccept: (dragged) => true,
     builder: (BuildContext context, List<dynamic> candidateData, List<dynamic> rejectedData) {

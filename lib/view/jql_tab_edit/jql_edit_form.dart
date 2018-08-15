@@ -1,10 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/view/action.dart';
 import 'package:todo_flutter_app/view/common/common_date_field.dart';
+import 'package:todo_flutter_app/view/common/common_drop_down_field.dart';
 import 'package:todo_flutter_app/view/common/common_text_field.dart';
 import 'package:todo_flutter_app/state/state.dart';
+import 'package:todo_flutter_app/view/jql_tab_edit/action.dart';
 
 wJqlEditPage() => MyHomePage();
 
@@ -36,64 +40,54 @@ class _MyHomePageState extends State<MyHomePage> {
         title: new Text(widget.title),
       ),
       body: new SafeArea(
-          top: false,
-          bottom: false,
-          child: new Form(
-              key: _formKey,
-              autovalidate: true,
-              child: new ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                children: <Widget>[
-                  new TextFormField(
-                    decoration: const InputDecoration(
-                      icon: const Icon(Icons.person),
-                      hintText: 'Enter the name of the Jql filter',
+        top: false,
+        bottom: false,
+        child: new StoreConnector<AppState, ViewState>(
+          converter: (store) => store.state.view,
+          builder: (context, view) => new Form(
+                key: _formKey,
+                autovalidate: false,
+                child: new ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  children: <Widget>[
+                    new CommonTextField(
                       labelText: 'Name',
+                      initValue: view.issueListViews[view.actListIdx].name,
+                      onChange: (txt) => dispatch(SetFilterNameAction(txt)),
+                      inputType: FieldInputType.TEXT,
                     ),
-                    validator: (s) => s.length > 10 ? 'Max 10 chars' : null,
-                  ),
-                  new InputDecorator(
-                    decoration: const InputDecoration(
-                      icon: const Icon(Icons.color_lens),
-                      labelText: 'Filters',
+                    CommonDropDownField(
+                      name: 'Filter',
+                      items: {1: 'Valami', 2: 'még valamibb'},
+                      onSelect: (filter) => dispatch(SelectFilterAction(filter)),
+                      selected: 2,
+                      icon: Icons.filter_none,
                     ),
-                    isEmpty: _color == '',
-                    child: new DropdownButtonHideUnderline(
-                      child: new DropdownButton<String>(
-                        value: _color,
-                        isDense: true,
-                        onChanged: (String newValue) {
-                          setState(() {
-                            _color = newValue;
-                          });
-                        },
-                        items: _colors.map((String value) {
-                          return new DropdownMenuItem<String>(
-                            value: value,
-                            child: new Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                  CommonTextField(
-                    labelText: 'Labelka',
-                    onChange: (txt) => print('submitted: ' + txt),
-                    initValue: 'initTxt',
-                    inputType: FieldInputType.TEXT,
-                  ),
-                  CommonDateField(
-                    title: 'Dátumocska',
-                    onChange: (res) => print('Choosed Date: ' + res.toIso8601String()),
-                  ),
-                  new Container(
-                      padding: const EdgeInsets.only(left: 40.0, top: 20.0),
-                      child: new RaisedButton(
-                        child: const Text('Submit'),
-                        onPressed: () => dispatch(HideConfigPage()),
-                      )),
-                ],
-              ))),
+                    Card(
+                        margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 16.0),
+                        child: Column(
+                          children: [
+                            ListTile(
+                              leading: Text('Filter name:'),
+                              title: Text(view.issueListViews[view.actListIdx].filter.name ?? 'No name ??'),
+                            ),
+                            ListTile(
+                              leading: Text('JQL:'),
+                              title: Text(view.issueListViews[view.actListIdx].filter.jql ?? 'No filter ??'),
+                            ),
+                          ],
+                        )),
+                    new Container(
+                        padding: const EdgeInsets.only(left: 40.0, top: 20.0),
+                        child: new RaisedButton(
+                          child: const Text('Submit'),
+                          onPressed: () => dispatch(HideConfigPage()),
+                        )),
+                  ],
+                ),
+              ),
+        ),
+      ),
     );
   }
 }

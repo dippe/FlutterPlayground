@@ -1,5 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
+import 'package:todo_flutter_app/state/state.dart';
 
 /*
  *
@@ -9,7 +10,9 @@ import 'package:todo_flutter_app/state/domain.dart';
  */
 typedef List<ListItemData> ListModifierFn(List<ListItemData> l);
 
-Reducer<ViewState> jqlTabsReducer = combineReducers<ViewState>([]);
+Reducer<ViewState> jqlTabsReducer = combineReducers<ViewState>([
+  debugReducer<ViewState>('jqlTabsReducer'),
+]);
 
 /* **********************
 *

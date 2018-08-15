@@ -1,6 +1,7 @@
 import 'package:redux/redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
-import 'package:todo_flutter_app/view/jql_tab_edit//action.dart' as Actions;
+import 'package:todo_flutter_app/state/state.dart';
+import 'package:todo_flutter_app/view/jql_tab_edit/action.dart';
 
 /*
  *
@@ -12,8 +13,9 @@ typedef ViewState ViewReducer(ViewState, dynamic);
 typedef IssueListView ItemModifierFn(IssueListView d);
 
 Reducer<ViewState> jqlEditReducer = combineReducers<ViewState>([
-  TypedReducer<ViewState, Actions.SelectFilter>(_selectFilter),
-  TypedReducer<ViewState, Actions.SetName>(_setName),
+  debugReducer<ViewState>('jqlEditReducer'),
+  TypedReducer<ViewState, SetFilterNameAction>(_setName),
+  TypedReducer<ViewState, SelectFilterAction>(_selectFilter),
 ]);
 
 /* **********************
@@ -22,11 +24,11 @@ Reducer<ViewState> jqlEditReducer = combineReducers<ViewState>([
 *
 * ***********************/
 
-ViewState _setName(ViewState state, Actions.SetName action) {
+ViewState _setName(ViewState state, SetFilterNameAction action) {
   return _changeActualListView(state, (view) => view.copyWith(name: action.name));
 }
 
-ViewState _selectFilter(ViewState state, Actions.SelectFilter action) {
+ViewState _selectFilter(ViewState state, SelectFilterAction action) {
   return _changeActualListView(state, (view) => view.copyWith(filter: action.filter));
 }
 

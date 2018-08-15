@@ -29,10 +29,8 @@ final _initState = AppState(
   jira: JiraData(
     error: null,
     fetchedIssues: null,
-    fetchedFilters: [
-      JiraFilter(name: 'TF1', id: '3', jql: 'resolutiondate >= -1w order by updated DESC'),
-      JiraFilter(name: 'TF2', id: '4', jql: 'updated >= -1w or created >= -1w order by updated DESC'),
-    ],
+    fetchedFilters: null,
+    predefinedFilters: _predefinedFilters,
   ),
   // fixme: remove test data
   config: ConfigState(user: TMP_USER, password: TMP_PWD),
@@ -42,52 +40,59 @@ final _initState = AppState(
     issueListViews: [
       IssueListView(
         id: '0',
-        name: 'My open issues',
-        filter: JiraFilter(
-            id: '0',
-            jql: 'assignee = currentUser() AND resolution = Unresolved order by updated '
-                'DESC'),
+        name: _predefinedFilters[0].name,
+        filter: _predefinedFilters[0],
         result: null,
         items: List.from([new ListItemData(null, 'Hello world :P', 'ISSUE-1')]),
       ),
       IssueListView(
-        id: '2',
-        name: 'Status Todo',
-        filter: JiraFilter(id: '2', jql: 'status in ("To Do")'),
+        id: '1',
+        name: _predefinedFilters[1].name,
+        filter: _predefinedFilters[1],
         result: null,
         items: null,
       ),
       // Usable predefined filters:
       IssueListView(
-        id: '3',
-        name: 'Resolved recently',
-        filter: JiraFilter(id: '3', jql: 'resolutiondate >= -1w order by updated DESC'),
-        result: null,
-        items: null,
-      ),
-      IssueListView(
-        id: '4',
-        name: 'Updated recently',
-        filter: JiraFilter(id: '4', jql: 'updated >= -1w or created >= -1w order by updated DESC'),
-        result: null,
-        items: null,
-      ),
-/*
-      IssueListView(
-        id: '5',
-        name: 'Created recently',
-        filter: JiraFilter(id: '5', jql: 'created >= -1w order by created DESC'),
-        result: null,
-        items: null,
-      ),
-*/
-      IssueListView(
-        id: '6',
-        name: 'Reported by me',
-        filter: JiraFilter(id: '6', jql: 'reporter = currentUser() order by created DESC'),
+        id: '2',
+        name: _predefinedFilters[2].name,
+        filter: _predefinedFilters[2],
         result: null,
         items: null,
       ),
     ],
   ),
 );
+
+final List<JiraFilter> _predefinedFilters = [
+  JiraFilter(
+    name: 'My open issues',
+    id: 'predef0',
+    jql: 'assignee = currentUser() AND resolution = Unresolved order by updated DESC',
+  ),
+  JiraFilter(
+    id: 'predef1',
+    jql: 'status in ("To Do")',
+    name: 'Status Todo',
+  ),
+  JiraFilter(
+    id: 'predef2',
+    jql: 'resolutiondate >= -1w order by updated DESC',
+    name: 'Resolved recently',
+  ),
+  JiraFilter(
+    id: 'predef3',
+    jql: 'updated >= -1w or created >= -1w order by updated DESC',
+    name: 'Updated recently',
+  ),
+  JiraFilter(
+    id: 'predef4',
+    jql: 'reporter = currentUser() order by created DESC',
+    name: 'Reported by me',
+  ),
+  JiraFilter(
+    id: 'predef5',
+    jql: 'created >= -1w order by created DESC',
+    name: 'Created recently',
+  ),
+];

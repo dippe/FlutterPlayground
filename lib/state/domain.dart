@@ -132,14 +132,16 @@ class ViewState {
 class JiraData {
   final List<JiraIssue> fetchedIssues;
   final List<JiraFilter> fetchedFilters;
+  final List<JiraFilter> predefinedFilters;
   final String error;
 
-  JiraData({this.fetchedIssues, this.fetchedFilters, this.error});
+  JiraData({this.fetchedIssues, this.fetchedFilters, this.error, this.predefinedFilters});
 
   JiraData copyWith({fetchedIssues, fetchedFilters}) {
     return JiraData(
       fetchedIssues: fetchedIssues != null ? List<JiraIssue>.unmodifiable(fetchedIssues).toList() : this.fetchedIssues,
       fetchedFilters: fetchedFilters != null ? List<JiraFilter>.unmodifiable(fetchedFilters).toList() : this.fetchedFilters,
+      predefinedFilters: this.predefinedFilters,
       error: error ?? this.error,
     );
   }

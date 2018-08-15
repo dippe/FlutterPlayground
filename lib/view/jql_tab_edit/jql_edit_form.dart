@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/view/action.dart';
 import 'package:todo_flutter_app/view/common/common_date_field.dart';
@@ -42,25 +43,32 @@ class _MyHomePageState extends State<MyHomePage> {
       body: new SafeArea(
         top: false,
         bottom: false,
-        child: new StoreConnector<AppState, ViewState>(
-          converter: (store) => store.state.view,
-          builder: (context, view) => new Form(
+        child: new StoreConnector<AppState, _ViewModel>(
+          converter: (store) {
+            final List<JiraFilter> tmpFilters = List<JiraFilter>.from(store.state.jira.predefinedFilters)
+              ..addAll(store.state.jira.fetchedFilters ?? []);
+
+            final Map<JiraFilter, String> itemMap = Map.fromIterable(tmpFilters, key: (v) => v, value: (v) => v.name);
+
+            return _ViewModel(actListView: store.state.view.issueListViews[store.state.view.actListIdx], items: itemMap);
+          },
+          builder: (context, vm) => new Form(
                 key: _formKey,
                 autovalidate: false,
                 child: new ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   children: <Widget>[
                     new CommonTextField(
-                      labelText: 'Name',
-                      initValue: view.issueListViews[view.actListIdx].name,
+                      labelText: 'Tab Name',
+                      initValue: vm.actListView.name,
                       onChange: (txt) => dispatch(SetFilterNameAction(txt)),
                       inputType: FieldInputType.TEXT,
                     ),
                     CommonDropDownField(
-                      name: 'Filter',
-                      items: {1: 'Valami', 2: 'még valamibb'},
+                      name: 'JIRA Filter',
+                      items: vm.items,
                       onSelect: (filter) => dispatch(SelectFilterAction(filter)),
-                      selected: 2,
+                      selected: vm.actListView.filter,
                       icon: Icons.filter_none,
                     ),
                     Card(
@@ -69,11 +77,11 @@ class _MyHomePageState extends State<MyHomePage> {
                           children: [
                             ListTile(
                               leading: Text('Filter name:'),
-                              title: Text(view.issueListViews[view.actListIdx].filter.name ?? 'No name ??'),
+                              title: Text(vm.actListView.filter.name ?? 'No name ??'),
                             ),
                             ListTile(
                               leading: Text('JQL:'),
-                              title: Text(view.issueListViews[view.actListIdx].filter.jql ?? 'No filter ??'),
+                              title: Text(vm.actListView.filter.jql ?? 'No filter ??'),
                             ),
                           ],
                         )),
@@ -90,4 +98,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
+
+class _ViewModel {
+  IssueListView actListView;
+  Map<JiraFilter, String> items;
+
+  _ViewModel({this.actListView, this.items});
 }

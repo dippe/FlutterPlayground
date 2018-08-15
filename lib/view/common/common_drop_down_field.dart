@@ -15,7 +15,7 @@ CommonDropDownField<E>({
       isEmpty: selected == null,
       child: new DropdownButtonHideUnderline(
         child: new DropdownButton<E>(
-          value: selected,
+          value: items.containsKey(selected) ? selected : null,
           isDense: true,
           onChanged: (E newValue) => onSelect(newValue),
           items: items.keys.map((key) {

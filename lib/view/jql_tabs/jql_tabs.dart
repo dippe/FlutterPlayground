@@ -5,6 +5,7 @@ import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/action.dart' as ViewActions;
 import 'package:todo_flutter_app/view/issue_list/action.dart' as Actions;
+import 'package:todo_flutter_app/view/issue_list/action.dart';
 import 'package:todo_flutter_app/view/issue_list/issue_list.dart';
 
 class wJqlTabsPage extends StatefulWidget {
@@ -28,6 +29,9 @@ class _wJqlTabsPageState extends State<wJqlTabsPage> with SingleTickerProviderSt
 
   @override
   void initState() {
+    // fixme: rethink, maybe index mustbe started from 0 ??
+    _currIdx = _appStore.state.view.actListIdx ?? 0;
+
     _recent = _appStore.state.view.issueListViews;
 
     _appStore.onChange.listen((appState) {
@@ -44,7 +48,7 @@ class _wJqlTabsPageState extends State<wJqlTabsPage> with SingleTickerProviderSt
     this._children = _renderChildren(_appStore);
 
     super.initState();
-    _tabController = new TabController(vsync: this, length: _myTabs.length);
+    _tabController = new TabController(vsync: this, length: _myTabs.length, initialIndex: _currIdx);
     _tabController.addListener(() {
       setState(() => _currIdx = this._tabController.index);
     });
@@ -76,11 +80,10 @@ class _wJqlTabsPageState extends State<wJqlTabsPage> with SingleTickerProviderSt
         controller: _tabController,
         tabs: _myTabs,
       ),
-      body: new TabBarView(controller: _tabController, children: _children
-//        myTabs.map((Tab tab) {
-//          return new Center(child: new Text(tab.text));
-//        }).toList(),
-          ),
+      body: new TabBarView(
+        controller: _tabController,
+        children: _children,
+      ),
     );
   }
 }
@@ -88,7 +91,10 @@ class _wJqlTabsPageState extends State<wJqlTabsPage> with SingleTickerProviderSt
 List<Widget> _tabsFromStore(AppState appState) => appState.view.issueListViews.map((i) {
       return Tab(
         icon: GestureDetector(
-          onLongPress: () => dispatch(ViewActions.ShowJqlEditPage()),
+          onLongPress: () {
+            dispatch(SetActListIdx(appState.view.issueListViews.indexOf(i)));
+            dispatch(ViewActions.ShowJqlEditPage());
+          },
           child: Icon(Icons.directions_car),
         ),
         text: i.name,

@@ -45,12 +45,16 @@ class _MyHomePageState extends State<MyHomePage> {
         bottom: false,
         child: new StoreConnector<AppState, _ViewModel>(
           converter: (store) {
+            // fixme: this converter function holds the old name value >> form won't be updated on changes (maybe this not a problem (?))
             final List<JiraFilter> tmpFilters = List<JiraFilter>.from(store.state.jira.predefinedFilters)
               ..addAll(store.state.jira.fetchedFilters ?? []);
 
             final Map<JiraFilter, String> itemMap = Map.fromIterable(tmpFilters, key: (v) => v, value: (v) => v.name);
 
-            return _ViewModel(actListView: store.state.view.issueListViews[store.state.view.actListIdx], items: itemMap);
+            return _ViewModel(
+              actListView: store.state.view.issueListViews[store.state.view.actListIdx],
+              items: itemMap,
+            );
           },
           builder: (context, vm) => new Form(
                 key: _formKey,
@@ -88,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     new Container(
                         padding: const EdgeInsets.only(left: 40.0, top: 20.0),
                         child: new RaisedButton(
-                          child: const Text('Submit'),
+                          child: const Text('Back to the list'),
                           onPressed: () => dispatch(HideConfigPage()),
                         )),
                   ],

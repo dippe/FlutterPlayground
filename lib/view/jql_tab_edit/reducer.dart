@@ -29,7 +29,8 @@ ViewState _setName(ViewState state, SetFilterNameAction action) {
 }
 
 ViewState _selectFilter(ViewState state, SelectFilterAction action) {
-  return _changeActualListView(state, (view) => view.copyWith(filter: action.filter));
+  var tmp = _setName(state, SetFilterNameAction(action.filter.name));
+  return _changeActualListView(tmp, (view) => view.copyWith(filter: action.filter));
 }
 
 /// do modification on the inner items via an immutable way

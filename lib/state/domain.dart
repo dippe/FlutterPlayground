@@ -3,8 +3,6 @@ import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/jira/domain/responses.dart';
 
-enum ConfigMenuItems { About, Config, DisplayFinished, Login }
-
 enum PageType { Config, IssueList, JqlEdit }
 
 class ListItemData {

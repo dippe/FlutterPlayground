@@ -29,15 +29,16 @@ Widget _wMainBtns = Row(
 );
 
 Widget _wTopMenu() {
-  PopupMenuItemBuilder builder = (BuildContext context) => <PopupMenuEntry<ConfigMenuItems>>[
-        PopupMenuItem(value: ConfigMenuItems.About, child: const Text('About')),
-        PopupMenuItem(value: ConfigMenuItems.Config, child: const Text('Config')),
-        PopupMenuItem(value: ConfigMenuItems.Login, child: const Text('Login')),
+  PopupMenuItemBuilder builder = (BuildContext context) => <PopupMenuEntry<PageType>>[
+        PopupMenuItem(value: PageType.IssueList, child: const Text('List view')),
+        PopupMenuItem(value: PageType.Config, child: const Text('Config')),
       ];
   return PopupMenuButton(
     onSelected: (i) {
-      if (i == ConfigMenuItems.Login) {
+      if (i == PageType.Config) {
         dispatch(Actions.ShowConfigPage());
+      } else {
+        dispatch(Actions.ShowActualIssueListPage());
       }
     },
     itemBuilder: builder,

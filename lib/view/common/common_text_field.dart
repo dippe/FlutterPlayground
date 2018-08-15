@@ -37,7 +37,8 @@ class _FieldState extends State<CommonTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return ListTile(
+        title: TextField(
       controller: _controller,
       decoration: new InputDecoration(
         labelText: widget.labelText,
@@ -47,7 +48,7 @@ class _FieldState extends State<CommonTextField> {
       keyboardType: _predefinedTypes[widget.inputType].keyboardType,
       inputFormatters: _predefinedTypes[widget.inputType].inputFormatters,
       onSubmitted: widget.onChange,
-    );
+    ));
   }
 }
 

@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 key: _formKey,
                 autovalidate: false,
                 child: new ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+//                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   children: <Widget>[
                     new CommonTextField(
                       labelText: 'Tab Name',

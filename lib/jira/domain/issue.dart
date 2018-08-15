@@ -32,7 +32,7 @@ class IssueComponent {
   final String self;
 
   IssueComponent.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
+      : id = json['id'].runtimeType == String ? int.parse(json['id']) : json['id'],
         name = json['name'],
         self = json['self'];
 }
@@ -40,7 +40,7 @@ class IssueComponent {
 class IssueType {
   final String description;
   final String iconUrl;
-  final String id; // int
+  final String id;
   final String name;
   final String self;
   final bool subtask;
@@ -61,7 +61,7 @@ class IssueStatusCategory {
 
   IssueStatusCategory.fromJson(Map<String, dynamic> json)
       : colorName = json['colorName'],
-        id = json['id'],
+        id = json['id'].runtimeType == String ? int.parse(json['id']) : json['id'],
         key = json['key'];
 }
 
@@ -157,8 +157,7 @@ class JiraIssueFields {
         aggregatetimespent = json['aggregatetimespent'],
         assignee = json['assignee'] != null ? JiraUser.fromJson(json['assignee']) : null,
         //ignore: unnecessary_cast
-        components = (json['components'] as List<dynamic>).map((item) => IssueComponent.fromJson(item)).toList()
-            as List<IssueComponent>, //
+        components = (json['components'] as List<dynamic>).map((item) => IssueComponent.fromJson(item)).toList() as List<IssueComponent>, //
         created = json['created'], // "2017-03-07T19:03:46.422+0100"
         creator = json['creator'] != null ? JiraUser.fromJson(json['creator']) : null,
         description = json['description'],

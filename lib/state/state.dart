@@ -10,7 +10,7 @@ final store = new Store<AppState>(combineReducers([_debugReducer, appReducer]), 
 
 /// dispatch action into the global store
 //final dispatchFn = (Action action) => () => store.dispatch(action);
-final dispatch = (Action action) => store.dispatch(action);
+final void Function(Action) dispatch = (Action action) => store.dispatch(action);
 
 /// call multiple reducers of the same state
 E callReducers<E>(List<Reducer<E>> reducers, E state, Action action) => reducers.fold(state, (E state, fn) => fn(state, action));

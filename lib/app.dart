@@ -51,6 +51,7 @@ Widget _wBody() => StoreConnector<AppState, dynamic>(
           'error': store.state.jira.error,
         },
     builder: (context2, s) {
+      // fixme: replace paging with https://flutter.io/cookbook/navigation/navigation-basics/
       if (s['error'] != null) {
         return SimpleDialog(
           title: Text('Ajax Error'),

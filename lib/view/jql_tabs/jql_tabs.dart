@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:todo_flutter_app/jira/jira_ajax.dart';
@@ -23,6 +25,8 @@ class _wJqlTabsPageState extends State<wJqlTabsPage> with SingleTickerProviderSt
 
   TabController _tabController;
 
+  StreamSubscription<AppState> _subscription;
+
   _wJqlTabsPageState() {
     this._appStore = store;
   }
@@ -34,7 +38,7 @@ class _wJqlTabsPageState extends State<wJqlTabsPage> with SingleTickerProviderSt
 
     _recent = _appStore.state.view.issueListViews;
 
-    _appStore.onChange.listen((appState) {
+    _subscription = _appStore.onChange.listen((appState) {
       if (appState.view.issueListViews != _recent) {
         setState(() {
           _recent = appState.view.issueListViews;
@@ -47,15 +51,17 @@ class _wJqlTabsPageState extends State<wJqlTabsPage> with SingleTickerProviderSt
     this._myTabs = _tabsFromStore(_appStore.state);
     this._children = _renderChildren(_appStore);
 
-    super.initState();
     _tabController = new TabController(vsync: this, length: _myTabs.length, initialIndex: _currIdx);
     _tabController.addListener(() {
       setState(() => _currIdx = this._tabController.index);
     });
+
+    super.initState();
   }
 
   @override
   void dispose() {
+    _subscription.cancel();
     _tabController.dispose();
     super.dispose();
   }
@@ -95,7 +101,7 @@ List<Widget> _tabsFromStore(AppState appState) => appState.view.issueListViews.m
             dispatch(SetActListIdx(appState.view.issueListViews.indexOf(i)));
             dispatch(ViewActions.ShowJqlEditPage());
           },
-          child: Icon(Icons.directions_car),
+          child: Icon(Icons.art_track),
         ),
         text: i.name,
       );

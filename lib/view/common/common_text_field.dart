@@ -13,7 +13,7 @@ import 'package:flutter/services.dart';
  */
 
 typedef void _OnChange(String txt);
-enum FieldInputType { PHONE, EMAIL, TEXT }
+enum FieldInputType { PHONE, EMAIL, TEXT, PASSWORD }
 
 class CommonTextField extends StatefulWidget {
   final FieldInputType inputType;
@@ -54,6 +54,7 @@ class _FieldState extends State<CommonTextField> {
   Widget build(BuildContext context) {
     return ListTile(
         title: TextField(
+      obscureText: widget.inputType == FieldInputType.PASSWORD,
       controller: _controller,
       decoration: new InputDecoration(
         labelText: widget.labelText,
@@ -83,6 +84,12 @@ final Map<FieldInputType, _InputType> _predefinedTypes = {
     inputFormatters: [],
   ),
   FieldInputType.TEXT: _InputType(
+    icon: const Icon(Icons.text_fields),
+    hintText: 'Enter a text',
+    inputFormatters: [],
+    keyboardType: TextInputType.text,
+  ),
+  FieldInputType.PASSWORD: _InputType(
     icon: const Icon(Icons.text_fields),
     hintText: 'Enter a text',
     inputFormatters: [],

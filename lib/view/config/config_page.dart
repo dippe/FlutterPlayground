@@ -34,7 +34,7 @@ Widget wConfigPage() => new StoreConnector<AppState, ConfigState>(
                 icon: Icons.person,
               ),
               CommonTextField(
-                inputType: FieldInputType.TEXT,
+                inputType: FieldInputType.PASSWORD,
                 initValue: config.password,
                 labelText: 'Password',
                 onChange: (txt) => dispatch(SetPwd(txt)),

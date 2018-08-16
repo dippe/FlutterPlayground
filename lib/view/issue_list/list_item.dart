@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/issue_list/action.dart' as Actions;
-import 'package:todo_flutter_app/jira/jira_ajax.dart';
+import 'package:todo_flutter_app/view/issue_list/consts.dart';
 import 'package:todo_flutter_app/view/issue_list/issue_status.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 
@@ -142,49 +142,36 @@ ItemWidget _wCheckBox = (item) => Checkbox(
       onChanged: (bool val) => dispatch(Actions.CbToggle(item)),
     );
 
-ItemWidget _wIssueKey = (item) => Text(item.key);
+ItemWidget _wIssueKey = (item) => Chip(
+      label: Container(
+        width: ISSUEKEY_WIDTH,
+        child: Text(
+          item.key,
+          overflow: TextOverflow.fade,
+        ),
+      ),
+    );
 
-ItemWidget _wPriority = (item) =>
-    item?.issue?.fields?.priority != null ? Image.network((item.issue.fields.priority['iconUrl'] as String).replaceAll('.svg', '.png')) : Text('');
+ItemWidget _wPriority = (item) {
+  if (item?.issue?.fields?.priority != null) {
+    final regexp = RegExp(".*\\/(.+).svg");
 
-// key: issue type name
-const URL_ISSUE_TYPE_ICONS = {
-  null: URL_ISSUETYPE_ICONS + '/all_unassigned.png',
-  'Default': URL_ISSUETYPE_ICONS + '/all_unassigned.png',
-  'Defect': URL_ISSUETYPE_ICONS + '/defect.png',
-  'Story': URL_ISSUETYPE_ICONS + '/story.png',
-  'Epic': URL_ISSUETYPE_ICONS + '/epic.png',
-  'Task': URL_ISSUETYPE_ICONS + '/task.png',
-  'Bug': URL_ISSUETYPE_ICONS + '/bug.png',
-  'Sub-task': URL_ISSUETYPE_ICONS + '/subtask.png',
-  'Undefined': URL_ISSUETYPE_ICONS + '/undefined.png',
+//    final fileName = regexp.firstMatch(item.issue.fields.priority['iconUrl']);
 
-//'' : URL_ISSUETYPE_ICONS + 'documentation.png',
-//'' : URL_ISSUETYPE_ICONS + 'feedback.png',
-//'' : URL_ISSUETYPE_ICONS + 'improvement.png',
-//'' : URL_ISSUETYPE_ICONS + 'request_access.png',
-//'' : URL_ISSUETYPE_ICONS + 'task_agile.png',
-//'' : URL_ISSUETYPE_ICONS + 'blank.png',
-//'' : URL_ISSUETYPE_ICONS + 'delete.png',
-//'' : URL_ISSUETYPE_ICONS + 'genericissue.png',
-//'' : URL_ISSUETYPE_ICONS + 'newfeature.png',
-//'' : URL_ISSUETYPE_ICONS + 'requirement.png',
-//'' : URL_ISSUETYPE_ICONS + 'subtask_alternate.png',
-//'' : URL_ISSUETYPE_ICONS + 'development_task.png',
-//'' : URL_ISSUETYPE_ICONS + 'exclamation.png',
-//'' : URL_ISSUETYPE_ICONS + 'health.png',
-//'' : URL_ISSUETYPE_ICONS + 'remove_feature.png',
-//'' : URL_ISSUETYPE_ICONS + 'sales.png',
+    final z = regexp.allMatches(item.issue.fields.priority['iconUrl']);
+
+    final filename = z.first.group(1);
+    return Image.asset('images/priorities/' + filename + '.png');
+  } else {
+    return Image.asset('images/issuetypes/blank.png');
+  }
 };
 
 ItemWidget _wIssuetype = (item) {
-  final baseUrl = store.state.config.baseUrl;
-  if (item.issue != null && item.issue.fields?.issuetype?.name != null) {
-    final icon = URL_ISSUE_TYPE_ICONS[item.issue.fields.issuetype.name] ?? URL_ISSUE_TYPE_ICONS['Undefined'];
-    return Image.network(baseUrl + icon);
+  if (item.issue != null && item.issue.fields?.issuetype != null) {
+    return Image.asset(ASSET_ISSUE_TYPE_ICONS[item.issue.fields.issuetype.name] ?? ASSET_DEFAULT_ISSUE_TYPE_ICON);
   } else {
-    return Image.network(baseUrl + URL_ISSUE_TYPE_ICONS['Undefined']);
-//    return Text('');
+    return Image.asset(ASSET_DEFAULT_ISSUE_TYPE_ICON);
   }
 };
 

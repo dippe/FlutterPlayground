@@ -10,9 +10,17 @@ import 'package:todo_flutter_app/jira/domain/responses.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/util/auth.dart';
 
-const TMP_USER = "dippenexus@gmail.com";
-const TMP_PWD = "KGRCC7h58fgfwKO3ZjKN62C9";
-const TMP_BASE_URL = "https://testdev1.atlassian.net";
+//const TMP_USER = "dippenexus@gmail.com";
+//const TMP_PWD = "KGRCC7h58fgfwKO3ZjKN62C9";
+//const TMP_BASE_URL = "https://testdev1.atlassian.net";
+
+//const TMP_USER = "gyula_pal";
+//const TMP_PWD = "";
+//const TMP_BASE_URL = "https://jira.epam.com/jira";
+
+const TMP_USER = "peter_dajka";
+const TMP_PWD = "Teflontal432";
+const TMP_BASE_URL = "https://jira.epam.com/jira";
 
 const URL_ISSUE = "/rest/api/2/issue/";
 const URL_JQL = "/rest/api/2/search";

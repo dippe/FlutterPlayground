@@ -1,0 +1,15 @@
+
+Feature:
+- jql filterek leszedése a szerverről
+- issue details lap
+- menteni kellene az adatokat
+
+Fix:
+- ha elindult egy ajax, ne induljon új ha ellapozok, majd vissza
+- loading kiírása/spinner refresh esetén
+- ok-mok helyett back
+- epam JIRA-s ikonok szarok
+- item oszlop igazítás szar
+
+- jql req indítása tab change esetén
+

@@ -43,11 +43,11 @@ final _initState = AppState(
     actPage: PageType.IssueList,
     issueListViews: [
       IssueListView(
-        id: '0',
-        name: _predefinedFilters[0].name,
-        filter: _predefinedFilters[0],
+        id: '4',
+        name: _predefinedFilters[4].name,
+        filter: _predefinedFilters[4],
         result: null,
-        items: List.from([new ListItemData(null, 'Hello world :P', 'ISSUE-1')]),
+        items: List.from([new ListItemData(null, 'Hello world :P', 'ISSUELONG-11234')]),
       ),
       IssueListView(
         id: '1',

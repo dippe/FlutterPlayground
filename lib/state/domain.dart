@@ -13,10 +13,12 @@ class ListItemData {
   final bool isEdit;
   final bool isSelected;
 
-  const ListItemData(this.issue, this.title, this.key, {this.isEdit = false, this.isSelected = false, this.done = false});
+  const ListItemData(this.issue, this.title, this.key,
+      {this.isEdit = false, this.isSelected = false, this.done = false});
 
   @override
-  bool operator ==(other) => other is ListItemData && issue == (other.issue) && title == other.title && key == other.key;
+  bool operator ==(other) =>
+      other is ListItemData && issue == (other.issue) && title == other.title && key == other.key;
 
   @override
   int get hashCode => issue.hashCode ^ title.hashCode ^ key.hashCode;
@@ -108,21 +110,30 @@ class IssueListView {
           idCounter == other.idCounter;
 
   @override
-  int get hashCode => items.hashCode ^ id.hashCode ^ name.hashCode ^ filter.hashCode ^ result.hashCode ^ idCounter.hashCode;
+  int get hashCode =>
+      items.hashCode ^ id.hashCode ^ name.hashCode ^ filter.hashCode ^ result.hashCode ^ idCounter.hashCode;
 }
 
 class ViewState {
+  final AppMessages messages;
   final PageType actPage;
   final List<IssueListView> issueListViews;
   final int actListIdx; // the actual visible list to work on
 
-  ViewState({@required this.actPage, @required this.issueListViews, @required this.actListIdx});
+  ViewState({
+    @required this.actPage,
+    @required this.issueListViews,
+    @required this.actListIdx,
+    @required this.messages,
+  });
 
-  ViewState copyWith({PageType actPage, int actListIdx, issueListViews}) {
+  ViewState copyWith({PageType actPage, int actListIdx, issueListViews, messages}) {
     return ViewState(
       actPage: actPage ?? this.actPage,
-      issueListViews: issueListViews != null ? List<IssueListView>.unmodifiable(issueListViews).toList() : this.issueListViews,
+      issueListViews:
+          issueListViews != null ? List<IssueListView>.unmodifiable(issueListViews).toList() : this.issueListViews,
       actListIdx: actListIdx ?? this.actListIdx,
+      messages: messages ?? this.messages,
     );
   }
 }
@@ -138,7 +149,8 @@ class JiraData {
   JiraData copyWith({fetchedIssues, fetchedFilters}) {
     return JiraData(
       fetchedIssues: fetchedIssues != null ? List<JiraIssue>.unmodifiable(fetchedIssues).toList() : this.fetchedIssues,
-      fetchedFilters: fetchedFilters != null ? List<JiraFilter>.unmodifiable(fetchedFilters).toList() : this.fetchedFilters,
+      fetchedFilters:
+          fetchedFilters != null ? List<JiraFilter>.unmodifiable(fetchedFilters).toList() : this.fetchedFilters,
       predefinedFilters: this.predefinedFilters,
       error: error ?? this.error,
     );
@@ -156,19 +168,13 @@ class AppState {
     @required this.jira,
   });
 
-  AppState copyWith({fetchedIssues, fetchedFilters, config, appView, view}) {
+  AppState copyWith({config, appView, view}) {
     return AppState(
       jira: jira ?? this.jira,
       config: config ?? this.config,
       view: view ?? this.view,
     );
   }
-
-  @deprecated
-  AppState withLogin(ConfigState newElem) => copyWith(config: newElem);
-
-  @deprecated
-  AppState withIssues(List<JiraIssue> newElem) => copyWith(fetchedIssues: newElem);
 
   @override
   String toString() {
@@ -200,8 +206,30 @@ class ConfigState {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is ConfigState && runtimeType == other.runtimeType && user == other.user && password == other.password;
+      identical(this, other) ||
+      other is ConfigState && runtimeType == other.runtimeType && user == other.user && password == other.password;
 
   @override
   int get hashCode => user.hashCode ^ password.hashCode;
+}
+
+enum AppMessageType { WARNING, INFO }
+
+class AppMessage {
+  final AppMessageType type;
+  final String text;
+
+  AppMessage({@required this.type, @required this.text});
+}
+
+class AppMessages {
+  final List<AppMessage> messages;
+  final bool visible;
+
+  AppMessages({@required this.messages, @required this.visible});
+
+  AppMessages copyWith({messages, visible}) => AppMessages(
+        visible: visible ?? this.visible,
+        messages: messages ?? this.messages,
+      );
 }

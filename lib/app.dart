@@ -7,6 +7,7 @@ import 'package:todo_flutter_app/view/app/header.dart';
 import 'package:todo_flutter_app/view/config/config_page.dart';
 import 'package:todo_flutter_app/view/jql_tab_edit/jql_edit_form.dart';
 import 'package:todo_flutter_app/view/jql_tabs/jql_tabs.dart';
+import 'package:todo_flutter_app/view/messages/messages.dart';
 
 class FlutterReduxApp extends StatelessWidget {
   final Store<AppState> store;
@@ -40,6 +41,7 @@ Widget _wMainRoot(context) => Scaffold(
       appBar: wHeaderAppBar(),
       body: _wBody(),
       drawer: wDrawer(context),
+      bottomSheet: wMessages(),
     );
 
 Widget _wBody() => StoreConnector<AppState, dynamic>(

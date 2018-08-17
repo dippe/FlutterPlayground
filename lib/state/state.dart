@@ -26,7 +26,8 @@ final store = new Store<AppState>(combineReducers([_debugReducer, appReducer]), 
 final void Function(Action) dispatch = (Action action) => store.dispatch(action);
 
 /// call multiple reducers of the same state
-E callReducers<E>(List<Reducer<E>> reducers, E state, Action action) => reducers.fold(state, (E state, fn) => fn(state, action));
+E callReducers<E>(List<Reducer<E>> reducers, E state, Action action) =>
+    reducers.fold(state, (E state, fn) => fn(state, action));
 
 Reducer<AppState> _debugReducer = (AppState state, action) {
   print('*** Action triggered with type: ' + action.runtimeType.toString() + ' val: ' + action.toString());
@@ -52,6 +53,7 @@ final _initState = AppState(
     baseUrl: TMP_BASE_URL,
   ),
   view: ViewState(
+    messages: AppMessages(messages: [], visible: false),
     actListIdx: 0,
     actPage: PageType.IssueList,
     issueListViews: [

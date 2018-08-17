@@ -5,12 +5,14 @@ import 'package:todo_flutter_app/view/action.dart';
 import 'package:todo_flutter_app/view/issue_list/reducer.dart';
 import 'package:todo_flutter_app/view/jql_tab_edit/reducer.dart';
 import 'package:todo_flutter_app/view/jql_tabs/reducer.dart';
+import 'package:todo_flutter_app/view/messages/reducer.dart';
 
 Reducer<ViewState> viewReducer = combineReducers<ViewState>([
   debugReducer<ViewState>('viewReducer'),
   jqlTabsReducer,
   listViewReducer,
   jqlEditReducer,
+  messagesReducer,
   TypedReducer<ViewState, ShowJqlEditPage>(_showJqlEditPage),
   TypedReducer<ViewState, HideJqlEditPage>(_hideJqlEditPage),
   TypedReducer<ViewState, ShowConfigPage>(_showConfigPage),

@@ -19,9 +19,9 @@ class JiraAjax {
       return res;
     }).catchError((err) {
       if (err is ValidationException) {
-        store.dispatch(AddWarningMessageAction('Validation Error: ' + err.toString() + ' \n JQL: ' + filter.jql));
+        store.dispatch(AddWarningMessageAction('Validation Error: ' + err.message + ' \n Filter: ' + filter.name));
       } else {
-        store.dispatch(AddErrorMessageAction(err.toString() + ' \n JQL: ' + filter.jql));
+        store.dispatch(AddErrorMessageAction(err.message + ' \n Filter: ' + filter.name));
       }
       throw Exception('AJAX ERROR: ' + err.toString());
     }).then((res) => store.dispatch(FetchJqlDone(res, filter)));
@@ -63,11 +63,11 @@ class JiraAjax {
 }
 
 class ValidationException implements Exception {
-  final String cause;
-  ValidationException(this.cause);
+  final String message;
+  ValidationException(this.message);
 
   @override
   String toString() {
-    return cause;
+    return message;
   }
 }

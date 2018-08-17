@@ -76,11 +76,14 @@ class JiraRestClient {
 
   static _validateResponse(Response resp) {
     if (resp.statusCode >= 400) {
-      var msg = (resp.body != null && resp.body.length > 0)
-          ? JiraErrorMsg.fromJson(json.decode(resp.body)).errorMessages.reduce((v, e) => v + ';  ' + e)
-          : '(No '
-          'error response)';
-      throw new Exception('Reason: ' + resp.reasonPhrase + '\n' + msg ?? ' - ');
+      try {
+        var msg = (resp.body != null && resp.body.length > 0)
+            ? JiraErrorMsg.fromJson(json.decode(resp.body)).errorMessages.reduce((v, e) => v + ';  ' + e)
+            : '(No error response)';
+        throw new HttpException(msg);
+      } catch (e) {
+        throw new HttpException('Error: ' + resp.reasonPhrase);
+      }
     } else {
       return resp;
     }
@@ -90,8 +93,10 @@ class JiraRestClient {
     if (err is SocketException) {
       print('Communication Error: ' + err.message);
       throw Exception(err.message);
+    } else if (err is HttpException) {
+      throw Exception(err.message);
     } else {
-      throw UnsupportedError('Data Conversion error. ' + err.toString());
+      throw UnsupportedError('Data Conversion error. ' + err.message);
     }
   }
 }

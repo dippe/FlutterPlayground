@@ -19,7 +19,9 @@ Widget wMessages() => StoreConnector<AppState, AppMessages>(
           final row = Row(
             children: [
               _ICONS[type],
-              Text(messages.messages.last?.text),
+              Expanded(
+                child: Text(messages.messages.last?.text),
+              ),
             ],
           );
 

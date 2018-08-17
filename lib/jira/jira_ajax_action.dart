@@ -7,6 +7,11 @@ import 'package:todo_flutter_app/jira/jira_rest_client.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/util/auth.dart';
 
+class _AjaxError {
+  static const LIMIT_REACHED = 'Cannot get all of the issues because the MaxResults limit is reached ';
+  static const EMPTY_JQL_RESULT = 'Empty JQL result';
+}
+
 class JiraAjax {
   static Future<Response> _jiraGet(String path) {
     // fixme: rethink this direct store access hack
@@ -23,8 +28,10 @@ class JiraAjax {
     store.dispatch(FetchJqlStart(filter));
 
     JiraRestClient.fetchIssuesByJql(filter)
-        .then((res) => store.dispatch(FetchJqlDone(res, filter)))
-        .catchError((error) => store.dispatch(FetchJqlError(error.toString(), filter)));
+        .catchError((error) => store.dispatch(FetchJqlError(error.toString(), filter)))
+        .then((res) => _validateJqlMaxResult(res))
+        .catchError((error) => store.dispatch(FetchWarning(error.toString() + ' \n JQL: ' + filter.jql)))
+        .then((res) => store.dispatch(FetchJqlDone(res, filter)));
   }
 
   static void doFetchIssueAction(String key) {
@@ -49,5 +56,15 @@ class JiraAjax {
     JiraRestClient.fetchVersions(idOrKey)
         .then((res) => store.dispatch(FetchVersionsDone(res)))
         .catchError((error) => store.dispatch(FetchVersionsError(error.toString())));
+  }
+
+  static _validateJqlMaxResult(res) {
+    if (res.total > MAX_RESULTS || res.total > res.maxResults) {
+      throw new Exception(_AjaxError.LIMIT_REACHED + MAX_RESULTS.toString());
+    } else if (res.total == 0) {
+      throw new Exception(_AjaxError.EMPTY_JQL_RESULT);
+    } else {
+      return res;
+    }
   }
 }

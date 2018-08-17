@@ -15,17 +15,6 @@ class FetchJqlError implements Action {
   }
 }
 
-class FetchIssueError implements Action {
-  final String error;
-
-  FetchIssueError(this.error);
-
-  @override
-  String toString() {
-    return 'FetchIssueError{error: $error}';
-  }
-}
-
 class FetchJqlDone implements Action {
   final JiraSearch jiraJqlResult;
   final JiraFilter jiraFilter;
@@ -49,6 +38,15 @@ class FetchJqlStart implements Action {
   }
 }
 
+class FetchIssueStart implements Action {
+  FetchIssueStart();
+
+  @override
+  String toString() {
+    return 'FetchIssueStart{}';
+  }
+}
+
 class FetchIssueDone implements Action {
   final JiraIssue issue;
 
@@ -57,5 +55,78 @@ class FetchIssueDone implements Action {
   @override
   String toString() {
     return 'FetchIssueDone{res: $issue}';
+  }
+}
+
+class FetchIssueError implements Action {
+  final String error;
+
+  FetchIssueError(this.error);
+
+  @override
+  String toString() {
+    return 'FetchIssueError{error: $error}';
+  }
+}
+
+class FetchComponentsStart implements Action {
+  FetchComponentsStart();
+
+  @override
+  String toString() {
+    return 'FetchComponentsStart{}';
+  }
+}
+
+class FetchComponentsDone implements Action {
+  final JiraComponents components;
+
+  FetchComponentsDone(this.components);
+
+  @override
+  String toString() {
+    return 'FetchComponentsDone{res: $components}';
+  }
+}
+
+class FetchComponentsError implements Action {
+  final String error;
+
+  FetchComponentsError(this.error);
+
+  @override
+  String toString() {
+    return 'FetchComponentsError{error: $error}';
+  }
+}
+
+class FetchVersionsStart implements Action {
+  FetchVersionsStart();
+
+  @override
+  String toString() {
+    return 'FetchVersionsStart{}';
+  }
+}
+
+class FetchVersionsDone implements Action {
+  final JiraVersions versions;
+
+  FetchVersionsDone(this.versions);
+
+  @override
+  String toString() {
+    return 'FetchVersionsDone{res: $versions}';
+  }
+}
+
+class FetchVersionsError implements Action {
+  final String error;
+
+  FetchVersionsError(this.error);
+
+  @override
+  String toString() {
+    return 'FetchVersionsError{error: $error}';
   }
 }

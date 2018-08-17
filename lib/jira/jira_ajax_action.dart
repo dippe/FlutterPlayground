@@ -21,16 +21,33 @@ class JiraAjax {
 
   static void doFetchJqlAction(JiraFilter filter) {
     store.dispatch(FetchJqlStart(filter));
-    JiraRestClient.fetchIssuesByJql(filter).then((res) {
-      store.dispatch(FetchJqlDone(res, filter));
-    }).catchError((error) {
-      store.dispatch(FetchJqlError(error.toString(), filter));
-    });
+
+    JiraRestClient.fetchIssuesByJql(filter)
+        .then((res) => store.dispatch(FetchJqlDone(res, filter)))
+        .catchError((error) => store.dispatch(FetchJqlError(error.toString(), filter)));
   }
 
-  static void doFetchIssueAction(String baseUrl, String key) => JiraRestClient.fetchIssue(key).then((res) {
-        store.dispatch(FetchIssueDone(res));
-      }).catchError((error) {
-        store.dispatch(FetchIssueError(error.toString()));
-      });
+  static void doFetchIssueAction(String key) {
+    store.dispatch(FetchIssueStart());
+
+    JiraRestClient.fetchIssue(key)
+        .then((res) => store.dispatch(FetchIssueDone(res)))
+        .catchError((error) => store.dispatch(FetchIssueError(error.toString())));
+  }
+
+  static void doFetchComponentsAction(String idOrKey) {
+    store.dispatch(FetchComponentsStart());
+
+    JiraRestClient.fetchComponents(idOrKey)
+        .then((res) => store.dispatch(FetchComponentsDone(res)))
+        .catchError((error) => store.dispatch(FetchComponentsError(error.toString())));
+  }
+
+  static void doFetchVersionsAction(String idOrKey) {
+    store.dispatch(FetchVersionsStart());
+
+    JiraRestClient.fetchVersions(idOrKey)
+        .then((res) => store.dispatch(FetchVersionsDone(res)))
+        .catchError((error) => store.dispatch(FetchVersionsError(error.toString())));
+  }
 }

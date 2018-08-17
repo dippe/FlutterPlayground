@@ -73,7 +73,7 @@ class JiraRestClient {
 //        .catchError((err) => print('*** ERROR: ' + err.toString()));
   }
 
-  static Future<JiraVersions> fetchReleases(String projectIdOrKey) {
+  static Future<JiraVersions> fetchVersions(String projectIdOrKey) {
     return _jiraGet('project/' + projectIdOrKey + '/versions')
         .then(_validateResponse)
         .then((resp) => json.decode(resp.body))

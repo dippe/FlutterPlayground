@@ -28,7 +28,10 @@ Widget wMessages() => StoreConnector<AppState, AppMessages>(
 
           var future = new Future<Null>.delayed(Duration.zero, () {
             Scaffold.of(context).showSnackBar(
-              new SnackBar(content: row),
+              new SnackBar(
+                content: row,
+                duration: Duration(seconds: 3),
+              ),
             );
           });
 

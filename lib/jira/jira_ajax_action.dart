@@ -19,10 +19,11 @@ class JiraAjax {
     }).catchError((err) {
       if (err is ValidationException) {
         store.dispatch(AddWarningMessageAction('Validation Error: ' + err.message + ' \n Filter: ' + filter.name));
+        return err.result;
       } else {
         store.dispatch(AddErrorMessageAction(err.message + ' \n Filter: ' + filter.name));
+        throw Exception('AJAX ERROR: ' + err.toString());
       }
-      throw Exception('AJAX ERROR: ' + err.toString());
     }).then((res) => store.dispatch(FetchJqlDone(res, filter)));
   }
 
@@ -52,9 +53,9 @@ class JiraAjax {
 
   static _validateJqlMaxResult(res) {
     if (res.total > MAX_RESULTS || res.total > res.maxResults) {
-      throw new ValidationException(_AjaxError.LIMIT_REACHED + MAX_RESULTS.toString());
+      throw new ValidationException(_AjaxError.LIMIT_REACHED + MAX_RESULTS.toString(), res);
     } else if (res.total == 0) {
-      throw new ValidationException(_AjaxError.EMPTY_JQL_RESULT);
+      throw new ValidationException(_AjaxError.EMPTY_JQL_RESULT, res);
     } else {
       return res;
     }
@@ -62,8 +63,9 @@ class JiraAjax {
 }
 
 class ValidationException implements Exception {
+  final result;
   final String message;
-  ValidationException(this.message);
+  ValidationException(this.message, this.result);
 
   @override
   String toString() {

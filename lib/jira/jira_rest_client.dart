@@ -13,7 +13,7 @@ import 'package:todo_flutter_app/util/auth.dart';
 const URL_ISSUE = "/rest/api/2/issue/";
 const URL_JQL = "/rest/api/2/search";
 
-const MAX_RESULTS = 1000;
+const MAX_RESULTS = 2;
 const FIELDS_TO_GET = "*all";
 // fixme: re-enable this for performance improvement with finalized fields
 //const FIELDS_TO_GET = "status,summary,components,fixVersions,project,issuelinks,issuetype,priority";

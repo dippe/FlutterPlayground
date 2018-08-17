@@ -48,7 +48,7 @@ class IssueListView {
   final String id;
   final String name;
   final JiraFilter filter;
-  final List<JiraSearch> result; // link to the ajax result
+  final JiraSearch result; // link to the ajax result
   final int idCounter;
 
   IssueListView({
@@ -56,7 +56,7 @@ class IssueListView {
     @required this.name,
     @required this.filter,
     @required this.items,
-    this.result,
+    this.result = null,
     this.idCounter = 0,
     this.lastFetched = null,
   });
@@ -66,7 +66,7 @@ class IssueListView {
       id: id ?? this.id,
       name: name ?? this.name,
       filter: filter ?? this.filter,
-      result: result != null ? List<JiraSearch>.unmodifiable(result).toList() : this.result,
+      result: result ?? this.result,
       lastFetched: result != null ? DateTime.now().millisecondsSinceEpoch : this.lastFetched,
       items: items != null ? List<ListItemData>.unmodifiable(items).toList() : this.items,
       idCounter: idCounter ?? this.idCounter,

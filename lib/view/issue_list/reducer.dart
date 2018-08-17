@@ -16,6 +16,7 @@ typedef List<ListItemData> ListModifierFn(List<ListItemData> l);
 Reducer<ViewState> listViewReducer = combineReducers<ViewState>([
   // fixme: move _actListIdx to jql_tabs reducer
   TypedReducer<ViewState, Actions.SetActListIdx>(_actListIdx),
+  TypedReducer<ViewState, JiraActions.FetchJqlStart>(_fetchJqlStart),
   TypedReducer<ViewState, JiraActions.FetchJqlDone>(_addItemsFromJqlFetch),
   TypedReducer<ViewState, Actions.Add>(_add),
   TypedReducer<ViewState, Actions.Edit>(_edit),
@@ -55,6 +56,23 @@ ViewState _add(ViewState state, Actions.Add action) {
   return _changeActualItemList(state, addTolistFn);
 }
 
+ViewState _fetchJqlStart(ViewState state, JiraActions.FetchJqlStart action) {
+  // throw exception when when no element has been found
+  bool sameFilterId(IssueListView i) => i.filter.id == action.jiraFilter.id;
+//  final IssueListView getViewByFilter = state.issueListViews.firstWhere(sameFilterId);
+
+  final List<IssueListView> listViewsCopy =
+      List<IssueListView>.from(state.issueListViews).toList() as List<IssueListView>;
+
+  final idx = state.issueListViews.indexWhere(sameFilterId);
+
+  if (idx < 0) throw Exception('Cannot find Issue Tab !!!!');
+
+  listViewsCopy[idx] = listViewsCopy[idx].copyWith(items: [], result: null);
+
+  return state.copyWith(issueListViews: listViewsCopy);
+}
+
 ViewState _addItemsFromJqlFetch(ViewState state, JiraActions.FetchJqlDone action) {
   final mapToItems = (List<JiraIssue> issues) {
     final List<ListItemData> listItems = issues
@@ -72,11 +90,15 @@ ViewState _addItemsFromJqlFetch(ViewState state, JiraActions.FetchJqlDone action
   bool sameFilterId(IssueListView i) => i.filter.id == action.jiraFilter.id;
 //  final IssueListView getViewByFilter = state.issueListViews.firstWhere(sameFilterId);
 
-  final List<IssueListView> listViewsCopy = List<IssueListView>.from(state.issueListViews).toList() as List<IssueListView>;
+  final List<IssueListView> listViewsCopy =
+      List<IssueListView>.from(state.issueListViews).toList() as List<IssueListView>;
 
   final idx = state.issueListViews.indexWhere(sameFilterId);
 
-  listViewsCopy[idx] = listViewsCopy[idx].copyWith(items: mapToItems(action.jiraJqlResult.issues));
+  listViewsCopy[idx] = listViewsCopy[idx].copyWith(
+    items: mapToItems(action.jiraJqlResult.issues),
+    result: action.jiraJqlResult,
+  );
 
   return state.copyWith(issueListViews: listViewsCopy);
 }
@@ -108,8 +130,8 @@ ViewState _edit(ViewState state, Actions.Edit action) {
 }
 
 ViewState _unSelectAll(ViewState state, Actions.UnSelectAll action) {
-  ListModifierFn unSelectAll =
-      (List<ListItemData> l) => l.map((ListItemData value) => value.copyWith(isSelected: false, isEdit: false)).toList() as List<ListItemData>;
+  ListModifierFn unSelectAll = (List<ListItemData> l) =>
+      l.map((ListItemData value) => value.copyWith(isSelected: false, isEdit: false)).toList() as List<ListItemData>;
   return _changeActualItemList(state, unSelectAll);
 }
 
@@ -183,7 +205,8 @@ ViewState _changeActualItemList(ViewState state, ListModifierFn fn) {
 
   if (targetIdx == null) throw ArgumentError('invalid targetIdx: ' + targetIdx.toString());
 
-  final List<IssueListView> listViewsCopy = List<IssueListView>.from(state.issueListViews).toList() as List<IssueListView>;
+  final List<IssueListView> listViewsCopy =
+      List<IssueListView>.from(state.issueListViews).toList() as List<IssueListView>;
   final origItems = listViewsCopy[targetIdx].items;
   final itemsCopy = List<ListItemData>.of(origItems).toList() as List<ListItemData>; // rethink if this really needed
 

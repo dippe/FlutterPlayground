@@ -1,7 +1,6 @@
 import 'package:todo_flutter_app/jira/action.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/jira/jira_rest_client.dart';
-import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/messages/action.dart';
 

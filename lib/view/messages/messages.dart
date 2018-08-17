@@ -11,6 +11,7 @@ const _ICONS = {
 };
 
 Widget wMessages() => StoreConnector<AppState, AppMessages>(
+      distinct: true,
       converter: (store) => store.state.view.messages,
       builder: (context, AppMessages messages) {
         if (messages.visible && messages.messages.isNotEmpty) {

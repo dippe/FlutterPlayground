@@ -213,7 +213,7 @@ class ConfigState {
   int get hashCode => user.hashCode ^ password.hashCode;
 }
 
-enum AppMessageType { WARNING, INFO }
+enum AppMessageType { ERROR, WARNING, INFO }
 
 class AppMessage {
   final AppMessageType type;

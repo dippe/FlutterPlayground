@@ -1,10 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 
 const _ICONS = {
-  AppMessageType.WARNING: Icons.warning,
-  AppMessageType.INFO: Icons.info,
+  AppMessageType.ERROR: Icon(Icons.error, color: Colors.red),
+  AppMessageType.WARNING: Icon(Icons.warning, color: Colors.orange),
+  AppMessageType.INFO: Icon(Icons.info),
 };
 
 Widget wMessages() => StoreConnector<AppState, AppMessages>(
@@ -13,14 +16,26 @@ Widget wMessages() => StoreConnector<AppState, AppMessages>(
         if (messages.visible && messages.messages.isNotEmpty) {
           final type = messages.messages.last.type;
 
-          return Row(
+          final row = Row(
             children: [
-              Icon(_ICONS[type]),
+              _ICONS[type],
               Text(messages.messages.last?.text),
             ],
           );
+
+          var future = new Future<Null>.delayed(Duration.zero, () {
+            Scaffold.of(context).showSnackBar(
+              new SnackBar(content: row),
+            );
+          });
+
+//          final snack = SnackBar(content: row);
+//          final ScaffoldState scaffold = globalMainKey.currentState;
+//
+//          scaffold.showSnackBar(snack);
+          return Text('');
         } else {
-          return Text('No message');
+          return Text('');
         }
       },
     );

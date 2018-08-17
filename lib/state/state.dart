@@ -5,9 +5,9 @@ import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/util/types.dart';
 
 // fixme: remove this dev block
-const TMP_USER = "dippenexus@gmail.com";
+const TMP_USER = "dippenexus@gmail.comaasd";
 const TMP_PWD = "KGRCC7h58fgfwKO3ZjKN62C9";
-const TMP_BASE_URL = "https://testdev1.atlassian.net";
+const TMP_BASE_URL = "https://testdev1.atlassian.netasd";
 
 //const TMP_USER = "gyula_pal";
 //const TMP_PWD = "";

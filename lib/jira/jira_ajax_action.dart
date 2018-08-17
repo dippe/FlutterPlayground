@@ -1,11 +1,9 @@
-import 'dart:async';
-
-import 'package:http/http.dart';
 import 'package:todo_flutter_app/jira/action.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/jira/jira_rest_client.dart';
+import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
-import 'package:todo_flutter_app/util/auth.dart';
+import 'package:todo_flutter_app/view/messages/action.dart';
 
 class _AjaxError {
   static const LIMIT_REACHED = 'Cannot get all of the issues because the MaxResults limit is reached ';
@@ -13,25 +11,20 @@ class _AjaxError {
 }
 
 class JiraAjax {
-  static Future<Response> _jiraGet(String path) {
-    // fixme: rethink this direct store access hack
-    final user = store.state.config.user;
-    final password = store.state.config.password;
-    final baseUrl = store.state.config.baseUrl;
-    final fullUrl = baseUrl + path;
-
-    print('*** JIRA get request: ' + fullUrl);
-    return BasicAuthClient(user, password).get(fullUrl);
-  }
-
   static void doFetchJqlAction(JiraFilter filter) {
     store.dispatch(FetchJqlStart(filter));
 
-    JiraRestClient.fetchIssuesByJql(filter)
-        .catchError((error) => store.dispatch(FetchJqlError(error.toString(), filter)))
-        .then((res) => _validateJqlMaxResult(res))
-        .catchError((error) => store.dispatch(FetchWarning(error.toString() + ' \n JQL: ' + filter.jql)))
-        .then((res) => store.dispatch(FetchJqlDone(res, filter)));
+    JiraRestClient.fetchIssuesByJql(filter).then((res) => _validateJqlMaxResult(res)).then((res) {
+      store.dispatch(AddInfoMessageAction('JQL fetch finished successfully'));
+      return res;
+    }).catchError((err) {
+      if (err is ValidationException) {
+        store.dispatch(AddWarningMessageAction('Validation Error: ' + err.toString() + ' \n JQL: ' + filter.jql));
+      } else {
+        store.dispatch(AddErrorMessageAction(err.toString() + ' \n JQL: ' + filter.jql));
+      }
+      throw Exception('AJAX ERROR: ' + err.toString());
+    }).then((res) => store.dispatch(FetchJqlDone(res, filter)));
   }
 
   static void doFetchIssueAction(String key) {
@@ -60,11 +53,21 @@ class JiraAjax {
 
   static _validateJqlMaxResult(res) {
     if (res.total > MAX_RESULTS || res.total > res.maxResults) {
-      throw new Exception(_AjaxError.LIMIT_REACHED + MAX_RESULTS.toString());
+      throw new ValidationException(_AjaxError.LIMIT_REACHED + MAX_RESULTS.toString());
     } else if (res.total == 0) {
-      throw new Exception(_AjaxError.EMPTY_JQL_RESULT);
+      throw new ValidationException(_AjaxError.EMPTY_JQL_RESULT);
     } else {
       return res;
     }
+  }
+}
+
+class ValidationException implements Exception {
+  final String cause;
+  ValidationException(this.cause);
+
+  @override
+  String toString() {
+    return cause;
   }
 }

@@ -3,17 +3,6 @@ import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/jira/domain/responses.dart';
 import 'package:todo_flutter_app/util/types.dart';
 
-class FetchWarning implements Action {
-  final String msg;
-
-  FetchWarning(this.msg);
-
-  @override
-  String toString() {
-    return 'FetchWarning{error: $msg}';
-  }
-}
-
 class FetchJqlError implements Action {
   final String error;
   final JiraFilter jiraFilter;

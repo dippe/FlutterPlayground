@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart';
 import 'package:todo_flutter_app/jira/domain/error.dart';
@@ -53,8 +54,8 @@ class JiraRestClient {
     return _jiraGet(path)
         .then(_validateResponse)
         .then((resp) => json.decode(resp.body))
-        .then((res) => JiraSearch.fromJson(res));
-//        .catchError((err) => print('*** ERROR: ' + err.toString()));
+        .then((res) => JiraSearch.fromJson(res))
+        .catchError((err) => _handleErrors(err));
   }
 
   static Future<JiraVersions> fetchVersions(String projectIdOrKey) {
@@ -82,6 +83,15 @@ class JiraRestClient {
       throw new Exception('Reason: ' + resp.reasonPhrase + '\n' + msg ?? ' - ');
     } else {
       return resp;
+    }
+  }
+
+  static _handleErrors(err) {
+    if (err is SocketException) {
+      print('Communication Error: ' + err.message);
+      throw Exception(err.message);
+    } else {
+      throw UnsupportedError('Data Conversion error. ' + err.toString());
     }
   }
 }

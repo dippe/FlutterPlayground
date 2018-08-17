@@ -204,3 +204,19 @@ class JiraIssue {
         typeUrl = json['typeUrl'],
         fields = JiraIssueFields.fromJson(json['fields']);
 }
+
+class JiraVersion {
+  // fixme: unimplemented
+
+  JiraVersion.fromJson(Map<String, dynamic> json) {
+    throw UnimplementedError('Unimplemented JiraVersion converter!');
+  }
+}
+
+class JiraComponent {
+  // fixme: unimplemented
+
+  JiraComponent.fromJson(Map<String, dynamic> json) {
+    throw UnimplementedError('Unimplemented JiraComponent converter!');
+  }
+}

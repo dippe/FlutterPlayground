@@ -68,4 +68,27 @@ class JiraFavouriteFilters {
   final List<JiraFilter> filters;
 
   JiraFavouriteFilters(this.filters);
+
+  JiraFavouriteFilters.fromJson(Map<String, dynamic> json)
+      // fixme asd!!!
+      : filters = json['asd']?.map((list) => JiraFilter.fromJson(list))?.toList() as List<JiraFilter>;
+}
+
+class JiraVersions {
+  final List<JiraVersion> versions;
+
+  JiraVersions(this.versions);
+
+  JiraVersions.fromJson(Map<String, dynamic> json)
+      // fixme asd!!!
+      : versions = json['asd']?.map((list) => JiraVersion.fromJson(list))?.toList() as List<JiraVersion>;
+}
+
+class JiraComponents {
+  final List<JiraComponent> components;
+
+  JiraComponents(this.components);
+  JiraComponents.fromJson(Map<String, dynamic> json)
+      // fixme asd!!!
+      : components = json['asd']?.map((list) => JiraComponent.fromJson(list))?.toList() as List<JiraComponent>;
 }

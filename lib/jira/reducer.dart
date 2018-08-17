@@ -13,7 +13,7 @@ Reducer<JiraData> jiraReducer = (JiraData state, dynamic action) {
     );
   } else if (action is Actions.FetchIssueDone) {
     throw Exception("unimplemented reducer for Actions.FetchIssueDone");
-  } else if (action is Actions.FetchError) {
+  } else if (action is Actions.FetchJqlError) {
     print('*** ERROR ***: Fetch error ' + action.error);
     throw Exception("unimplemented reducer FetchError : ");
 //    return state.copyWith(error: action.error);

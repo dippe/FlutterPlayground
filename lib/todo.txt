@@ -5,11 +5,12 @@ Feature:
 - menteni kellene az adatokat
 
 Fix:
+- maxlimit handling hibás
 - ha elindult egy ajax, ne induljon új ha ellapozok, majd vissza
 - loading kiírása/spinner refresh esetén
+- jql req indítása tab change esetén
+
+kész:
 - ok-mok helyett back
 - epam JIRA-s ikonok szarok
 - item oszlop igazítás szar
-
-- jql req indítása tab change esetén
-

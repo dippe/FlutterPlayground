@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
-import 'package:todo_flutter_app/jira/jira_ajax.dart';
+import 'package:todo_flutter_app/jira/jira_ajax_action.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/action.dart' as ViewActions;

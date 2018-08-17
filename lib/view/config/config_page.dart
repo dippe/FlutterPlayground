@@ -41,7 +41,7 @@ Widget wConfigPage() => new StoreConnector<AppState, ConfigState>(
                 icon: Icons.input,
               ),
               new FlatButton(
-                child: Text('Ok-Mok'),
+                child: Text('Back to the list'),
                 onPressed: () => dispatch(HideConfigPage()),
               ),
             ],

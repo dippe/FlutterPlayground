@@ -15,13 +15,6 @@ const STATUS_COLORS = {
   5: Colors.red,
 };
 
-const STATUS_ICONS = {
-  1: Icons.device_unknown,
-  2: Icons.input,
-  3: Icons.arrow_forward,
-  4: Icons.done,
-};
-
 const ASSET_UNKNOWN_PRIORITY = 'images/issuetypes/blank.png';
 
 const ASSET_DEFAULT_ISSUE_TYPE_ICON = 'images/issuetypes/genericissue.png';
@@ -50,4 +43,10 @@ const ASSET_ISSUE_TYPE_ICONS = {
   'Health': 'images/issuetypes/health.png',
   'Remove-feature': 'images/issuetypes/remove_feature.png',
   'Sales': 'images/issuetypes/sales.png',
+};
+
+const ASSET_STATUS_ICONS = {
+  'done': 'images/statuses/resolved.png',
+  'indeterminate': 'images/statuses/inprogress.png',
+  'new': 'images/statuses/open.png',
 };

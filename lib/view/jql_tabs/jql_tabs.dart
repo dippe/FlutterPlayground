@@ -108,10 +108,18 @@ List<Widget> _tabsFromStore(AppState appState) => appState.view.issueListViews.m
     }).toList();
 
 List<Widget> _renderChildren(Store<AppState> store) => store.state.view.issueListViews.map((i) {
-      print(i.name);
+      final bool showProgressIndicator = i.result == null;
+
       if (i.items != null) {
-        return wIssueList(i.items) as Widget;
+        return wIssueList(i.items, showProgressIndicator) as Widget;
       } else {
-        return Text('Loading ...') as Widget;
+        return Column(children: [
+          Text('Loading ...') as Widget,
+          new SizedBox(
+            width: 40.0,
+            height: 40.0,
+            child: new CircularProgressIndicator(),
+          ),
+        ]);
       }
     }).toList() as List<Widget>;

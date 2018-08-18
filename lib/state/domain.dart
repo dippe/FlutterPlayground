@@ -61,12 +61,12 @@ class IssueListView {
     this.lastFetched = null,
   });
 
-  IssueListView copyWith({id, name, filter, result, items, idCounter}) {
+  IssueListView copyWith({id, name, filter, result, items, idCounter, bool resetResult = false}) {
     return IssueListView(
       id: id ?? this.id,
       name: name ?? this.name,
       filter: filter ?? this.filter,
-      result: result ?? this.result,
+      result: resetResult == true ? null : result ?? this.result,
       lastFetched: result != null ? DateTime.now().millisecondsSinceEpoch : this.lastFetched,
       items: items != null ? List<ListItemData>.unmodifiable(items).toList() : this.items,
       idCounter: idCounter ?? this.idCounter,

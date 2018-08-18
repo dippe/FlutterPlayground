@@ -68,7 +68,7 @@ ViewState _fetchJqlStart(ViewState state, JiraActions.FetchJqlStart action) {
 
   if (idx < 0) throw Exception('Cannot find Issue Tab !!!!');
 
-  listViewsCopy[idx] = listViewsCopy[idx].copyWith(items: [], result: null);
+  listViewsCopy[idx] = listViewsCopy[idx].copyWith(resetResult: true);
 
   return state.copyWith(issueListViews: listViewsCopy);
 }
@@ -95,10 +95,14 @@ ViewState _addItemsFromJqlFetch(ViewState state, JiraActions.FetchJqlDone action
 
   final idx = state.issueListViews.indexWhere(sameFilterId);
 
-  listViewsCopy[idx] = listViewsCopy[idx].copyWith(
-    items: mapToItems(action.jiraJqlResult.issues),
-    result: action.jiraJqlResult,
-  );
+  try {
+    listViewsCopy[idx] = listViewsCopy[idx].copyWith(
+      items: mapToItems(action.jiraJqlResult.issues),
+      result: action.jiraJqlResult,
+    );
+  } catch (e) {
+    print(e.toString());
+  }
 
   return state.copyWith(issueListViews: listViewsCopy);
 }

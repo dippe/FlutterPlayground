@@ -7,8 +7,7 @@ import 'package:todo_flutter_app/state/state.dart';
 void main() {
   initStore();
 
-// fixme: the store is not initialized yet??
-//  _reloadFirstTab();
+  _reloadFirstTab();
 
   runApp(new FlutterReduxApp(
     store: store,

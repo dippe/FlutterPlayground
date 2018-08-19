@@ -5,12 +5,7 @@ import 'package:todo_flutter_app/jira/jira_ajax_action.dart';
 import 'package:todo_flutter_app/state/state.dart';
 
 void main() {
-  // Load initial state
-//  persistor.load(store);
-
   initStore();
-
-  final tmp = store;
 
 // fixme: the store is not initialized yet??
 //  _reloadFirstTab();

@@ -42,7 +42,6 @@ class ListItemData {
 class IssueListView {
   final int lastFetched;
 
-  @JsonKey(ignore: true, defaultValue: [])
   final List<ListItemData> items;
 
   final String id;
@@ -166,7 +165,7 @@ class AppState {
     @required this.jira,
   });
 
-  AppState copyWith({config, appView, view}) {
+  AppState copyWith({config, jira, view}) {
     return AppState(
       jira: jira ?? this.jira,
       config: config ?? this.config,

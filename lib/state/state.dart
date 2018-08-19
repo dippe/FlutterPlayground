@@ -1,6 +1,8 @@
+import 'dart:async';
+
 import 'package:redux/redux.dart';
-//import 'package:redux_persist/redux_persist.dart';
-//import 'package:redux_persist_flutter/redux_persist_flutter.dart';
+import 'package:redux_persist/redux_persist.dart';
+import 'package:redux_persist_flutter/redux_persist_flutter.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/reducer.dart';
 import 'package:todo_flutter_app/state/domain.dart';
@@ -20,24 +22,28 @@ const TMP_BASE_URL = "https://testdev1.atlassian.net";
 //const TMP_BASE_URL = "https://jira.epam.com/jira";
 // fixme end
 
-// Create Persistor
-/*
-final persistor = Persistor<AppState>(
-  storage: FlutterStorage("my-app"),
-  decoder: AppState.fromJsonDecoder,
-);
-*/
-
 /// global store "singleton"
 Store<AppState> store;
 
-void initStore() {
+Future initStore() async {
   try {
+// Create Persistor
+    final persistor = Persistor<AppState>(
+//      storage: FileStorage("state.json"),
+      storage: FlutterStorage("my-jira-app"),
+      version: 1,
+      decoder: AppState.fromJsonDecoder,
+      debug: true,
+    );
+
     store = new Store<AppState>(
       combineReducers([_debugReducer, appReducer]),
       initialState: _initState,
-      //  middleware: [persistor.createMiddleware()],
+      middleware: [persistor.createMiddleware()],
     );
+
+    // Load initial state
+    await persistor.load(store);
   } catch (e) {
     print(e);
   }
@@ -61,13 +67,9 @@ Reducer<E> debugReducer<E>(name) => (E state, action) {
       return state;
     };
 
+// init state for first usage
 final _initState = AppState(
-  jira: JiraData(
-    error: null,
-    fetchedIssues: null,
-    fetchedFilters: null,
-    predefinedFilters: _predefinedFilters,
-  ),
+  jira: initJiraData,
   // fixme: remove test data
   config: ConfigState(
     user: TMP_USER,
@@ -75,7 +77,7 @@ final _initState = AppState(
     baseUrl: TMP_BASE_URL,
   ),
   view: ViewState(
-    messages: AppMessages(messages: [], visible: false),
+    messages: initAppMessages,
     actListIdx: 0,
     actPage: PageType.IssueList,
     issueListViews: [
@@ -104,6 +106,16 @@ final _initState = AppState(
     ],
   ),
 );
+
+// re-usable init state for app-restarts
+final JiraData initJiraData = JiraData(
+  error: null,
+  fetchedIssues: null,
+  fetchedFilters: null,
+  predefinedFilters: _predefinedFilters,
+);
+
+final AppMessages initAppMessages = AppMessages(messages: [], visible: false);
 
 final List<JiraFilter> _predefinedFilters = [
   JiraFilter(

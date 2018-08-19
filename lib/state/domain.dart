@@ -40,8 +40,11 @@ class ListItemData {
 
 @JsonSerializable()
 class IssueListView {
+  @JsonKey(ignore: true, defaultValue: null)
   final int lastFetched;
 
+  // fixme: rethink ignoring (UX?)
+  @JsonKey(ignore: true, defaultValue: [])
   final List<ListItemData> items;
 
   final String id;
@@ -49,7 +52,7 @@ class IssueListView {
 
   final JiraFilter filter;
   // !!!!!!!!!!!! FIXME: REMOVE THIS LATER
-  @JsonKey(ignore: true)
+  @JsonKey(ignore: true, defaultValue: null)
   final JiraSearch result; // link to the ajax result
   final int idCounter;
 

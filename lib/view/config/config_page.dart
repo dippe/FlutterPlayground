@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
+import 'package:todo_flutter_app/view/common/common_switch_field.dart';
 import 'package:todo_flutter_app/view/common/common_text_field.dart';
 import 'package:todo_flutter_app/view/config/action.dart';
 import 'package:todo_flutter_app/view/action.dart';
@@ -39,6 +40,15 @@ Widget wConfigPage() => new StoreConnector<AppState, ConfigState>(
                 labelText: 'Password',
                 onChange: (txt) => dispatch(SetPwd(txt)),
                 icon: Icons.input,
+              ),
+              Divider(
+                height: 2.0,
+                color: Colors.white,
+              ),
+              CommonSwitchField(
+                labelText: 'Compact List View',
+                initValue: config.listViewMode == ListViewMode.COMPACT,
+                onChange: (val) => dispatch(ToggleDisplayModeAction()),
               ),
               new FlatButton(
                 child: Text('Back to the list'),

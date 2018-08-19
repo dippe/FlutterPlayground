@@ -188,33 +188,32 @@ class AppState {
   static AppState fromJsonDecoder(dynamic json) => AppState.fromJson(json);
 }
 
+enum ListViewMode { NORMAL, COMPACT }
+
 @JsonSerializable()
 class ConfigState {
   final String user;
   final String password;
   final String baseUrl;
+  final ListViewMode listViewMode;
 
-  ConfigState({@required this.user, @required this.password, @required this.baseUrl});
+  ConfigState({@required this.user, @required this.password, @required this.baseUrl, @required this.listViewMode});
 
   hasLogin() {
     return user != null && password != null && baseUrl != null;
   }
 
-  ConfigState copyWith({user, password, baseUrl}) => ConfigState(
+  ConfigState copyWith({user, password, baseUrl, listViewMode}) => ConfigState(
         user: user ?? this.user,
         password: password ?? this.password,
         baseUrl: baseUrl ?? this.baseUrl,
+        listViewMode: listViewMode ?? this.listViewMode,
       );
 
   @override
   String toString() {
     return 'ConfigState{server: $baseUrl, user: $user, password: $password}';
   }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ConfigState && runtimeType == other.runtimeType && user == other.user && password == other.password;
 
   @override
   int get hashCode => user.hashCode ^ password.hashCode;

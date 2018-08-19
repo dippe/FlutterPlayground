@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/jira/jira_ajax_action.dart';
 import 'package:todo_flutter_app/state/domain.dart';
+import 'package:todo_flutter_app/view/config/action.dart';
 import 'package:todo_flutter_app/view/issue_list/action.dart' as Actions;
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/action.dart' as Actions;
@@ -25,7 +26,7 @@ Widget wHeaderAppBar() => AppBar(
     );
 
 Widget _wMainBtns = Row(
-  children: [_wAddButton, _wTopMenu(), _wRefreshButton],
+  children: [_wToggleCompact, _wAddButton, _wTopMenu(), _wRefreshButton],
 );
 
 Widget _wTopMenu() {
@@ -44,6 +45,21 @@ Widget _wTopMenu() {
     itemBuilder: builder,
   );
 }
+
+Widget _wToggleCompact = StoreConnector<AppState, bool>(
+    converter: (store) => store.state.config.listViewMode == ListViewMode.COMPACT,
+    builder: (context, isCompact) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text('Compact'),
+          Switch(
+            value: isCompact,
+            onChanged: (val) => dispatch(ToggleDisplayModeAction()),
+          ),
+        ],
+      );
+    });
 
 Widget _wAddButton = IconButton(
   tooltip: 'New Item',

@@ -84,12 +84,20 @@ ConfigState _$ConfigStateFromJson(Map<String, dynamic> json) {
   return ConfigState(
       user: json['user'] as String,
       password: json['password'] as String,
-      baseUrl: json['baseUrl'] as String);
+      baseUrl: json['baseUrl'] as String,
+      listViewMode:
+          _$enumDecodeNullable(_$ListViewModeEnumMap, json['listViewMode']));
 }
 
 Map<String, dynamic> _$ConfigStateToJson(ConfigState instance) =>
     <String, dynamic>{
       'user': instance.user,
       'password': instance.password,
-      'baseUrl': instance.baseUrl
+      'baseUrl': instance.baseUrl,
+      'listViewMode': _$ListViewModeEnumMap[instance.listViewMode]
     };
+
+const _$ListViewModeEnumMap = <ListViewMode, dynamic>{
+  ListViewMode.NORMAL: 'NORMAL',
+  ListViewMode.COMPACT: 'COMPACT'
+};

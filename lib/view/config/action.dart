@@ -34,3 +34,5 @@ class SetBaseUrl implements Action {
     return 'SetBaseUrl{url: $url}';
   }
 }
+
+class ToggleDisplayModeAction implements Action {}

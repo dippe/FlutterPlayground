@@ -27,6 +27,8 @@ class _wJqlTabsPageState extends State<wJqlTabsPage> with SingleTickerProviderSt
 
   StreamSubscription<AppState> _subscription;
 
+  ListViewMode _recentListViewMode;
+
   _wJqlTabsPageState() {
     this._appStore = store;
   }
@@ -42,6 +44,12 @@ class _wJqlTabsPageState extends State<wJqlTabsPage> with SingleTickerProviderSt
       if (appState.view.issueListViews != _recent) {
         setState(() {
           _recent = appState.view.issueListViews;
+          // ?? this line seem inappropriate here
+          _children = _renderChildren(_appStore);
+        });
+      } else if (appState.config.listViewMode != _recentListViewMode) {
+        setState(() {
+          _recentListViewMode = appState.config.listViewMode;
           // ?? this line seem inappropriate here
           _children = _renderChildren(_appStore);
         });
@@ -111,7 +119,8 @@ List<Widget> _renderChildren(Store<AppState> store) => store.state.view.issueLis
       final bool showProgressIndicator = i.result == null;
 
       if (i.items != null) {
-        return wIssueList(i.items, showProgressIndicator) as Widget;
+        return wIssueList(i.items, showProgressIndicator, store.state.config.listViewMode == ListViewMode.COMPACT)
+            as Widget;
       } else {
         return Column(children: [
           Text('Loading ...') as Widget,

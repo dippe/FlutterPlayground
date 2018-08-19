@@ -75,6 +75,7 @@ final _initState = AppState(
     user: TMP_USER,
     password: TMP_PWD,
     baseUrl: TMP_BASE_URL,
+    listViewMode: ListViewMode.COMPACT,
   ),
   view: ViewState(
     messages: initAppMessages,

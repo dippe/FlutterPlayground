@@ -6,7 +6,7 @@ import 'package:todo_flutter_app/view/issue_list/list_item.dart';
 Color _getColorByStatusId(int id) => STATUS_COLORS[id] ?? COLOR_UNKNOWN;
 // todo: remove later
 
-ItemWidget wIssueStatusChip = (item) {
+ItemWidget wIssueStatusChip = (item, bool isCompact) {
   // fixme: remove later this simple hack (direct access to state instead of listening to the state change)
   // fixme: rethink static resources instead of downloading
   final String baseUrl = store.state.config.baseUrl;
@@ -14,23 +14,33 @@ ItemWidget wIssueStatusChip = (item) {
   return item.issue?.fields?.status != null
       ? Transform(
           transform: new Matrix4.identity()..scale(0.8),
-          child: Chip(
-//          shape: Border.all(color: Colors.yellow, width: 1.0),
-            avatar: _wStatusIcon(item),
-            label: Container(
-              width: STATUS_CHIP_WIDTH,
-              child: Text(
-                item.issue.fields.status.name,
-                overflow: TextOverflow.fade,
-              ),
-            ),
-            backgroundColor: _getColorByStatusId(item.issue.fields.status.statusCategory.id),
-          ),
+          child: isCompact
+              ? Chip(
+                  label: Container(
+                    width: STATUS_CHIP_WIDTH * 0.8,
+                    child: Text(
+                      item.issue.fields.status.name,
+                      overflow: TextOverflow.fade,
+                    ),
+                  ),
+                  backgroundColor: _getColorByStatusId(item.issue.fields.status.statusCategory.id),
+                )
+              : Chip(
+                  avatar: isCompact ? Text('') : _wStatusIcon(item, isCompact),
+                  label: Container(
+                    width: STATUS_CHIP_WIDTH,
+                    child: Text(
+                      item.issue.fields.status.name,
+                      overflow: TextOverflow.fade,
+                    ),
+                  ),
+                  backgroundColor: _getColorByStatusId(item.issue.fields.status.statusCategory.id),
+                ),
         )
       : Text('-');
 };
 
-ItemWidget _wStatusIcon = (item) {
+ItemWidget _wStatusIcon = (item, isCompact) {
   final iconUrl = item.issue?.fields?.status?.iconUrl;
   final statusCtgKey = item.issue?.fields?.status?.statusCategory?.key;
   if (iconUrl != null) {

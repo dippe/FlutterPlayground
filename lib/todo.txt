@@ -1,10 +1,24 @@
 
 Feature:
-- menteni kellene az adatokat
+- kereső lap
 - jql filterek leszedése a szerverről
-- issue details lap
+- issue details lap alap mezőkkel
+- utolsó komment(ek) megjelenítése
+- minden state mentése (issue list)
+- csak deltát töltsön le + merge-elje a listát?
 
 Fix:
+- kisebb / konfigurálható issuekey mező
+- kikapcsolható issuetype ikon
+- kikapcsolható priority
+- kikapcsolható státusz ikon
+- státusz igazítása függőlegesen
+- tab longtap ne csak a képen
+- dialog menü leszedése
+- konfigurálható tabok száma
+- szerver, user, jelszó elkódolása?
+
+
 
 kész:
 - ok-mok helyett back
@@ -15,3 +29,4 @@ kész:
 - maxlimit handling hibás
 - init 1. view megnyitáskor
 - loading kiírása/spinner refresh esetén
+- menteni kellene az adatokat

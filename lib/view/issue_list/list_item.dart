@@ -5,9 +5,9 @@ import 'package:todo_flutter_app/view/issue_list/consts.dart';
 import 'package:todo_flutter_app/view/issue_list/issue_status.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 
-typedef Widget ItemWidget(ListItemData item);
+typedef Widget ItemWidget(ListItemData item, bool isCompact);
 
-ItemWidget wDraggableListItem = (ListItemData item) {
+ItemWidget wDraggableListItem = (ListItemData item, isCompact) {
   return DragTarget<ListItemData>(
     // fixme:re-think keying! perf/ref?
     key: ObjectKey(item),
@@ -17,16 +17,19 @@ ItemWidget wDraggableListItem = (ListItemData item) {
       final decoration = candidateData.isNotEmpty ? new BoxDecoration(color: Colors.green) : null;
       final _renderHighlight = (Widget row) => Container(decoration: decoration, child: row);
 
-      return _renderHighlight(wListItem(item));
+      return _renderHighlight(wListItem(item, isCompact));
     },
   );
 };
 
-ItemWidget wListItem = (ListItemData item) {
+ItemWidget wListItem = (ListItemData item, isCompact) {
+  final isCompact = store.state.config.listViewMode == ListViewMode.COMPACT;
+
   final renderSimpleRow = (children) => Row(
         children: children,
       );
   final renderUnselectedRow = (children) => Row(
+//        crossAxisAlignment: CrossAxisAlignment.start,
         children: children,
       );
   final renderUnselectedRowWithSwipeToggle = (children) => _wDraggableItem(
@@ -39,23 +42,23 @@ ItemWidget wListItem = (ListItemData item) {
 
   if (item.isSelected && item.isEdit) {
     return renderSimpleRow([
-      _wName(item),
-      _wDeleteBtn(item),
+      _wName(item, isCompact),
+      _wDeleteBtn(item, isCompact),
     ]);
   } else if (item.isSelected) {
     return renderSimpleRow([
-      _wCheckBox(item),
-      _wName(item),
-      _wDeleteBtn(item),
+      _wCheckBox(item, isCompact),
+      _wName(item, isCompact),
+      _wDeleteBtn(item, isCompact),
     ]);
   } else {
     // fixme: rethink: only JiraIssue or manually created should processed here too?
     return renderUnselectedRow([
-      _wIssuetype(item),
-      _wPriority(item),
-      _wIssueKey(item),
-      _wName(item),
-      wIssueStatusChip(item),
+      isCompact ? Text('') : _wIssuetype(item, isCompact),
+      _wPriority(item, isCompact),
+      _wIssueKey(item, isCompact),
+      _wName(item, isCompact),
+      wIssueStatusChip(item, isCompact),
     ]);
   }
 };
@@ -81,7 +84,7 @@ Widget _wReadOnlyTitle({
   );
 }
 
-ItemWidget _wEditableTitle = (ListItemData item) {
+ItemWidget _wEditableTitle = (ListItemData item, isCompact) {
   final d = item;
   final ctrl = new TextEditingController();
 
@@ -132,19 +135,19 @@ Widget _wDraggableItem(Widget child, ListItemData item) => LongPressDraggable<Li
       onDragCompleted: () => {},
     );
 
-ItemWidget _wDeleteBtn = (item) => IconButton(
+ItemWidget _wDeleteBtn = (item, isCompact) => IconButton(
       icon: Icon(Icons.delete),
       onPressed: () => dispatch(Actions.Delete(item)),
     );
 
-ItemWidget _wCheckBox = (item) => Checkbox(
+ItemWidget _wCheckBox = (item, isCompact) => Checkbox(
       value: item.done,
       onChanged: (bool val) => dispatch(Actions.CbToggle(item)),
     );
 
-ItemWidget _wIssueKey = (item) => Chip(
+ItemWidget _wIssueKey = (item, isCompact) => Chip(
       label: Container(
-        width: ISSUEKEY_WIDTH,
+        width: isCompact ? ISSUEKEY_WIDTH * 0.7 : ISSUEKEY_WIDTH,
         child: Text(
           item.key,
           overflow: TextOverflow.fade,
@@ -152,7 +155,7 @@ ItemWidget _wIssueKey = (item) => Chip(
       ),
     );
 
-ItemWidget _wPriority = (item) {
+ItemWidget _wPriority = (item, isCompact) {
   if (item?.issue?.fields?.priority != null) {
     final regexp = RegExp(".*\\/(.+).svg");
 
@@ -167,7 +170,7 @@ ItemWidget _wPriority = (item) {
   }
 };
 
-ItemWidget _wIssuetype = (item) {
+ItemWidget _wIssuetype = (item, isCompact) {
   if (item.issue != null && item.issue.fields?.issuetype != null) {
     return Image.asset(ASSET_ISSUE_TYPE_ICONS[item.issue.fields.issuetype.name] ?? ASSET_DEFAULT_ISSUE_TYPE_ICON);
   } else {
@@ -175,9 +178,9 @@ ItemWidget _wIssuetype = (item) {
   }
 };
 
-ItemWidget _wName = (item) => Expanded(
+ItemWidget _wName = (item, isCompact) => Expanded(
       child: item.isEdit
-          ? _wEditableTitle(item)
+          ? _wEditableTitle(item, isCompact)
           : item.isSelected
               ? _wReadOnlyTitle(
                   item: item,

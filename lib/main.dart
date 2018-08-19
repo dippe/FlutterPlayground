@@ -5,15 +5,23 @@ import 'package:todo_flutter_app/jira/jira_ajax_action.dart';
 import 'package:todo_flutter_app/state/state.dart';
 
 void main() {
-  _initFirstTab();
+  // Load initial state
+//  persistor.load(store);
+
+  initStore();
+
+  final tmp = store;
+
+// fixme: the store is not initialized yet??
+//  _reloadFirstTab();
 
   runApp(new FlutterReduxApp(
     store: store,
   ));
 }
 
-_initFirstTab() {
-  final idx = store.state.view.actListIdx;
+_reloadFirstTab() {
+  final idx = store.state.view?.actListIdx;
   final filter = store.state.view.issueListViews[idx].filter;
 
   if (filter != null) {

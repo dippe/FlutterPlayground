@@ -1,4 +1,6 @@
 import 'package:redux/redux.dart';
+//import 'package:redux_persist/redux_persist.dart';
+//import 'package:redux_persist_flutter/redux_persist_flutter.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/reducer.dart';
 import 'package:todo_flutter_app/state/domain.dart';
@@ -18,8 +20,28 @@ const TMP_BASE_URL = "https://testdev1.atlassian.net";
 //const TMP_BASE_URL = "https://jira.epam.com/jira";
 // fixme end
 
+// Create Persistor
+/*
+final persistor = Persistor<AppState>(
+  storage: FlutterStorage("my-app"),
+  decoder: AppState.fromJsonDecoder,
+);
+*/
+
 /// global store "singleton"
-final store = new Store<AppState>(combineReducers([_debugReducer, appReducer]), initialState: _initState);
+Store<AppState> store;
+
+void initStore() {
+  try {
+    store = new Store<AppState>(
+      combineReducers([_debugReducer, appReducer]),
+      initialState: _initState,
+      //  middleware: [persistor.createMiddleware()],
+    );
+  } catch (e) {
+    print(e);
+  }
+}
 
 /// dispatch action into the global store
 //final dispatchFn = (Action action) => () => store.dispatch(action);

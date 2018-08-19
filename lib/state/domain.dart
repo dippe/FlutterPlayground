@@ -2,7 +2,12 @@ import 'package:meta/meta.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/jira/domain/responses.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'domain.g.dart';
 
+/**
+ * BUILD JSON CONVERTERS: flutter packages pub run build_runner build
+ */
 enum PageType { Config, IssueList, JqlEdit }
 
 class ListItemData {
@@ -31,23 +36,21 @@ class ListItemData {
         isEdit: isEdit ?? this.isEdit,
         isSelected: isSelected ?? this.isSelected,
       );
-
-//  ListItemData withEdit(bool edit) => copyWith(isEdit: edit);
-//
-//  ListItemData withSelected(bool val) => copyWith(isSelected: val);
-//
-//  ListItemData withToggled() => copyWith(done: !this.done);
-//
-//  ListItemData withTitle(String newTitle) => copyWith(title: newTitle);
 }
 
+@JsonSerializable()
 class IssueListView {
   final int lastFetched;
+
+  @JsonKey(ignore: true, defaultValue: [])
   final List<ListItemData> items;
 
   final String id;
   final String name;
+
   final JiraFilter filter;
+  // !!!!!!!!!!!! FIXME: REMOVE THIS LATER
+  @JsonKey(ignore: true)
   final JiraSearch result; // link to the ajax result
   final int idCounter;
 
@@ -60,6 +63,7 @@ class IssueListView {
     this.idCounter = 0,
     this.lastFetched = null,
   });
+//  }) : this.items = items ?? [] as List<ListItemData>;
 
   IssueListView copyWith({id, name, filter, result, items, idCounter, bool resetResult = false}) {
     return IssueListView(
@@ -112,9 +116,15 @@ class IssueListView {
   @override
   int get hashCode =>
       items.hashCode ^ id.hashCode ^ name.hashCode ^ filter.hashCode ^ result.hashCode ^ idCounter.hashCode;
+
+  factory IssueListView.fromJson(Map<String, dynamic> json) => _$IssueListViewFromJson(json);
+
+  Map<String, dynamic> toJson() => _$IssueListViewToJson(this);
 }
 
+@JsonSerializable()
 class ViewState {
+  @JsonKey(ignore: true)
   final AppMessages messages;
   final PageType actPage;
   final List<IssueListView> issueListViews;
@@ -136,28 +146,16 @@ class ViewState {
       messages: messages ?? this.messages,
     );
   }
+
+  factory ViewState.fromJson(Map<String, dynamic> json) => _$ViewStateFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ViewStateToJson(this);
 }
 
-class JiraData {
-  final List<JiraIssue> fetchedIssues;
-  final List<JiraFilter> fetchedFilters;
-  final List<JiraFilter> predefinedFilters;
-  final String error;
-
-  JiraData({this.fetchedIssues, this.fetchedFilters, this.error, this.predefinedFilters});
-
-  JiraData copyWith({fetchedIssues, fetchedFilters}) {
-    return JiraData(
-      fetchedIssues: fetchedIssues != null ? List<JiraIssue>.unmodifiable(fetchedIssues).toList() : this.fetchedIssues,
-      fetchedFilters:
-          fetchedFilters != null ? List<JiraFilter>.unmodifiable(fetchedFilters).toList() : this.fetchedFilters,
-      predefinedFilters: this.predefinedFilters,
-      error: error ?? this.error,
-    );
-  }
-}
-
+@JsonSerializable()
 class AppState {
+  // !!!!!!!!!!!! FIXME: REMOVE THIS LATER
+  @JsonKey(ignore: true)
   final JiraData jira;
   final ViewState view;
   final ConfigState config;
@@ -180,8 +178,15 @@ class AppState {
   String toString() {
     return 'AppState{view: $view, jira: $jira, config: $config}';
   }
+
+  factory AppState.fromJson(Map<String, dynamic> json) => _$AppStateFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AppStateToJson(this);
+
+  static AppState fromJsonDecoder(dynamic json) => AppState.fromJson(json);
 }
 
+@JsonSerializable()
 class ConfigState {
   final String user;
   final String password;
@@ -211,7 +216,17 @@ class ConfigState {
 
   @override
   int get hashCode => user.hashCode ^ password.hashCode;
+
+  factory ConfigState.fromJson(Map<String, dynamic> json) => _$ConfigStateFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ConfigStateToJson(this);
 }
+
+/**********************************
+ *
+ * NOT SERIALIZABLE CLASSES
+ *
+ */
 
 enum AppMessageType { ERROR, WARNING, INFO }
 
@@ -232,4 +247,23 @@ class AppMessages {
         visible: visible ?? this.visible,
         messages: messages ?? this.messages,
       );
+}
+
+class JiraData {
+  final List<JiraIssue> fetchedIssues;
+  final List<JiraFilter> fetchedFilters;
+  final List<JiraFilter> predefinedFilters;
+  final String error;
+
+  JiraData({this.fetchedIssues, this.fetchedFilters, this.error, this.predefinedFilters});
+
+  JiraData copyWith({fetchedIssues, fetchedFilters}) {
+    return JiraData(
+      fetchedIssues: fetchedIssues != null ? List<JiraIssue>.unmodifiable(fetchedIssues).toList() : this.fetchedIssues,
+      fetchedFilters:
+          fetchedFilters != null ? List<JiraFilter>.unmodifiable(fetchedFilters).toList() : this.fetchedFilters,
+      predefinedFilters: this.predefinedFilters,
+      error: error ?? this.error,
+    );
+  }
 }

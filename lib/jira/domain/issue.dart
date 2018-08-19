@@ -1,3 +1,6 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'issue.g.dart';
+
 class StatusName {
   static const CLOSED = 'Closed';
   static const DONE = 'Done';
@@ -5,6 +8,7 @@ class StatusName {
   static const UNDEFINED = '??';
 }
 
+@JsonSerializable()
 class JiraUser {
   final bool active;
   final dynamic avatarUrls; // fixme type
@@ -15,6 +19,18 @@ class JiraUser {
   final String self;
   final String timeZone;
 
+  JiraUser({
+    this.active,
+    this.avatarUrls,
+    this.displayName,
+    this.emailAddress,
+    this.key,
+    this.name,
+    this.self,
+    this.timeZone,
+  });
+
+  /*
   JiraUser.fromJson(Map<String, dynamic> json)
       : active = json['active'],
         avatarUrls = json['avatarUrls'],
@@ -24,6 +40,11 @@ class JiraUser {
         name = json['name'],
         self = json['self'],
         timeZone = json['timeZone'];
+*/
+
+  factory JiraUser.fromJson(Map<String, dynamic> json) => _$JiraUserFromJson(json);
+
+  Map<String, dynamic> toJson() => _$JiraUserToJson(this);
 }
 
 class IssueComponent {
@@ -157,7 +178,8 @@ class JiraIssueFields {
         aggregatetimespent = json['aggregatetimespent'],
         assignee = json['assignee'] != null ? JiraUser.fromJson(json['assignee']) : null,
         //ignore: unnecessary_cast
-        components = (json['components'] as List<dynamic>).map((item) => IssueComponent.fromJson(item)).toList() as List<IssueComponent>, //
+        components = (json['components'] as List<dynamic>).map((item) => IssueComponent.fromJson(item)).toList()
+            as List<IssueComponent>, //
         created = json['created'], // "2017-03-07T19:03:46.422+0100"
         creator = json['creator'] != null ? JiraUser.fromJson(json['creator']) : null,
         description = json['description'],

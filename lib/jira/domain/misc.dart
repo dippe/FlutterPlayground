@@ -1,5 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
+part 'misc.g.dart';
 
+@JsonSerializable()
 class JiraFilter {
   final String self; // "htt; ////www.example.com/jira/rest/api/2/filter/10000",
   final String id; // "10000",
@@ -27,6 +30,7 @@ class JiraFilter {
     this.subscriptions,
   }); // {
 
+/*
   JiraFilter.fromJson(Map<String, dynamic> json)
       : self = json['self'],
         id = json['id'],
@@ -40,8 +44,13 @@ class JiraFilter {
         sharePermissions = json['sharePermissions'],
         subscriptions = json['subscriptions'];
 
+*/
   @override
   String toString() {
     return 'JiraFilter{id: $id, name: $name}';
   }
+
+  factory JiraFilter.fromJson(Map<String, dynamic> json) => _$JiraFilterFromJson(json);
+
+  Map<String, dynamic> toJson() => _$JiraFilterToJson(this);
 }

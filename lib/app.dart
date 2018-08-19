@@ -10,14 +10,16 @@ import 'package:todo_flutter_app/view/jql_tabs/jql_tabs.dart';
 import 'package:todo_flutter_app/view/messages/messages.dart';
 
 class FlutterReduxApp extends StatelessWidget {
+//  Persistor<AppState> persistor;
   final Store<AppState> store;
 
-  FlutterReduxApp({Key key, this.store}) : super(key: key);
+  FlutterReduxApp({this.store}) {}
 
   @override
   Widget build(BuildContext context) {
-    // The StoreProvider should wrap your MaterialApp or WidgetsApp. This will
-    // ensure all routes have access to the store.
+//    return PersistorGate(
+//      persistor: persistor,
+//      builder: (context) =>
     return StoreProvider<AppState>(
       // Pass the store to the StoreProvider. Any ancestor `StoreConnector`
       // Widgets will find and use this value as the `Store`.
@@ -27,6 +29,7 @@ class FlutterReduxApp extends StatelessWidget {
         title: 'Test title',
         theme: ThemeData.dark(),
       ),
+//          ),
     );
   }
 }

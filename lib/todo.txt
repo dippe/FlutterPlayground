@@ -1,11 +1,10 @@
 
 Feature:
+- menteni kellene az adatokat
 - jql filterek leszedése a szerverről
 - issue details lap
-- menteni kellene az adatokat
 
 Fix:
-- loading kiírása/spinner refresh esetén
 
 kész:
 - ok-mok helyett back
@@ -15,3 +14,4 @@ kész:
 - jql req indítása tab change esetén
 - maxlimit handling hibás
 - init 1. view megnyitáskor
+- loading kiírása/spinner refresh esetén

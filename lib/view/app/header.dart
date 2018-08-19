@@ -26,25 +26,8 @@ Widget wHeaderAppBar() => AppBar(
     );
 
 Widget _wMainBtns = Row(
-  children: [_wToggleCompact, _wAddButton, _wTopMenu(), _wRefreshButton],
+  children: [_wToggleCompact, _wRefreshButton],
 );
-
-Widget _wTopMenu() {
-  PopupMenuItemBuilder builder = (BuildContext context) => <PopupMenuEntry<PageType>>[
-        PopupMenuItem(value: PageType.IssueList, child: const Text('List view')),
-        PopupMenuItem(value: PageType.Config, child: const Text('Config')),
-      ];
-  return PopupMenuButton(
-    onSelected: (i) {
-      if (i == PageType.Config) {
-        dispatch(Actions.ShowConfigPage());
-      } else {
-        dispatch(Actions.ShowActualIssueListPage());
-      }
-    },
-    itemBuilder: builder,
-  );
-}
 
 Widget _wToggleCompact = StoreConnector<AppState, bool>(
     converter: (store) => store.state.config.listViewMode == ListViewMode.COMPACT,

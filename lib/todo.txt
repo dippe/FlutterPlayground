@@ -8,13 +8,9 @@ Feature:
 - csak deltát töltsön le + merge-elje a listát?
 
 Fix:
-- kisebb / konfigurálható issuekey mező
-- kikapcsolható issuetype ikon
 - kikapcsolható priority
-- kikapcsolható státusz ikon
 - státusz igazítása függőlegesen
 - tab longtap ne csak a képen
-- dialog menü leszedése
 - konfigurálható tabok száma
 - szerver, user, jelszó elkódolása?
 
@@ -30,3 +26,8 @@ kész:
 - init 1. view megnyitáskor
 - loading kiírása/spinner refresh esetén
 - menteni kellene az adatokat
+- compact mode:
+    - kisebb / konfigurálható issuekey mező
+    - kikapcsolható issuetype ikon
+    - kikapcsolható státusz ikon
+- dialog menü leszedése

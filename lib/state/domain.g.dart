@@ -24,6 +24,15 @@ Map<String, dynamic> _$IssueListViewToJson(IssueListView instance) =>
       'idCounter': instance.idCounter
     };
 
+SearchState _$SearchStateFromJson(Map<String, dynamic> json) {
+  return SearchState(
+      recent: (json['recent'] as List)?.map((e) => e as String)?.toList(),
+      text: json['text'] as String);
+}
+
+Map<String, dynamic> _$SearchStateToJson(SearchState instance) =>
+    <String, dynamic>{'recent': instance.recent, 'text': instance.text};
+
 ViewState _$ViewStateFromJson(Map<String, dynamic> json) {
   return ViewState(
       actPage: _$enumDecodeNullable(_$PageTypeEnumMap, json['actPage']),
@@ -32,13 +41,17 @@ ViewState _$ViewStateFromJson(Map<String, dynamic> json) {
               ? null
               : IssueListView.fromJson(e as Map<String, dynamic>))
           ?.toList(),
-      actListIdx: json['actListIdx'] as int);
+      actListIdx: json['actListIdx'] as int,
+      search: json['search'] == null
+          ? null
+          : SearchState.fromJson(json['search'] as Map<String, dynamic>));
 }
 
 Map<String, dynamic> _$ViewStateToJson(ViewState instance) => <String, dynamic>{
       'actPage': _$PageTypeEnumMap[instance.actPage],
       'issueListViews': instance.issueListViews,
-      'actListIdx': instance.actListIdx
+      'actListIdx': instance.actListIdx,
+      'search': instance.search
     };
 
 T _$enumDecode<T>(Map<T, dynamic> enumValues, dynamic source) {

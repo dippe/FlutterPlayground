@@ -9,3 +9,5 @@ class ShowJqlEditPage implements Action {}
 class HideJqlEditPage implements Action {}
 
 class ShowActualIssueListPage implements Action {}
+
+class ShowSearchPage implements Action {}

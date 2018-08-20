@@ -1,7 +1,6 @@
 
 Feature:
 - kereső lap
-- jql filterek leszedése a szerverről
 - issue details lap alap mezőkkel
 - utolsó komment(ek) megjelenítése
 - minden state mentése (issue list)
@@ -31,3 +30,4 @@ kész:
     - kikapcsolható issuetype ikon
     - kikapcsolható státusz ikon
 - dialog menü leszedése
+- jql filterek leszedése a szerverről

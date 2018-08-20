@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/jira/jira_ajax_action.dart';
 import 'package:todo_flutter_app/state/domain.dart';
+import 'package:todo_flutter_app/view/action.dart';
 import 'package:todo_flutter_app/view/config/action.dart';
 import 'package:todo_flutter_app/view/issue_list/action.dart' as Actions;
 import 'package:todo_flutter_app/state/state.dart';
@@ -25,8 +26,18 @@ Widget wHeaderAppBar() => AppBar(
       ],
     );
 
-Widget _wMainBtns = Row(
-  children: [_wToggleCompact, _wRefreshButton],
+Widget _wMainBtns = Expanded(
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceAround,
+    children: [
+      SizedBox(
+        width: 80.0,
+      ),
+      _wToggleCompact,
+      _wSearchButton,
+      _wRefreshButton
+    ],
+  ),
 );
 
 Widget _wToggleCompact = StoreConnector<AppState, bool>(
@@ -43,6 +54,12 @@ Widget _wToggleCompact = StoreConnector<AppState, bool>(
         ],
       );
     });
+
+Widget _wSearchButton = IconButton(
+  tooltip: 'Search',
+  icon: Icon(Icons.search),
+  onPressed: () => dispatch(ShowSearchPage()),
+);
 
 Widget _wAddButton = IconButton(
   tooltip: 'New Item',

@@ -1,15 +1,12 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/jira/jira_ajax_action.dart';
 import 'package:todo_flutter_app/state/domain.dart';
+import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/action.dart';
-import 'package:todo_flutter_app/view/common/common_date_field.dart';
 import 'package:todo_flutter_app/view/common/common_drop_down_field.dart';
 import 'package:todo_flutter_app/view/common/common_text_field.dart';
-import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/jql_tab_edit/action.dart';
 
 wJqlEditPage() => new StoreConnector<AppState, _ViewModel>(

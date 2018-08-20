@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:meta/meta.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
@@ -8,7 +10,7 @@ part 'domain.g.dart';
 /**
  * BUILD JSON CONVERTERS: flutter packages pub run build_runner build
  */
-enum PageType { Config, IssueList, JqlEdit }
+enum PageType { Config, IssueList, JqlEdit, Search }
 
 class ListItemData {
   final String key;
@@ -125,27 +127,50 @@ class IssueListView {
 }
 
 @JsonSerializable()
+class SearchState {
+  final List<String> recent;
+  final String text;
+  @JsonKey(ignore: true, defaultValue: [], includeIfNull: true)
+  final List<ListItemData> resultItems;
+
+  SearchState({this.recent, this.text, this.resultItems});
+
+  SearchState copyWith({recent, text, resultItems}) => SearchState(
+        recent: recent ?? this.recent,
+        text: text ?? this.text,
+        resultItems: resultItems ?? this.resultItems,
+      );
+
+  factory SearchState.fromJson(Map<String, dynamic> json) => _$SearchStateFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SearchStateToJson(this);
+}
+
+@JsonSerializable()
 class ViewState {
   @JsonKey(ignore: true, includeIfNull: true, defaultValue: null)
   final AppMessages messages;
   final PageType actPage;
   final List<IssueListView> issueListViews;
   final int actListIdx; // the actual visible list to work on
+  final SearchState search;
 
   ViewState({
     @required this.actPage,
     @required this.issueListViews,
     @required this.actListIdx,
     @required this.messages,
+    @required this.search,
   });
 
-  ViewState copyWith({PageType actPage, int actListIdx, issueListViews, messages}) {
+  ViewState copyWith({PageType actPage, int actListIdx, issueListViews, messages, search}) {
     return ViewState(
       actPage: actPage ?? this.actPage,
       issueListViews:
           issueListViews != null ? List<IssueListView>.unmodifiable(issueListViews).toList() : this.issueListViews,
       actListIdx: actListIdx ?? this.actListIdx,
       messages: messages ?? this.messages,
+      search: search ?? this.search,
     );
   }
 

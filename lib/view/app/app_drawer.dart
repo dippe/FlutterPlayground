@@ -31,6 +31,17 @@ Widget wDrawer(context) => Drawer(
             },
           ),
           ListTile(
+            leading: Icon(Icons.search),
+            title: Text('Search'),
+            onTap: () {
+              dispatch(ShowSearchPage());
+              // Update the state of the app
+              // ...
+              // Then close the drawer
+              Navigator.pop(_globalKey.currentContext);
+            },
+          ),
+          ListTile(
             leading: Icon(Icons.settings_applications),
             title: Text('Configure'),
             onTap: () {

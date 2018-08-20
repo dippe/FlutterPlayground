@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:redux/redux.dart';
 import 'package:redux_persist/redux_persist.dart';
@@ -78,6 +79,7 @@ final _initState = AppState(
     listViewMode: ListViewMode.COMPACT,
   ),
   view: ViewState(
+    search: SearchState(text: null, recent: [], resultItems: null),
     messages: initAppMessages,
     actListIdx: 0,
     actPage: PageType.IssueList,

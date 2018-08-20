@@ -8,6 +8,7 @@ import 'package:todo_flutter_app/view/config/config_page.dart';
 import 'package:todo_flutter_app/view/jql_tab_edit/jql_edit_form.dart';
 import 'package:todo_flutter_app/view/jql_tabs/jql_tabs.dart';
 import 'package:todo_flutter_app/view/messages/messages.dart';
+import 'package:todo_flutter_app/view/search/search.dart';
 
 class FlutterReduxApp extends StatelessWidget {
 //  Persistor<AppState> persistor;
@@ -52,6 +53,7 @@ Widget _wBody() => StoreConnector<AppState, dynamic>(
           // fixme: rethink page handling
           'showJqlEdit': store.state.view.actPage == PageType.JqlEdit,
           'showConfig': store.state.view.actPage == PageType.Config,
+          'showSearch': store.state.view.actPage == PageType.Search,
           // fixme: rethink error handling
           'error': store.state.jira.error,
         },
@@ -71,6 +73,8 @@ Widget _wBody() => StoreConnector<AppState, dynamic>(
         return wJqlEditPage();
       } else if (s['showConfig']) {
         return wConfigPage();
+      } else if (s['showSearch']) {
+        return wSearchPage();
       } else {
         return wJqlTabsPage();
       }

@@ -13,6 +13,7 @@ Reducer<ViewState> viewReducer = combineReducers<ViewState>([
   listViewReducer,
   jqlEditReducer,
   messagesReducer,
+  TypedReducer<ViewState, ShowSearchPage>(_showSearchPage),
   TypedReducer<ViewState, ShowJqlEditPage>(_showJqlEditPage),
   TypedReducer<ViewState, HideJqlEditPage>(_hideJqlEditPage),
   TypedReducer<ViewState, ShowConfigPage>(_showConfigPage),
@@ -25,6 +26,10 @@ Reducer<ViewState> viewReducer = combineReducers<ViewState>([
 *    Reducer functions
 *
 * ***********************/
+
+ViewState _showSearchPage(ViewState state, ShowSearchPage action) {
+  return state.copyWith(actPage: PageType.Search);
+}
 
 ViewState _showJqlEditPage(ViewState state, ShowJqlEditPage action) {
   return state.copyWith(actPage: PageType.JqlEdit);

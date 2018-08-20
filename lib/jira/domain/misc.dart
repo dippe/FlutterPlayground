@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
 part 'misc.g.dart';
 
@@ -19,10 +20,10 @@ class JiraFilter {
   JiraFilter({
     this.self,
     this.id,
-    this.name,
+    @required this.name,
     this.description,
     this.owner,
-    this.jql,
+    @required this.jql,
     this.viewUrl,
     this.searchUrl,
     this.favourite,

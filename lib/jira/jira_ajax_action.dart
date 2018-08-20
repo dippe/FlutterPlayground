@@ -30,14 +30,16 @@ class JiraAjax {
   static void doSearchAction(String text) {
     store.dispatch(SearchStartAction());
 
-    final filter = JiraFilter(jql: 'Text ~ \'$text\'');
+    final filter = JiraFilter(jql: 'Text ~ \'$text\'', name: 'Search');
 
     JiraRestClient.fetchIssuesByJql(filter).then((res) => _validateJqlMaxResult(res)).then((res) {
       store.dispatch(AddInfoMessageAction('JQL fetch finished successfully'));
       return res;
     }).catchError((err) {
       if (err is ValidationException) {
-        store.dispatch(AddWarningMessageAction('Validation Error: ' + err.message + ' \n Filter: ' + filter.name));
+        final msg = 'Validation Error: ' + err.message + ' \n Filter: ' + filter.name;
+
+        store.dispatch(AddWarningMessageAction(msg));
         return err.result;
       } else {
         store.dispatch(AddErrorMessageAction(err.message + ' \n Filter: ' + filter.name));

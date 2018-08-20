@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
+import 'package:todo_flutter_app/jira/jira_ajax_action.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/view/action.dart';
 import 'package:todo_flutter_app/view/common/common_date_field.dart';
@@ -59,7 +60,10 @@ wJqlEditPage() => new StoreConnector<AppState, _ViewModel>(
                   padding: const EdgeInsets.only(left: 40.0, top: 20.0),
                   child: new RaisedButton(
                     child: const Text('Back to the list'),
-                    onPressed: () => dispatch(HideConfigPage()),
+                    onPressed: () {
+                      dispatch(HideConfigPage());
+                      JiraAjax.doFetchJqlAction(vm.actListView.filter);
+                    },
                   )),
             ],
           ),

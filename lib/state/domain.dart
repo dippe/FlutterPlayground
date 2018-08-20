@@ -44,7 +44,7 @@ class IssueListView {
   final int lastFetched;
 
   // fixme: rethink ignoring (UX?)
-  @JsonKey(ignore: true, defaultValue: [])
+  @JsonKey(ignore: true, defaultValue: [], includeIfNull: true)
   final List<ListItemData> items;
 
   final String id;
@@ -52,7 +52,7 @@ class IssueListView {
 
   final JiraFilter filter;
   // !!!!!!!!!!!! FIXME: REMOVE THIS LATER
-  @JsonKey(ignore: true, defaultValue: null)
+  @JsonKey(ignore: true, defaultValue: null, includeIfNull: true)
   final JiraSearch result; // link to the ajax result
   final int idCounter;
 
@@ -126,7 +126,7 @@ class IssueListView {
 
 @JsonSerializable()
 class ViewState {
-  @JsonKey(ignore: true)
+  @JsonKey(ignore: true, includeIfNull: true, defaultValue: null)
   final AppMessages messages;
   final PageType actPage;
   final List<IssueListView> issueListViews;
@@ -157,7 +157,7 @@ class ViewState {
 @JsonSerializable()
 class AppState {
   // !!!!!!!!!!!! FIXME: REMOVE THIS LATER
-  @JsonKey(ignore: true)
+  @JsonKey(ignore: true, defaultValue: null, includeIfNull: true)
   final JiraData jira;
   final ViewState view;
   final ConfigState config;

@@ -27,6 +27,17 @@ class FetchJqlDone implements Action {
   }
 }
 
+class FetchFiltersDone implements Action {
+  final List<JiraFilter> filters;
+
+  FetchFiltersDone(this.filters);
+
+  @override
+  String toString() {
+    return 'FetchFiltersDone{filters: $filters}';
+  }
+}
+
 class FetchJqlStart implements Action {
   final JiraFilter jiraFilter;
 

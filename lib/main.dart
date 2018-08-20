@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_flutter_app/app.dart';
-import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/jira/jira_ajax_action.dart';
+import 'package:todo_flutter_app/jira/jira_rest_client.dart';
 import 'package:todo_flutter_app/state/state.dart';
 
 void main() {
@@ -21,4 +21,6 @@ _reloadFirstTab() {
   if (filter != null) {
     JiraAjax.doFetchJqlAction(filter);
   }
+
+  JiraAjax.doFetchFilters();
 }

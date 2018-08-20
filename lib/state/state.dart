@@ -120,33 +120,33 @@ final AppMessages initAppMessages = AppMessages(messages: [], visible: false);
 
 final List<JiraFilter> _predefinedFilters = [
   JiraFilter(
-    name: 'My open issues',
+    name: 'My open issues *(PreDef)',
     id: 'predef0',
     jql: 'assignee = currentUser() AND resolution = Unresolved order by updated DESC',
   ),
   JiraFilter(
     id: 'predef1',
     jql: 'status in ("To Do")',
-    name: 'Status Todo',
+    name: 'Status Todo *(PreDef)',
   ),
   JiraFilter(
     id: 'predef2',
     jql: 'resolutiondate >= -1w order by updated DESC',
-    name: 'Resolved recently',
+    name: 'Resolved recently *(PreDef)',
   ),
   JiraFilter(
     id: 'predef3',
     jql: 'updated >= -1w or created >= -1w order by updated DESC',
-    name: 'Updated recently',
+    name: 'Updated recently *(PreDef)',
   ),
   JiraFilter(
     id: 'predef4',
     jql: 'reporter = currentUser() order by created DESC',
-    name: 'Reported by me',
+    name: 'Reported by me *(PreDef)',
   ),
   JiraFilter(
     id: 'predef5',
     jql: 'created >= -1w order by created DESC',
-    name: 'Created recently',
+    name: 'Created recently *(PreDef)',
   ),
 ];

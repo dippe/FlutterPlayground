@@ -47,7 +47,8 @@ class JiraSearch {
         maxResults = json['maxResults'],
         total = json['total'],
         //ignore: unnecessary_cast
-        issues = (json['issues'] as List<dynamic>)?.map((issueJson) => JiraIssue.fromJson(issueJson))?.toList() as List<JiraIssue>,
+        issues = (json['issues'] as List<dynamic>)?.map((issueJson) => JiraIssue.fromJson(issueJson))?.toList()
+            as List<JiraIssue>,
         fetchTime = DateTime.now();
 
   @override
@@ -69,9 +70,8 @@ class JiraFavouriteFilters {
 
   JiraFavouriteFilters(this.filters);
 
-  JiraFavouriteFilters.fromJson(Map<String, dynamic> json)
-      // fixme asd!!!
-      : filters = json['asd']?.map((list) => JiraFilter.fromJson(list))?.toList() as List<JiraFilter>;
+  JiraFavouriteFilters.fromJson(List<dynamic> json)
+      : filters = json?.map((list) => JiraFilter.fromJson(list))?.toList() as List<JiraFilter>;
 }
 
 class JiraVersions {

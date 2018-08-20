@@ -59,6 +59,14 @@ class JiraRestClient {
         .catchError((err) => _handleErrors(err));
   }
 
+  static Future<JiraFavouriteFilters> fetchFavouriteFilters() {
+    return _jiraGet('/rest/api/2/filter/favourite')
+        .then(_validateResponse)
+        .then((resp) => json.decode(resp.body) ?? [])
+        .then((res) => JiraFavouriteFilters.fromJson(res));
+//        .then(_validateJiraVersionsResponse);
+  }
+
   static Future<JiraVersions> fetchVersions(String projectIdOrKey) {
     return _jiraGet('project/' + projectIdOrKey + '/versions')
         .then(_validateResponse)

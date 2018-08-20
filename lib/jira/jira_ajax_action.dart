@@ -27,6 +27,14 @@ class JiraAjax {
     }).then((res) => store.dispatch(FetchJqlDone(res, filter)));
   }
 
+  static void doFetchFilters() {
+//    store.dispatch(FetchFilters());
+
+    JiraRestClient.fetchFavouriteFilters()
+        .then((res) => store.dispatch(FetchFiltersDone(res.filters)))
+        .catchError((error) => store.dispatch(FetchIssueError(error.toString())));
+  }
+
   static void doFetchIssueAction(String key) {
     store.dispatch(FetchIssueStart());
 

@@ -12,6 +12,8 @@ Reducer<JiraData> jiraReducer = (JiraData state, dynamic action) {
 //      todos: state.view.issueListViews[0].copyWith(items: items),
       fetchedIssues: action.jiraJqlResult.issues,
     );
+  } else if (action is Actions.FetchFiltersDone) {
+    return state.copyWith(fetchedFilters: action.filters);
   } else if (action is Actions.FetchIssueDone) {
     throw Exception("unimplemented reducer for Actions.FetchIssueDone");
   } else if (action is Actions.FetchJqlError) {

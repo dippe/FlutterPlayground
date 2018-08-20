@@ -135,11 +135,16 @@ class SearchState {
 
   SearchState({this.recent, this.text, this.resultItems});
 
-  SearchState copyWith({List<String> recent, String text, List<ListItemData> resultItems}) {
+  SearchState copyWith({
+    List<String> recent,
+    String text,
+    List<ListItemData> resultItems,
+    bool resetResultItems = false,
+  }) {
     return SearchState(
       recent: recent ?? this.recent ?? [],
       text: text ?? this.text ?? '',
-      resultItems: resultItems ?? this.resultItems,
+      resultItems: resetResultItems ? null : resultItems ?? this.resultItems,
     );
   }
 

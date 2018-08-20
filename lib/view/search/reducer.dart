@@ -58,7 +58,7 @@ ViewState _doSearch(ViewState state, DoSearchAction action) {
       l.removeAt(0);
     }
 
-    final newSrcState = state.search.copyWith(text: action.text, recent: l);
+    final newSrcState = state.search.copyWith(text: action.text, recent: l, resetResultItems: true);
     return state.copyWith(search: newSrcState);
   } catch (e) {
     print(e.toString());

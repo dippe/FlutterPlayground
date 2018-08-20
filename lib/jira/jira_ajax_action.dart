@@ -27,6 +27,25 @@ class JiraAjax {
     }).then((res) => store.dispatch(FetchJqlDone(res, filter)));
   }
 
+  static void doSearchAction(String text) {
+    store.dispatch(SearchStartAction());
+
+    final filter = JiraFilter(jql: 'Text ~ \'$text\'');
+
+    JiraRestClient.fetchIssuesByJql(filter).then((res) => _validateJqlMaxResult(res)).then((res) {
+      store.dispatch(AddInfoMessageAction('JQL fetch finished successfully'));
+      return res;
+    }).catchError((err) {
+      if (err is ValidationException) {
+        store.dispatch(AddWarningMessageAction('Validation Error: ' + err.message + ' \n Filter: ' + filter.name));
+        return err.result;
+      } else {
+        store.dispatch(AddErrorMessageAction(err.message + ' \n Filter: ' + filter.name));
+        throw Exception('AJAX ERROR: ' + err.toString());
+      }
+    }).then((res) => store.dispatch(FetchSearchDone(res)));
+  }
+
   static void doFetchFilters() {
 //    store.dispatch(FetchFilters());
 

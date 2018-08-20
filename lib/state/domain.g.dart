@@ -77,7 +77,8 @@ T _$enumDecodeNullable<T>(Map<T, dynamic> enumValues, dynamic source) {
 const _$PageTypeEnumMap = <PageType, dynamic>{
   PageType.Config: 'Config',
   PageType.IssueList: 'IssueList',
-  PageType.JqlEdit: 'JqlEdit'
+  PageType.JqlEdit: 'JqlEdit',
+  PageType.Search: 'Search'
 };
 
 AppState _$AppStateFromJson(Map<String, dynamic> json) {

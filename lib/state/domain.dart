@@ -135,11 +135,13 @@ class SearchState {
 
   SearchState({this.recent, this.text, this.resultItems});
 
-  SearchState copyWith({recent, text, resultItems}) => SearchState(
-        recent: recent ?? this.recent,
-        text: text ?? this.text,
-        resultItems: resultItems ?? this.resultItems,
-      );
+  SearchState copyWith({List<String> recent, String text, List<ListItemData> resultItems}) {
+    return SearchState(
+      recent: recent ?? this.recent ?? [],
+      text: text ?? this.text ?? '',
+      resultItems: resultItems ?? this.resultItems,
+    );
+  }
 
   factory SearchState.fromJson(Map<String, dynamic> json) => _$SearchStateFromJson(json);
 

@@ -6,6 +6,7 @@ import 'package:todo_flutter_app/view/issue_list/reducer.dart';
 import 'package:todo_flutter_app/view/jql_tab_edit/reducer.dart';
 import 'package:todo_flutter_app/view/jql_tabs/reducer.dart';
 import 'package:todo_flutter_app/view/messages/reducer.dart';
+import 'package:todo_flutter_app/view/search/reducer.dart';
 
 Reducer<ViewState> viewReducer = combineReducers<ViewState>([
   debugReducer<ViewState>('viewReducer'),
@@ -13,6 +14,7 @@ Reducer<ViewState> viewReducer = combineReducers<ViewState>([
   listViewReducer,
   jqlEditReducer,
   messagesReducer,
+  searchReducer,
   TypedReducer<ViewState, ShowSearchPage>(_showSearchPage),
   TypedReducer<ViewState, ShowJqlEditPage>(_showJqlEditPage),
   TypedReducer<ViewState, HideJqlEditPage>(_hideJqlEditPage),

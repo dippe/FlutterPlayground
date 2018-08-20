@@ -27,6 +27,19 @@ class FetchJqlDone implements Action {
   }
 }
 
+class SearchStartAction {}
+
+class FetchSearchDone implements Action {
+  final JiraSearch jiraJqlResult;
+
+  FetchSearchDone(this.jiraJqlResult);
+
+  @override
+  String toString() {
+    return 'FetchSearchDone{jiraJqlResult: $jiraJqlResult}';
+  }
+}
+
 class FetchFiltersDone implements Action {
   final List<JiraFilter> filters;
 

@@ -9,6 +9,8 @@ import 'package:todo_flutter_app/reducer.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/util/types.dart';
 
+const DEBUG = false;
+
 // fixme: remove this dev block
 const TMP_USER = "dippenexus@gmail.com";
 const TMP_PWD = "KGRCC7h58fgfwKO3ZjKN62C9";
@@ -64,7 +66,7 @@ Reducer<AppState> _debugReducer = (AppState state, action) {
 };
 
 Reducer<E> debugReducer<E>(name) => (E state, action) {
-      print('*** Reducer: $name  >>> get action: ${action.toString()}');
+      if (DEBUG) print('*** Reducer: $name  >>> get action: ${action.toString()}');
       return state;
     };
 

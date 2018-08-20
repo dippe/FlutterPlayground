@@ -51,6 +51,12 @@ class _FieldState extends State<CommonTextField> {
   }
 
   @override
+  void didUpdateWidget(CommonTextField oldWidget) {
+    // HACK: Fix the state not recreated issue caused by the same widget key + flutter optimization
+    _controller.text = widget.initValue;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListTile(
         title: TextField(

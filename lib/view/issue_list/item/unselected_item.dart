@@ -7,20 +7,32 @@ import 'package:todo_flutter_app/view/issue_list/issue_status.dart';
 import 'package:todo_flutter_app/view/issue_list/item/list_item.dart';
 
 ItemWidget wUnselectedItem = (ListItemData item, isCompact) {
+  final onTapCb = (item) => dispatch(Actions.Select(item));
+  final onDoubleTapCb = (item) => dispatch(Actions.Edit(item));
   return Row(children: [
     isCompact ? Text('') : _wIssuetype(item, isCompact),
     _wPriority(item, isCompact),
     _wIssueKey(item, isCompact),
-    _wName(item, isCompact),
+    _wName(item, isCompact, onTapCb, onDoubleTapCb),
     wIssueStatusChip(item, isCompact),
   ]);
 };
 
-ItemWidget _wName = (item, isCompact) => Expanded(
+Widget wItemLineForSelected(ListItemData item, isCompact, onTapCb, onDoubleTapCb) {
+  return Row(children: [
+    isCompact ? Text('') : _wIssuetype(item, isCompact),
+    _wPriority(item, isCompact),
+//    _wIssueKey(item, isCompact),
+    _wName(item, isCompact, onTapCb, onDoubleTapCb),
+//    wIssueStatusChip(item, isCompact),
+  ]);
+}
+
+Widget _wName(item, isCompact, onTapCb, onDoubleTapCb) => Expanded(
       child: _wReadOnlyTitle(
         item: item,
-        onTapCb: () => dispatch(Actions.Select(item)),
-        onDoubleTapCb: () => dispatch(Actions.Edit(item)),
+        onTapCb: () => onTapCb(item),
+        onDoubleTapCb: () => onDoubleTapCb(item),
       ),
     );
 

@@ -6,9 +6,19 @@ import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/issue_list/action.dart' as Actions;
 import 'package:todo_flutter_app/view/issue_list/consts.dart';
 import 'package:todo_flutter_app/view/issue_list/item/list_item.dart';
+import 'package:todo_flutter_app/view/issue_list/item/unselected_item.dart';
 
 ItemWidget wSelectedItem = (ListItemData item, isCompact) {
-  return _IssueDetails(item.issue);
+  final onTapCb = (item) => dispatch(Actions.UnSelectAll());
+  return Column(
+    children: <Widget>[
+      ListTile(
+        onTap: () => dispatch(Actions.UnSelectAll()),
+        title: wItemLineForSelected(item, isCompact, onTapCb, onTapCb),
+      ),
+      _IssueDetails(item.issue)
+    ],
+  );
 
   final renderSimpleRow = (children) => Row(
         children: children,

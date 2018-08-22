@@ -6,24 +6,11 @@ import 'package:redux_persist/redux_persist.dart';
 import 'package:redux_persist_flutter/redux_persist_flutter.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/reducer.dart';
+import 'package:todo_flutter_app/state/.config.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/util/types.dart';
 
 const DEBUG = false;
-
-// fixme: remove this dev block
-const TMP_USER = "dippenexus@gmail.com";
-const TMP_PWD = "KGRCC7h58fgfwKO3ZjKN62C9";
-const TMP_BASE_URL = "https://testdev1.atlassian.net";
-
-//const TMP_USER = "gyula_pal";
-//const TMP_PWD = "";
-//const TMP_BASE_URL = "https://jira.epam.com/jira";
-
-//const TMP_USER = "peter_dajka";
-//const TMP_PWD = "";
-//const TMP_BASE_URL = "https://jira.epam.com/jira";
-// fixme end
 
 /// global store "singleton"
 Store<AppState> store;

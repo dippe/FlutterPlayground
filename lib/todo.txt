@@ -1,6 +1,5 @@
 
 Feature:
-- kereső lap
 - issue details lap alap mezőkkel
 - utolsó komment(ek) megjelenítése
 - minden state mentése (issue list)
@@ -12,6 +11,8 @@ Fix:
 - tab longtap ne csak a képen
 - konfigurálható tabok száma
 - szerver, user, jelszó elkódolása?
+- Mentés
+- kezdőlap első alkalommal Config legyen (init_state)
 
 
 
@@ -31,3 +32,4 @@ kész:
     - kikapcsolható státusz ikon
 - dialog menü leszedése
 - jql filterek leszedése a szerverről
+- kereső lap

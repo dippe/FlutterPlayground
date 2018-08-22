@@ -46,7 +46,7 @@ ViewState _actListIdx(ViewState state, Actions.SetActListIdx action) {
 ViewState _add(ViewState state, Actions.Add action) {
   final newItem = ListItemData(action.issue, action.issue.fields.summary, action.issue.key);
   ListModifierFn addTolistFn = (l) {
-    if (action.issue != null && _getByKey(l, action.issue.key) != null) {
+    if (action.issue != null && getByKey(l, action.issue.key) != null) {
       throw ArgumentError('Item already exists with the same key!');
     }
     l.add(newItem);
@@ -124,7 +124,7 @@ ViewState _drop(ViewState state, Actions.Drop action) {
 
 ViewState _edit(ViewState state, Actions.Edit action) {
   final ListModifierFn edit = (l) {
-    var idx = l.indexOf(_getByKey(l, action.item.key));
+    var idx = l.indexOf(getByKey(l, action.item.key));
     l[idx] = l[idx].copyWith(isEdit: true);
     return l;
   };
@@ -141,7 +141,7 @@ ViewState _unSelectAll(ViewState state, Actions.UnSelectAll action) {
 
 ViewState _toggle(ViewState state, Actions.CbToggle action) {
   final ListModifierFn set = (l) {
-    var idx = l.indexOf(_getByKey(l, action.item.key));
+    var idx = l.indexOf(getByKey(l, action.item.key));
     l[idx] = l[idx].copyWith(done: !l[idx].done);
     return l;
   };
@@ -152,8 +152,8 @@ ViewState _toggle(ViewState state, Actions.CbToggle action) {
 // fixme: change action payload to key instead of item
 ViewState _select(ViewState state, Actions.Select action) {
   final ListModifierFn select = (l) {
-    var item = _getByKey(l, action.item.key);
-    var idx = _getIdxByKey(l, action.item.key);
+    var item = getByKey(l, action.item.key);
+    var idx = getIdxByKey(l, action.item.key);
     l[idx] = item.copyWith(isSelected: true);
     return l;
   };
@@ -166,7 +166,7 @@ ViewState _select(ViewState state, Actions.Select action) {
 
 ViewState _setItemTitle(ViewState state, Actions.SetItemTitle action) {
   final ListModifierFn set = (l) {
-    var idx = l.indexOf(_getByKey(l, action.key));
+    var idx = l.indexOf(getByKey(l, action.key));
     l[idx] = l[idx].copyWith(title: action.title);
     return l;
   };
@@ -180,12 +180,14 @@ ViewState _setItemTitle(ViewState state, Actions.SetItemTitle action) {
 *
 * ************/
 
-ListItemData _getByKey(List<ListItemData> items, String key) {
+/// list item util
+ListItemData getByKey(List<ListItemData> items, String key) {
   return items.firstWhere((i) => i.key == key, orElse: () => null);
 }
 
-int _getIdxByKey(items, String key) {
-  var item = _getByKey(items, key);
+/// list item util
+int getIdxByKey(items, String key) {
+  var item = getByKey(items, key);
   var idx = items.indexOf(item);
 
   return idx;
@@ -203,6 +205,11 @@ List<ListItemData> _withMoved(items, ListItemData what, ListItemData target) {
 
 /// do modification on the inner items via an immutable way
 ViewState _changeActualItemList(ViewState state, ListModifierFn fn) {
+  // fixme: re-think this hack:
+  if (state.actPage != PageType.IssueList) {
+    return state;
+  }
+
   final targetIdx = state.actListIdx;
 
   // leokádia ... tiszta jáva f@s az elb@szott stream api miatt :D

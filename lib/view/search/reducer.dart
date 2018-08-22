@@ -3,7 +3,8 @@ import 'package:todo_flutter_app/jira/action.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
-import 'package:todo_flutter_app/view/jql_tab_edit/action.dart';
+import 'package:todo_flutter_app/view/issue_list/action.dart';
+import 'package:todo_flutter_app/view/issue_list/reducer.dart';
 import 'package:todo_flutter_app/view/search/action.dart';
 
 /*
@@ -14,12 +15,15 @@ import 'package:todo_flutter_app/view/search/action.dart';
  */
 typedef SearchState ViewReducer(SearchState, dynamic);
 typedef IssueListView ItemModifierFn(IssueListView d);
-const int MAX_RECENT_SEARCH_NUM = 10;
+
+const int MAX_RECENT_SEARCH_NUM = 20;
 
 Reducer<ViewState> searchReducer = combineReducers<ViewState>([
   debugReducer<ViewState>('searchReducer'),
   TypedReducer<ViewState, FetchSearchDone>(_addItemsFromSearchFetch),
   TypedReducer<ViewState, DoSearchAction>(_doSearch),
+  TypedReducer<ViewState, Select>(_select),
+  TypedReducer<ViewState, UnSelectAll>(_unSelectAll),
 ]);
 
 /* **********************
@@ -64,4 +68,38 @@ ViewState _doSearch(ViewState state, DoSearchAction action) {
     print(e.toString());
     return state;
   }
+}
+
+ViewState _unSelectAll(ViewState state, UnSelectAll action) {
+  // fixme: re-think this hack:
+  if (state.actPage != PageType.Search) {
+    return state;
+  }
+
+  final newRes = state.search.resultItems
+      .map((ListItemData value) => value.copyWith(isSelected: false, isEdit: false))
+      .toList() as List<ListItemData>;
+  final newSrcState = state.search.copyWith(resultItems: newRes);
+  return state.copyWith(search: newSrcState);
+}
+
+// fixme: change action payload to key instead of item
+ViewState _select(ViewState state, Select action) {
+  // fixme: re-think this hack:
+  if (state.actPage != PageType.Search) {
+    return state;
+  }
+
+  final items = state.search.resultItems;
+
+  final select = (l) {
+    var item = getByKey(l, action.item.key);
+    var idx = getIdxByKey(l, action.item.key);
+    l[idx] = item.copyWith(isSelected: true);
+    return l;
+  };
+
+  _unSelectAll(state, UnSelectAll());
+  final newSrcState = state.search.copyWith(resultItems: select(items));
+  return state.copyWith(search: newSrcState);
 }

@@ -30,7 +30,11 @@ class JiraAjax {
   static void doSearchAction(String text) {
     store.dispatch(SearchStartAction());
 
-    final filter = JiraFilter(jql: 'Text ~ \'$text\'', name: 'Search');
+    final keyRegexp = RegExp("([a-zA-Z0-9]{1,15}-[0-9]+)");
+
+    final jqlPrefix = keyRegexp.hasMatch(text) ? 'issuekey=\'$text\' or ' : '';
+
+    final filter = JiraFilter(jql: jqlPrefix + 'Text ~ \'$text\'', name: 'Search');
 
     JiraRestClient.fetchIssuesByJql(filter).then((res) => _validateJqlMaxResult(res)).then((res) {
       store.dispatch(AddInfoMessageAction('JQL fetch finished successfully'));

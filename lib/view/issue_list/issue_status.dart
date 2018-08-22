@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/issue_list/consts.dart';
-import 'package:todo_flutter_app/view/issue_list/list_item.dart';
+import 'package:todo_flutter_app/view/issue_list/item/list_item.dart';
 
 Color _getColorByStatusId(int id) => STATUS_COLORS[id] ?? COLOR_UNKNOWN;
 // todo: remove later

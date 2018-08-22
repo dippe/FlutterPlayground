@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/issue_list/action.dart' as Actions;
@@ -6,6 +8,8 @@ import 'package:todo_flutter_app/view/issue_list/consts.dart';
 import 'package:todo_flutter_app/view/issue_list/item/list_item.dart';
 
 ItemWidget wSelectedItem = (ListItemData item, isCompact) {
+  return _IssueDetails(item.issue);
+
   final renderSimpleRow = (children) => Row(
         children: children,
       );
@@ -13,6 +17,57 @@ ItemWidget wSelectedItem = (ListItemData item, isCompact) {
     _wName(item, isCompact),
   ]);
 };
+
+Widget _IssueDetails(JiraIssue issue) {
+//  issue.key;
+  final renderComments = (List<IssueComment> comments) {
+    if (comments != null && comments.length > 0) {
+      final renderComment = (IssueComment comment) =>
+          'Author: ${comment.author} \n' +
+          'Created: ${DateFormat('yyyy-MM-dd hh:mm').format(DateTime.parse(comment.created))} \n' +
+          'Comment: ${comment.body}';
+
+      return comments.reversed.take(2).fold('', (val, elem) => '$val${renderComment(elem)} \n\n ');
+    } else {
+      return ' - ';
+    }
+  };
+
+  return Container(
+    child: Card(
+      child: ListView(
+        children: <Widget>[
+          _IssueField('Key', issue.key),
+          _IssueField('Project', issue.fields.project.name),
+          _IssueField('Summary', issue.fields.summary),
+          _IssueField('Labels',
+              issue.fields.labels.length > 0 ? issue.fields.labels.reduce((val, elem) => val + ', ' + elem) : ''),
+          _IssueField('Recent Comments', renderComments(issue.fields.comment?.comments)),
+          _IssueField('Description', issue.fields.description ?? ''),
+        ],
+      ),
+    ),
+    height: 300.0,
+  );
+}
+
+Widget _IssueField(label, text) => Container(
+      padding: EdgeInsets.all(10.0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
+          Expanded(
+            child: Text(text),
+            flex: 3,
+          ),
+        ],
+      ),
+    );
 
 Widget _wReadOnlyTitle({
   @required ListItemData item,

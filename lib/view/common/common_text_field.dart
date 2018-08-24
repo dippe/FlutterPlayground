@@ -110,8 +110,6 @@ final Map<FieldInputType, _InputType> _predefinedTypes = {
     hintText: 'Enter a number',
     inputFormatters: [
       WhitelistingTextInputFormatter.digitsOnly,
-      // FIXME: this should be an input parameter
-//      LengthLimitingTextInputFormatter(3),
     ],
     keyboardType: TextInputType.number,
   ),

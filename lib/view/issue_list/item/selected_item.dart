@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:todo_flutter_app/app.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
@@ -50,9 +52,15 @@ Widget _IssueDetails(JiraIssue issue) {
     child: Card(
       child: ListView(
         children: <Widget>[
-          _IssueField('Key', issue.key),
-          _IssueField('Project', issue.fields.project.name),
-          _IssueField('Summary', issue.fields.summary),
+          _IssueField('Prj/Key', issue.fields.project.name + ' [' + issue.key + ']'),
+//          _IssueField('Summary', issue.fields.summary),
+          // FIXME: remove - ernospec fields
+          _IssueField('Cégnév', issue.allFields['customfield_10027'] ?? ''),
+          _IssueField('Beosztás', issue.allFields['customfield_10030'] ?? ''),
+          _IssueField('Telefon', issue.allFields['customfield_10026'] ?? ''),
+          _IssueField('Email', issue.allFields['customfield_10029'] ?? ''),
+
+          // FIXME end
           _IssueField('Labels',
               issue.fields.labels.length > 0 ? issue.fields.labels.reduce((val, elem) => val + ', ' + elem) : ''),
           _IssueField('Recent Comments', renderComments(issue.fields.comment?.comments)),
@@ -78,6 +86,14 @@ Widget _IssueField(label, text) => Container(
             child: Text(text),
             flex: 3,
           ),
+          IconButton(
+              icon: Icon(Icons.content_copy),
+              onPressed: () {
+                Clipboard.setData(new ClipboardData(text: text));
+                (mainGlobalScaffold.currentState as ScaffoldState).showSnackBar(new SnackBar(
+                  content: new Text("Copied to Clipboard: "),
+                ));
+              }),
         ],
       ),
     );

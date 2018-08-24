@@ -218,6 +218,7 @@ class JiraIssue {
   final String key;
   final String typeUrl;
   final JiraIssueFields fields;
+  final Map<String, dynamic> allFields;
 
   JiraIssue.unlinked(key, summary)
       : key = key,
@@ -229,7 +230,8 @@ class JiraIssue {
       : id = json['id'],
         key = json['key'],
         typeUrl = json['typeUrl'],
-        fields = JiraIssueFields.fromJson(json['fields']);
+        fields = JiraIssueFields.fromJson(json['fields']),
+        allFields = json['fields'];
 }
 
 class JiraVersion {

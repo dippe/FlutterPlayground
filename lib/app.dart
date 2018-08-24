@@ -10,6 +10,8 @@ import 'package:todo_flutter_app/view/jql_tabs/jql_tabs.dart';
 import 'package:todo_flutter_app/view/messages/messages.dart';
 import 'package:todo_flutter_app/view/search/search.dart';
 
+final mainGlobalScaffold = GlobalKey(debugLabel: 'MainGlobalScaffold');
+
 class FlutterReduxApp extends StatelessWidget {
 //  Persistor<AppState> persistor;
   final Store<AppState> store;
@@ -42,6 +44,7 @@ class FlutterReduxApp extends StatelessWidget {
  * ************************************/
 
 Widget _wMainRoot(context) => Scaffold(
+      key: mainGlobalScaffold,
       appBar: wHeaderAppBar(),
       body: _wBody(),
       drawer: wDrawer(context),

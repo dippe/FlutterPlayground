@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/**
- * Example:
- * CommonTextField(
- *   labelText: 'Labelka',
- *   onChange: (txt) => print('submitted: ' + txt),
- *   initValue: 'initTxt',
- *   inputType: FieldInputType.TEXT,
- *   ),
- *
- */
+///
+/// Example:
+/// CommonTextField(
+///   labelText: 'Labelka',
+///   onChange: (txt) => print('submitted: ' + txt),
+///   initValue: 'initTxt',
+///   inputType: FieldInputType.TEXT,
+///   ),
+///
 
 typedef void _OnChange(String txt);
 enum FieldInputType { PHONE, EMAIL, TEXT, PASSWORD, NUMBER }
-
-final _DEFAULT_FORMATTER = LengthLimitingTextInputFormatter(100);
 
 class CommonTextField extends StatefulWidget {
   final FieldInputType inputType;
@@ -58,6 +55,7 @@ class _FieldState extends State<CommonTextField> {
   void didUpdateWidget(CommonTextField oldWidget) {
     // HACK: Fix the state not recreated issue caused by the same widget key + flutter optimization
     _controller.text = widget.initValue;
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

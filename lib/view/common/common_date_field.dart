@@ -27,7 +27,6 @@ class CommonDateField extends StatefulWidget {
 }
 
 class _CommonDateFieldState extends State<CommonDateField> {
-  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final TextEditingController _dateFieldController = new TextEditingController();
 
   final _dateFormat = DateFormat.yMd();
@@ -71,7 +70,8 @@ class _CommonDateFieldState extends State<CommonDateField> {
     var initialDate = convertToDate(initialDateString) ?? now;
     initialDate = (initialDate.year >= 1900 && initialDate.isBefore(now) ? initialDate : now);
 
-    DateTime result = await showDatePicker(context: context, initialDate: initialDate, firstDate: new DateTime(1900), lastDate: new DateTime.now());
+    DateTime result = await showDatePicker(
+        context: context, initialDate: initialDate, firstDate: new DateTime(1900), lastDate: new DateTime.now());
 
     if (result == null) return;
 

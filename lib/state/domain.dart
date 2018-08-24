@@ -1,11 +1,10 @@
-import 'dart:collection';
-
+import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/jira/domain/responses.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:todo_flutter_app/state/consts.dart';
+
 part 'domain.g.dart';
 
 /**
@@ -263,19 +262,16 @@ class ConfigState {
     return 'ConfigState{server: $baseUrl, user: $user, password: $password}';
   }
 
-  @override
-  int get hashCode => user.hashCode ^ password.hashCode;
-
   factory ConfigState.fromJson(Map<String, dynamic> json) => _$ConfigStateFromJson(json);
 
   Map<String, dynamic> toJson() => _$ConfigStateToJson(this);
 }
 
-/**********************************
- *
- * NOT SERIALIZABLE CLASSES
- *
- */
+///
+///
+/// NOT SERIALIZABLE CLASSES
+///
+///
 
 enum AppMessageType { ERROR, WARNING, INFO }
 

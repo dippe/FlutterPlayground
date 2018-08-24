@@ -16,7 +16,7 @@ class FlutterReduxApp extends StatelessWidget {
 //  Persistor<AppState> persistor;
   final Store<AppState> store;
 
-  FlutterReduxApp({this.store}) {}
+  FlutterReduxApp({this.store});
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,7 @@ Widget _wBody() => StoreConnector<AppState, dynamic>(
       } else if (s['showSearch']) {
         return wSearchPage();
       } else {
-        return wJqlTabsPage();
+        return JqlTabsPage();
       }
     });
 

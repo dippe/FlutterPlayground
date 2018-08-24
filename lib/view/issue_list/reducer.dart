@@ -62,6 +62,7 @@ ViewState _fetchJqlStart(ViewState state, JiraActions.FetchJqlStart action) {
 //  final IssueListView getViewByFilter = state.issueListViews.firstWhere(sameFilterId);
 
   final List<IssueListView> listViewsCopy =
+      //ignore: unnecessary_cast
       List<IssueListView>.from(state.issueListViews).toList() as List<IssueListView>;
 
   final idx = state.issueListViews.indexWhere(sameFilterId);
@@ -91,6 +92,7 @@ ViewState _addItemsFromJqlFetch(ViewState state, JiraActions.FetchJqlDone action
 //  final IssueListView getViewByFilter = state.issueListViews.firstWhere(sameFilterId);
 
   final List<IssueListView> listViewsCopy =
+      //ignore: unnecessary_cast
       List<IssueListView>.from(state.issueListViews).toList() as List<IssueListView>;
 
   final idx = state.issueListViews.indexWhere(sameFilterId);
@@ -135,6 +137,7 @@ ViewState _edit(ViewState state, Actions.Edit action) {
 
 ViewState _unSelectAll(ViewState state, Actions.UnSelectAll action) {
   ListModifierFn unSelectAll = (List<ListItemData> l) =>
+      //ignore: unnecessary_cast
       l.map((ListItemData value) => value.copyWith(isSelected: false, isEdit: false)).toList() as List<ListItemData>;
   return _changeActualItemList(state, unSelectAll);
 }
@@ -217,8 +220,10 @@ ViewState _changeActualItemList(ViewState state, ListModifierFn fn) {
   if (targetIdx == null) throw ArgumentError('invalid targetIdx: ' + targetIdx.toString());
 
   final List<IssueListView> listViewsCopy =
+      //ignore: unnecessary_cast
       List<IssueListView>.from(state.issueListViews).toList() as List<IssueListView>;
   final origItems = listViewsCopy[targetIdx].items;
+  //ignore: unnecessary_cast
   final itemsCopy = List<ListItemData>.of(origItems).toList() as List<ListItemData>; // rethink if this really needed
 
   final updatedItems = fn(itemsCopy);

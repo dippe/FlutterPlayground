@@ -41,7 +41,9 @@ ViewState _changeActualListView(ViewState state, ItemModifierFn fn) {
 
   if (targetIdx == null) throw ArgumentError('invalid targetIdx: ' + targetIdx.toString());
 
-  final List<IssueListView> listViewsCopy = List<IssueListView>.from(state.issueListViews).toList() as List<IssueListView>;
+  final List<IssueListView> listViewsCopy =
+      //ignore: unnecessary_cast
+      List<IssueListView>.from(state.issueListViews).toList() as List<IssueListView>;
   final actual = listViewsCopy[targetIdx];
 
   final modified = fn(actual);

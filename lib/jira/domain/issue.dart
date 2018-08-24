@@ -186,6 +186,7 @@ class JiraIssueFields {
         creator = json['creator'] != null ? JiraUser.fromJson(json['creator']) : null,
         description = json['description'],
         duedate = json['duedate'],
+        //ignore: unnecessary_cast
         fixVersions = (json['fixVersions'] as List<dynamic>).map((item) => JiraVersion.fromJson(item)).toList()
             as List<JiraVersion>,
         issuelinks = json['issuelinks'],
@@ -206,6 +207,7 @@ class JiraIssueFields {
         timespent = json['timespent'],
         updated = json['updated'], // "2017-03-07T19:03:46.000+0100"
         versions =
+            //ignore: unnecessary_cast
             (json['versions'] as List<dynamic>).map((item) => JiraVersion.fromJson(item)).toList() as List<JiraVersion>,
         votes = json['votes'],
         watches = json['watches'],
@@ -224,7 +226,8 @@ class JiraIssue {
       : key = key,
         fields = JiraIssueFields.unlinked(summary: summary),
         id = null,
-        typeUrl = null;
+        typeUrl = null,
+        allFields = {};
 
   JiraIssue.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -304,6 +307,7 @@ class IssueComments {
   IssueComments({this.comments, this.maxResults, this.total, this.startAt});
 
   IssueComments.fromJson(Map<String, dynamic> json)
+      //ignore: unnecessary_cast
       : comments = (json['comments'] as List<dynamic>).map((item) => IssueComment.fromJson(item)).toList()
             as List<IssueComment>, //
         maxResults = json['maxResults'],

@@ -26,7 +26,7 @@ Widget wMessages() => StoreConnector<AppState, AppMessages>(
             ],
           );
 
-          var future = new Future<Null>.delayed(Duration.zero, () {
+          new Future<Null>.delayed(Duration.zero, () {
             Scaffold.of(context).showSnackBar(
               new SnackBar(
                 content: row,
@@ -35,10 +35,6 @@ Widget wMessages() => StoreConnector<AppState, AppMessages>(
             );
           });
 
-//          final snack = SnackBar(content: row);
-//          final ScaffoldState scaffold = globalMainKey.currentState;
-//
-//          scaffold.showSnackBar(snack);
           return Text('');
         } else {
           return Text('');

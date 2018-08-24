@@ -21,6 +21,7 @@ CommonDropDownField<E>({
             isDense: true,
             hint: Text(hint),
             onChanged: (E newValue) => onSelect(newValue),
+            //ignore: unnecessary_cast
             items: items.keys.map((key) {
               return new DropdownMenuItem<E>(
                 value: key,

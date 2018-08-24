@@ -10,13 +10,13 @@ import 'package:todo_flutter_app/view/issue_list/action.dart' as Actions;
 import 'package:todo_flutter_app/view/issue_list/action.dart';
 import 'package:todo_flutter_app/view/issue_list/issue_list.dart';
 
-class wJqlTabsPage extends StatefulWidget {
-  const wJqlTabsPage({Key key}) : super(key: key);
+class JqlTabsPage extends StatefulWidget {
+  const JqlTabsPage({Key key}) : super(key: key);
   @override
-  _wJqlTabsPageState createState() => new _wJqlTabsPageState();
+  _JqlTabsPageState createState() => new _JqlTabsPageState();
 }
 
-class _wJqlTabsPageState extends State<wJqlTabsPage> with SingleTickerProviderStateMixin {
+class _JqlTabsPageState extends State<JqlTabsPage> with SingleTickerProviderStateMixin {
   List<Widget> _myTabs;
   List<Widget> _children;
   List<IssueListView> _recent;
@@ -29,7 +29,7 @@ class _wJqlTabsPageState extends State<wJqlTabsPage> with SingleTickerProviderSt
 
   ListViewMode _recentListViewMode;
 
-  _wJqlTabsPageState() {
+  _JqlTabsPageState() {
     this._appStore = store;
   }
 
@@ -115,15 +115,15 @@ List<Widget> _tabsFromStore(AppState appState) => appState.view.issueListViews.m
       );
     }).toList();
 
+//ignore: unnecessary_cast
 List<Widget> _renderChildren(Store<AppState> store) => store.state.view.issueListViews.map((i) {
       final bool showProgressIndicator = i.result == null;
 
       if (i.items != null) {
-        return wIssueList(i.items, showProgressIndicator, store.state.config.listViewMode == ListViewMode.COMPACT)
-            as Widget;
+        return wIssueList(i.items, showProgressIndicator, store.state.config.listViewMode == ListViewMode.COMPACT);
       } else {
         return Column(children: [
-          Text('Loading ...') as Widget,
+          Text('Loading ...'),
           new SizedBox(
             width: 40.0,
             height: 40.0,

@@ -34,6 +34,7 @@ Reducer<ViewState> searchReducer = combineReducers<ViewState>([
 
 ViewState _addItemsFromSearchFetch(ViewState state, FetchSearchDone action) {
   final mapToItems = (List<JiraIssue> issues) {
+    //ignore: unnecessary_cast
     final List<ListItemData> listItems = issues
         .map((jiraIssue) => ListItemData(
               jiraIssue,
@@ -46,7 +47,6 @@ ViewState _addItemsFromSearchFetch(ViewState state, FetchSearchDone action) {
   };
 
   try {
-    final List<ListItemData> resultItems = mapToItems(action.jiraJqlResult.issues);
     final newSrcState = state.search.copyWith(resultItems: mapToItems(action.jiraJqlResult.issues));
     return state.copyWith(search: newSrcState);
   } catch (e) {
@@ -76,6 +76,7 @@ ViewState _unSelectAll(ViewState state, UnSelectAll action) {
     return state;
   }
 
+  //ignore: unnecessary_cast
   final newRes = state.search.resultItems
       .map((ListItemData value) => value.copyWith(isSelected: false, isEdit: false))
       .toList() as List<ListItemData>;

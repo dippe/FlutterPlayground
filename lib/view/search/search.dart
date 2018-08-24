@@ -32,6 +32,4 @@ Widget _renderResult(List items) => (items?.length == 0)
         direction: Axis.vertical,
         children: [Text('-- No result --')],
       )
-    : Expanded(
-        child:
-            wIssueList(items ?? [], items == null, store.state.config.listViewMode == ListViewMode.COMPACT) as Widget);
+    : Expanded(child: wIssueList(items ?? [], items == null, store.state.config.listViewMode == ListViewMode.COMPACT));

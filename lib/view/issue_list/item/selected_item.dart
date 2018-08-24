@@ -22,13 +22,6 @@ ItemWidget wSelectedItem = (ListItemData item, isCompact) {
       _IssueDetails(item.issue)
     ],
   );
-
-  final renderSimpleRow = (children) => Row(
-        children: children,
-      );
-  return renderSimpleRow([
-    _wName(item, isCompact),
-  ]);
 };
 
 Widget _IssueDetails(JiraIssue issue) {

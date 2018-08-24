@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:redux/redux.dart';
 import 'package:redux_persist/redux_persist.dart';

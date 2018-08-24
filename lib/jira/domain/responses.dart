@@ -71,6 +71,7 @@ class JiraFavouriteFilters {
   JiraFavouriteFilters(this.filters);
 
   JiraFavouriteFilters.fromJson(List<dynamic> json)
+      //ignore: unnecessary_cast
       : filters = json?.map((list) => JiraFilter.fromJson(list))?.toList() as List<JiraFilter>;
 }
 

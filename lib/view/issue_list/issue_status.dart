@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/issue_list/consts.dart';
 import 'package:todo_flutter_app/view/issue_list/item/list_item.dart';
 
@@ -7,10 +6,6 @@ Color _getColorByStatusId(int id) => STATUS_COLORS[id] ?? COLOR_UNKNOWN;
 // todo: remove later
 
 ItemWidget wIssueStatusChip = (item, bool isCompact) {
-  // fixme: remove later this simple hack (direct access to state instead of listening to the state change)
-  // fixme: rethink static resources instead of downloading
-  final String baseUrl = store.state.config.baseUrl;
-
   return item.issue?.fields?.status != null
       ? Transform(
           transform: new Matrix4.identity()..scale(0.8),

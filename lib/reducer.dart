@@ -13,7 +13,6 @@ Reducer<AppState> appReducer = (AppState state, dynamic action) {
       jira: initJiraData,
       view: action.state.view.copyWith(messages: initAppMessages),
     );
-    action.state;
   } else {
     return new AppState(
       view: viewReducer(state.view, action),

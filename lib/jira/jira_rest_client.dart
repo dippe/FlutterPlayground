@@ -10,6 +10,7 @@ import 'package:todo_flutter_app/jira/domain/responses.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/util/auth.dart';
 import 'package:todo_flutter_app/util/tripledes/lib/tripledes.dart';
+import 'package:todo_flutter_app/view/config/reducer.dart';
 
 const URL_ISSUE = "/rest/api/2/issue/";
 const URL_JQL = "/rest/api/2/search";
@@ -27,15 +28,9 @@ class JiraRestClient {
     final baseUrl = store.state.config.baseUrl;
     final fullUrl = baseUrl + path;
 
-    final key = baseUrl + user;
-    var blockCipher = new BlockCipher(new DESEngine(), key);
-    try {
-      final password = blockCipher.decodeB64(store.state.config.password);
-      print('*** JIRA get request: ' + fullUrl);
-      return BasicAuthClient(user, password).get(fullUrl);
-    } catch (e) {
-      throw new Exception('Password encrypt error: try to re-enter the pwd!');
-    }
+    final password = getDecryptedPwd(store.state.config, store.state.config.password);
+    print('*** JIRA get request: ' + fullUrl);
+    return BasicAuthClient(user, password).get(fullUrl);
   }
 
   static Future<JiraIssue> fetchIssue(String key) {

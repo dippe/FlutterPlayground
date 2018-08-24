@@ -7,6 +7,7 @@ import 'package:todo_flutter_app/view/common/common_switch_field.dart';
 import 'package:todo_flutter_app/view/common/common_text_field.dart';
 import 'package:todo_flutter_app/view/config/action.dart';
 import 'package:todo_flutter_app/view/action.dart';
+import 'package:todo_flutter_app/view/config/reducer.dart';
 
 Widget wConfigPage() => new StoreConnector<AppState, ConfigState>(
       converter: (state) => state.state.config,
@@ -37,7 +38,7 @@ Widget wConfigPage() => new StoreConnector<AppState, ConfigState>(
               ),
               CommonTextField(
                 inputType: FieldInputType.PASSWORD,
-                initValue: config.password,
+                initValue: getDecryptedPwd(config, config.password),
                 labelText: 'Password',
                 onChange: (txt) => dispatch(SetPwd(txt)),
                 icon: Icons.input,

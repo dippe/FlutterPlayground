@@ -34,6 +34,17 @@ getEncryptedPwd(ConfigState state, pwd) {
     final encrypted = blockCipher.encodeB64(pwd);
     return encrypted;
   } catch (e) {
-    throw Exception('Encrypt error: ' + e.toString());
+    throw Exception('Password encrypt error: ' + e.toString());
+  }
+}
+
+getDecryptedPwd(ConfigState state, pwd) {
+  try {
+    final key = state.baseUrl + state.user;
+    var blockCipher = new BlockCipher(new DESEngine(), key);
+    final decrypted = blockCipher.decodeB64(pwd);
+    return decrypted;
+  } catch (e) {
+    throw Exception('Password decrypt error: try to re-enter the pwd!  ' + e.toString());
   }
 }

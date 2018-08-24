@@ -15,7 +15,6 @@ Reducer<JiraData> jiraReducer = (JiraData state, dynamic action) {
     print('*** ERROR ***: unimplemented reducer FetchError ' + action.error);
     return state;
   } else {
-    print("jiraReducer: unhandled action type: " + action.runtimeType.toString());
     return state;
   }
 };

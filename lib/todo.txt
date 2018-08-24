@@ -1,16 +1,16 @@
 
 Feature:
-- issue details lap alap mezőkkel
-- utolsó komment(ek) megjelenítése
 - minden state mentése (issue list)
+- optimalizálás:
+   - mentés
+   - rajzolás
 - csak deltát töltsön le + merge-elje a listát?
+- metadata leszedése
+- konfigolható custom fields
+- státusz change
 
 Fix:
-- kikapcsolható priority
-- státusz igazítása függőlegesen
-- tab longtap ne csak a képen
 - konfigurálható tabok száma
-- szerver, user, jelszó elkódolása?
 - Mentés
 - kezdőlap első alkalommal Config legyen (init_state)
 
@@ -33,3 +33,6 @@ kész:
 - dialog menü leszedése
 - jql filterek leszedése a szerverről
 - kereső lap
+- issue details lap alap mezőkkel
+- utolsó komment(ek) megjelenítése
+- szerver, user, jelszó elkódolása?

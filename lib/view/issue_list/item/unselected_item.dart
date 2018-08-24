@@ -9,13 +9,15 @@ import 'package:todo_flutter_app/view/issue_list/item/list_item.dart';
 ItemWidget wUnselectedItem = (ListItemData item, isCompact) {
   final onTapCb = (item) => dispatch(Actions.Select(item));
   final onDoubleTapCb = (item) => dispatch(Actions.Edit(item));
-  return Row(children: [
-    isCompact ? Text('') : _wIssuetype(item, isCompact),
-    _wPriority(item, isCompact),
-    _wIssueKey(item, isCompact),
-    _wName(item, isCompact, onTapCb, onDoubleTapCb),
-    wIssueStatusChip(item, isCompact),
-  ]);
+  return Row(
+    children: [
+      isCompact ? Text('') : _wIssuetype(item, isCompact),
+      _wPriority(item, isCompact),
+      _wIssueKey(item, isCompact),
+      _wName(item, isCompact, onTapCb, onDoubleTapCb),
+      wIssueStatusChip(item, isCompact),
+    ],
+  );
 };
 
 Widget wItemLineForSelected(ListItemData item, isCompact, onTapCb, onDoubleTapCb) {

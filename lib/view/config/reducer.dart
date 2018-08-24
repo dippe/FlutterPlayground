@@ -1,5 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
+import 'package:todo_flutter_app/util/tripledes/lib/tripledes.dart';
 import 'package:todo_flutter_app/view/config/action.dart';
 import 'package:todo_flutter_app/view/issue_list/action.dart' as Actions;
 import 'package:todo_flutter_app/view/config/action.dart' as Actions;
@@ -13,7 +14,7 @@ Reducer<ConfigState> configReducer = (ConfigState state, dynamic action) {
   } else if (action is Actions.SetBaseUrl) {
     return state.copyWith(baseUrl: action.url);
   } else if (action is Actions.SetPwd) {
-    return state.copyWith(password: action.pwd);
+    return state.copyWith(password: getEncryptedPwd(state, action.pwd));
   } else if (action is Actions.SetMaxIssueKeyLength) {
     return state.copyWith(maxIssueKeyLength: int.parse(action.num));
   } else if (action is Actions.SetMaxJqlIssueNum) {
@@ -25,3 +26,14 @@ Reducer<ConfigState> configReducer = (ConfigState state, dynamic action) {
     return state;
   }
 };
+
+getEncryptedPwd(ConfigState state, pwd) {
+  try {
+    final key = state.baseUrl + state.user;
+    var blockCipher = new BlockCipher(new DESEngine(), key);
+    final encrypted = blockCipher.encodeB64(pwd);
+    return encrypted;
+  } catch (e) {
+    throw Exception('Encrypt error: ' + e.toString());
+  }
+}

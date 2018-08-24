@@ -13,10 +13,10 @@ import 'package:todo_flutter_app/view/issue_list/issue_list.dart';
 class JqlTabsPage extends StatefulWidget {
   const JqlTabsPage({Key key}) : super(key: key);
   @override
-  _JqlTabsPageState createState() => new _JqlTabsPageState();
+  _wJqlTabsPageState createState() => new _wJqlTabsPageState();
 }
 
-class _JqlTabsPageState extends State<JqlTabsPage> with SingleTickerProviderStateMixin {
+class _wJqlTabsPageState extends State<JqlTabsPage> with SingleTickerProviderStateMixin {
   List<Widget> _myTabs;
   List<Widget> _children;
   List<IssueListView> _recent;
@@ -29,7 +29,7 @@ class _JqlTabsPageState extends State<JqlTabsPage> with SingleTickerProviderStat
 
   ListViewMode _recentListViewMode;
 
-  _JqlTabsPageState() {
+  _wJqlTabsPageState() {
     this._appStore = store;
   }
 

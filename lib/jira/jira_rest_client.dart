@@ -9,6 +9,7 @@ import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/jira/domain/responses.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/util/auth.dart';
+import 'package:todo_flutter_app/util/tripledes/lib/tripledes.dart';
 
 const URL_ISSUE = "/rest/api/2/issue/";
 const URL_JQL = "/rest/api/2/search";
@@ -20,15 +21,21 @@ const FIELDS_TO_GET = "*all";
 //const FIELDS_TO_GET = "status,summary,components,fixVersions,project,issuelinks,issuetype,priority";
 
 class JiraRestClient {
-  static Future<Response> _jiraGet(String path) {
+  static Future<Response> _jiraGet(String path) async {
     // fixme: rethink this direct store access hack
     final user = store.state.config.user;
-    final password = store.state.config.password;
     final baseUrl = store.state.config.baseUrl;
     final fullUrl = baseUrl + path;
 
-    print('*** JIRA get request: ' + fullUrl);
-    return BasicAuthClient(user, password).get(fullUrl);
+    final key = baseUrl + user;
+    var blockCipher = new BlockCipher(new DESEngine(), key);
+    try {
+      final password = blockCipher.decodeB64(store.state.config.password);
+      print('*** JIRA get request: ' + fullUrl);
+      return BasicAuthClient(user, password).get(fullUrl);
+    } catch (e) {
+      throw new Exception('Password encrypt error: try to re-enter the pwd!');
+    }
   }
 
   static Future<JiraIssue> fetchIssue(String key) {

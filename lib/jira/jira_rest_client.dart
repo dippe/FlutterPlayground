@@ -14,8 +14,8 @@ const URL_ISSUE = "/rest/api/2/issue/";
 const URL_JQL = "/rest/api/2/search";
 
 // fixme: this should be configurable on the Config page!
-const MAX_RESULTS = 100;
 const FIELDS_TO_GET = "*all";
+
 // fixme: re-enable this for performance improvement with finalized fields
 //const FIELDS_TO_GET = "status,summary,components,fixVersions,project,issuelinks,issuetype,priority";
 
@@ -45,12 +45,12 @@ class JiraRestClient {
 //        .catchError((err) => print('*** ERROR: ' + err.toString()));
   }
 
-  static Future<JiraSearch> fetchIssuesByJql(JiraFilter filter) {
+  static Future<JiraSearch> fetchIssuesByJql(JiraFilter filter, maxResults) {
     // fixme: re-enable encoding
     //  String ncodedJql = encodeURIComponent(jql);
     String ncodedJql = filter.jql;
 
-    String path = URL_JQL + '?maxResults=' + MAX_RESULTS.toString() + "&fields=" + FIELDS_TO_GET + '&jql=' + ncodedJql;
+    String path = URL_JQL + '?maxResults=' + maxResults.toString() + "&fields=" + FIELDS_TO_GET + '&jql=' + ncodedJql;
 
     return _jiraGet(path)
         .then(_validateResponse)

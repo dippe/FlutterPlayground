@@ -11,9 +11,12 @@ class _AjaxError {
 
 class JiraAjax {
   static void doFetchJqlAction(JiraFilter filter) {
+    final allowedMax = store.state.config.maxJqlIssueNum;
     store.dispatch(FetchJqlStart(filter));
 
-    JiraRestClient.fetchIssuesByJql(filter).then((res) => _validateJqlMaxResult(res)).then((res) {
+    JiraRestClient.fetchIssuesByJql(filter, allowedMax)
+        .then((res) => _validateJqlMaxResult(res, allowedMax))
+        .then((res) {
       store.dispatch(AddInfoMessageAction('JQL fetch finished successfully'));
       return res;
     }).catchError((err) {
@@ -36,7 +39,11 @@ class JiraAjax {
 
     final filter = JiraFilter(jql: jqlPrefix + 'Text ~ \'$text\'', name: 'Search');
 
-    JiraRestClient.fetchIssuesByJql(filter).then((res) => _validateJqlMaxResult(res)).then((res) {
+    final allowedMax = store.state.config.maxJqlIssueNum;
+
+    JiraRestClient.fetchIssuesByJql(filter, allowedMax)
+        .then((res) => _validateJqlMaxResult(res, allowedMax))
+        .then((res) {
       store.dispatch(AddInfoMessageAction('JQL fetch finished successfully'));
       return res;
     }).catchError((err) {
@@ -84,9 +91,9 @@ class JiraAjax {
         .catchError((error) => store.dispatch(FetchVersionsError(error.toString())));
   }
 
-  static _validateJqlMaxResult(res) {
-    if (res.total > MAX_RESULTS || res.total > res.maxResults) {
-      throw new ValidationException(_AjaxError.LIMIT_REACHED + MAX_RESULTS.toString(), res);
+  static _validateJqlMaxResult(res, allowedMax) {
+    if (res.total > allowedMax || res.total > res.maxResults) {
+      throw new ValidationException(_AjaxError.LIMIT_REACHED + allowedMax.toString(), res);
     } else if (res.total == 0) {
       throw new ValidationException(_AjaxError.EMPTY_JQL_RESULT, res);
     } else {

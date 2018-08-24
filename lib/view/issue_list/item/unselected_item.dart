@@ -74,7 +74,9 @@ Widget _wDraggableItem(Widget child, ListItemData item) => LongPressDraggable<Li
 
 ItemWidget _wIssueKey = (item, isCompact) => Chip(
       label: Container(
-        width: isCompact ? ISSUEKEY_WIDTH * 0.7 : ISSUEKEY_WIDTH,
+        width: isCompact
+            ? store.state.config.maxIssueKeyLength * DEFAULT_ISSUEKEY_CHAR_WIDTH * 0.7 + DEFAULT_ISSUEKEY_CHAR_PADDING
+            : store.state.config.maxIssueKeyLength * DEFAULT_ISSUEKEY_CHAR_WIDTH + DEFAULT_ISSUEKEY_CHAR_PADDING,
         child: Text(
           item.key,
           overflow: TextOverflow.fade,

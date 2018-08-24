@@ -14,6 +14,12 @@ Reducer<ConfigState> configReducer = (ConfigState state, dynamic action) {
     return state.copyWith(baseUrl: action.url);
   } else if (action is Actions.SetPwd) {
     return state.copyWith(password: action.pwd);
+  } else if (action is Actions.SetMaxIssueKeyLength) {
+    return state.copyWith(maxIssueKeyLength: int.parse(action.num));
+  } else if (action is Actions.SetMaxJqlIssueNum) {
+    return state.copyWith(maxJqlIssueNum: int.parse(action.num));
+  } else if (action is Actions.SetRecentIssueCommentsNum) {
+    return state.copyWith(recentIssueCommentsNum: int.parse(action.num));
   } else {
     print("configReducer: unhandled action type: " + action.runtimeType.toString());
     return state;

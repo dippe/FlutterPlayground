@@ -24,6 +24,39 @@ class SetPwd implements Action {
   }
 }
 
+class SetMaxJqlIssueNum implements Action {
+  String num;
+
+  SetMaxJqlIssueNum(this.num);
+
+  @override
+  String toString() {
+    return 'SetMaxJqlIssueNum{$num}';
+  }
+}
+
+class SetMaxIssueKeyLength implements Action {
+  String num;
+
+  SetMaxIssueKeyLength(this.num);
+
+  @override
+  String toString() {
+    return 'SetMaxIssueKeyLength{$num}';
+  }
+}
+
+class SetRecentIssueCommentsNum implements Action {
+  String num;
+
+  SetRecentIssueCommentsNum(this.num);
+
+  @override
+  String toString() {
+    return 'SetRecentIssueCommentsNum{num: $num}';
+  }
+}
+
 class SetBaseUrl implements Action {
   String url;
 

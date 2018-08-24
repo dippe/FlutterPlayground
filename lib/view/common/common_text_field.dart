@@ -13,7 +13,9 @@ import 'package:flutter/services.dart';
  */
 
 typedef void _OnChange(String txt);
-enum FieldInputType { PHONE, EMAIL, TEXT, PASSWORD }
+enum FieldInputType { PHONE, EMAIL, TEXT, PASSWORD, NUMBER }
+
+final _DEFAULT_FORMATTER = LengthLimitingTextInputFormatter(100);
 
 class CommonTextField extends StatefulWidget {
   final FieldInputType inputType;
@@ -22,6 +24,7 @@ class CommonTextField extends StatefulWidget {
   final _OnChange onChange;
   final String Function(dynamic) validator;
   final IconData icon;
+  final TextInputFormatter inputFormatter;
 
   CommonTextField({
     @required this.labelText,
@@ -30,6 +33,7 @@ class CommonTextField extends StatefulWidget {
     @required this.onChange,
     this.validator = null,
     this.icon = null,
+    this.inputFormatter,
   });
 
   @override
@@ -58,6 +62,11 @@ class _FieldState extends State<CommonTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final tmpFormatters = List<TextInputFormatter>.from(_predefinedTypes[widget.inputType].inputFormatters);
+    if (widget.inputFormatter != null) {
+      tmpFormatters.add(widget.inputFormatter);
+    }
+
     return ListTile(
         title: TextField(
       obscureText: widget.inputType == FieldInputType.PASSWORD,
@@ -68,7 +77,8 @@ class _FieldState extends State<CommonTextField> {
         hintText: _predefinedTypes[widget.inputType].hintText ?? '',
       ),
       keyboardType: _predefinedTypes[widget.inputType].keyboardType,
-      inputFormatters: _predefinedTypes[widget.inputType].inputFormatters,
+      inputFormatters: tmpFormatters,
+//        ..add(widget.inputFormatter ?? _DEFAULT_FORMATTER),
       onSubmitted: widget.onChange,
     ));
   }
@@ -94,6 +104,16 @@ final Map<FieldInputType, _InputType> _predefinedTypes = {
     hintText: 'Enter a text',
     inputFormatters: [],
     keyboardType: TextInputType.text,
+  ),
+  FieldInputType.NUMBER: _InputType(
+    icon: const Icon(Icons.text_fields),
+    hintText: 'Enter a number',
+    inputFormatters: [
+      WhitelistingTextInputFormatter.digitsOnly,
+      // FIXME: this should be an input parameter
+//      LengthLimitingTextInputFormatter(3),
+    ],
+    keyboardType: TextInputType.number,
   ),
   FieldInputType.PASSWORD: _InputType(
     icon: const Icon(Icons.text_fields),

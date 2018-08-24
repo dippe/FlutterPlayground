@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-const ISSUEKEY_WIDTH = 100.0;
-
+const DEFAULT_ISSUEKEY_CHAR_WIDTH = 8.0;
+const DEFAULT_ISSUEKEY_CHAR_PADDING = 15.0;
 const COLOR_UNKNOWN = Colors.grey;
 const UNKNOWN_ICON = Icons.blur_on;
 

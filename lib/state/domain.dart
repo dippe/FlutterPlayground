@@ -5,6 +5,7 @@ import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/jira/domain/responses.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:todo_flutter_app/state/consts.dart';
 part 'domain.g.dart';
 
 /**
@@ -62,7 +63,7 @@ class IssueListView {
     @required this.id,
     @required this.name,
     @required this.filter,
-    @required this.items,
+    this.items,
     this.result = null,
     this.idCounter = 0,
     this.lastFetched = null,
@@ -166,7 +167,7 @@ class ViewState {
     @required this.actPage,
     @required this.issueListViews,
     @required this.actListIdx,
-    @required this.messages,
+    this.messages,
     @required this.search,
   });
 
@@ -197,7 +198,7 @@ class AppState {
   AppState({
     @required this.config,
     @required this.view,
-    @required this.jira,
+    this.jira,
   });
 
   AppState copyWith({config, jira, view}) {
@@ -228,18 +229,33 @@ class ConfigState {
   final String password;
   final String baseUrl;
   final ListViewMode listViewMode;
+  final int maxJqlIssueNum;
+  final int maxIssueKeyLength;
+  final int recentIssueCommentsNum;
 
-  ConfigState({@required this.user, @required this.password, @required this.baseUrl, @required this.listViewMode});
+  ConfigState(
+      {@required this.user,
+      @required this.password,
+      @required this.baseUrl,
+      @required this.listViewMode,
+      this.maxJqlIssueNum = DEFAULT_MAX_JQL_RESULTS,
+      this.maxIssueKeyLength = DEFAULT_MAX_ISSUE_KEY_LENGTH,
+      this.recentIssueCommentsNum = DEFAULT_LAST_COMMENT_NUM});
 
   hasLogin() {
     return user != null && password != null && baseUrl != null;
   }
 
-  ConfigState copyWith({user, password, baseUrl, listViewMode}) => ConfigState(
+  ConfigState copyWith(
+          {user, password, baseUrl, listViewMode, maxJqlIssueNum, maxIssueKeyLength, recentIssueCommentsNum}) =>
+      ConfigState(
         user: user ?? this.user,
         password: password ?? this.password,
         baseUrl: baseUrl ?? this.baseUrl,
         listViewMode: listViewMode ?? this.listViewMode,
+        maxJqlIssueNum: maxJqlIssueNum ?? this.maxJqlIssueNum,
+        maxIssueKeyLength: maxIssueKeyLength ?? this.maxIssueKeyLength,
+        recentIssueCommentsNum: recentIssueCommentsNum ?? this.recentIssueCommentsNum,
       );
 
   @override

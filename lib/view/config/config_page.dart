@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
@@ -9,7 +10,7 @@ import 'package:todo_flutter_app/view/action.dart';
 
 Widget wConfigPage() => new StoreConnector<AppState, ConfigState>(
       converter: (state) => state.state.config,
-      builder: (context, config) => new Column(
+      builder: (context, config) => new ListView(
             children: <Widget>[
               Title(
                 color: Colors.greenAccent,
@@ -42,7 +43,7 @@ Widget wConfigPage() => new StoreConnector<AppState, ConfigState>(
                 icon: Icons.input,
               ),
               Divider(
-                height: 2.0,
+                height: 20.0,
                 color: Colors.white,
               ),
               CommonSwitchField(
@@ -50,10 +51,42 @@ Widget wConfigPage() => new StoreConnector<AppState, ConfigState>(
                 initValue: config.listViewMode == ListViewMode.COMPACT,
                 onChange: (val) => dispatch(ToggleDisplayModeAction()),
               ),
+              CommonTextField(
+                inputType: FieldInputType.NUMBER,
+                initValue: config.maxJqlIssueNum.toString(),
+                labelText: 'Max Issues to fetch',
+                onChange: (txt) => dispatch(SetMaxJqlIssueNum(txt)),
+                icon: Icons.person,
+                inputFormatter: LengthLimitingTextInputFormatter(3),
+              ),
+              CommonTextField(
+                inputType: FieldInputType.NUMBER,
+                initValue: config.maxIssueKeyLength.toString(),
+                labelText: 'Issuekey length',
+                onChange: (txt) => dispatch(SetMaxIssueKeyLength(txt)),
+                icon: Icons.person,
+                inputFormatter: LengthLimitingTextInputFormatter(2),
+              ),
+              CommonTextField(
+                inputType: FieldInputType.NUMBER,
+                initValue: config.recentIssueCommentsNum.toString(),
+                labelText: 'Recent comments to show',
+                onChange: (txt) => dispatch(SetRecentIssueCommentsNum(txt)),
+                icon: Icons.person,
+                inputFormatter: LengthLimitingTextInputFormatter(1),
+              ),
+              Divider(
+                height: 10.0,
+                color: Colors.white,
+              ),
               new FlatButton(
+                color: Colors.blueGrey,
                 child: Text('Back to the list'),
                 onPressed: () => dispatch(HideConfigPage()),
               ),
+//              SizedBox(
+//                height: 300.0,
+//              )
             ],
           ),
     );

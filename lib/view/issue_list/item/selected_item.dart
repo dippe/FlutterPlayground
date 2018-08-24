@@ -4,9 +4,10 @@ import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/issue_list/action.dart' as Actions;
-import 'package:todo_flutter_app/view/issue_list/consts.dart';
 import 'package:todo_flutter_app/view/issue_list/item/list_item.dart';
 import 'package:todo_flutter_app/view/issue_list/item/unselected_item.dart';
+
+const _DETAILS_BLOCK_HEIGHT = 400.0;
 
 ItemWidget wSelectedItem = (ListItemData item, isCompact) {
   final onTapCb = (item) => dispatch(Actions.UnSelectAll());
@@ -37,7 +38,9 @@ Widget _IssueDetails(JiraIssue issue) {
           'Created: ${DateFormat('yyyy-MM-dd hh:mm').format(DateTime.parse(comment.created))} \n' +
           'Comment: ${comment.body}';
 
-      return comments.reversed.take(2).fold('', (val, elem) => '$val${renderComment(elem)} \n\n ');
+      return comments.reversed
+          .take(store.state.config.recentIssueCommentsNum)
+          .fold('', (val, elem) => '$val${renderComment(elem)} \n\n ');
     } else {
       return ' - ';
     }
@@ -57,7 +60,7 @@ Widget _IssueDetails(JiraIssue issue) {
         ],
       ),
     ),
-    height: 300.0,
+    height: _DETAILS_BLOCK_HEIGHT,
   );
 }
 
@@ -99,39 +102,6 @@ Widget _wReadOnlyTitle({
     ),
   );
 }
-
-ItemWidget _wIssueKey = (item, isCompact) => Chip(
-      label: Container(
-        width: isCompact ? ISSUEKEY_WIDTH * 0.7 : ISSUEKEY_WIDTH,
-        child: Text(
-          item.key,
-          overflow: TextOverflow.fade,
-        ),
-      ),
-    );
-
-ItemWidget _wPriority = (item, isCompact) {
-  if (item?.issue?.fields?.priority != null) {
-    final regexp = RegExp(".*\\/(.+).svg");
-
-//    final fileName = regexp.firstMatch(item.issue.fields.priority['iconUrl']);
-
-    final z = regexp.allMatches(item.issue.fields.priority['iconUrl']);
-
-    final filename = z.first.group(1);
-    return Image.asset('images/priorities/' + filename + '.png');
-  } else {
-    return Image.asset('images/issuetypes/blank.png');
-  }
-};
-
-ItemWidget _wIssuetype = (item, isCompact) {
-  if (item.issue != null && item.issue.fields?.issuetype != null) {
-    return Image.asset(ASSET_ISSUE_TYPE_ICONS[item.issue.fields.issuetype.name] ?? ASSET_DEFAULT_ISSUE_TYPE_ICON);
-  } else {
-    return Image.asset(ASSET_DEFAULT_ISSUE_TYPE_ICON);
-  }
-};
 
 ItemWidget _wName = (item, isCompact) => Expanded(
         child: _wReadOnlyTitle(

@@ -11,9 +11,6 @@ Feature:
 
 Fix:
 - konfigurálható tabok száma
-- Mentés
-- kezdőlap első alkalommal Config legyen (init_state)
-
 
 
 kész:
@@ -36,3 +33,4 @@ kész:
 - issue details lap alap mezőkkel
 - utolsó komment(ek) megjelenítése
 - szerver, user, jelszó elkódolása?
+- Mentés?? hibakezelés?

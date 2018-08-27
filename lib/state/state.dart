@@ -4,6 +4,7 @@ import 'package:redux/redux.dart';
 import 'package:redux_persist/redux_persist.dart';
 import 'package:redux_persist_flutter/redux_persist_flutter.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
+import 'package:todo_flutter_app/jira/jira_ajax_action.dart';
 import 'package:todo_flutter_app/reducer.dart';
 import 'package:todo_flutter_app/state/.config.dart';
 import 'package:todo_flutter_app/state/domain.dart';
@@ -33,9 +34,22 @@ Future initStore() async {
 
     // Load initial state
     await persistor.load(store);
+    _reloadFirstTab();
   } catch (e) {
-    print(e);
+    print('***** CRITICAL INIT ERROR' + e);
+    throw (e);
   }
+}
+
+_reloadFirstTab() {
+  final idx = store.state.view?.actListIdx;
+  final filter = store.state.view.issueListViews[idx].filter;
+
+  if (filter != null) {
+    JiraAjax.doFetchJqlAction(filter);
+  }
+
+  JiraAjax.doFetchFilters();
 }
 
 /// dispatch action into the global store

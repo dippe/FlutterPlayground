@@ -56,6 +56,8 @@ class IssueListView {
   // !!!!!!!!!!!! FIXME: REMOVE THIS LATER
   @JsonKey(ignore: true, defaultValue: null, includeIfNull: true)
   final JiraSearch result; // link to the ajax result
+  @JsonKey(ignore: true, defaultValue: null)
+  final JiraError error; // link to the ajax result
   final int idCounter;
 
   IssueListView({
@@ -66,10 +68,11 @@ class IssueListView {
     this.result = null,
     this.idCounter = 0,
     this.lastFetched = null,
+    this.error = null,
   });
 //  }) : this.items = items ?? [] as List<ListItemData>;
 
-  IssueListView copyWith({id, name, filter, result, items, idCounter, bool resetResult = false}) {
+  IssueListView copyWith({id, name, filter, result, items, idCounter, JiraError error, bool resetResult = false}) {
     return IssueListView(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -78,8 +81,11 @@ class IssueListView {
       lastFetched: result != null ? DateTime.now().millisecondsSinceEpoch : this.lastFetched,
       items: items != null ? List<ListItemData>.unmodifiable(items).toList() : this.items,
       idCounter: idCounter ?? this.idCounter,
+      error: error ?? (result != null ? null : this.error),
     );
   }
+
+  bool showProgressIndicator() => result == null && error == null;
 
   @deprecated
   int length() {

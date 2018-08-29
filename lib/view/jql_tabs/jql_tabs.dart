@@ -117,10 +117,13 @@ List<Widget> _tabsFromStore(AppState appState) => appState.view.issueListViews.m
 
 //ignore: unnecessary_cast
 List<Widget> _renderChildren(Store<AppState> store) => store.state.view.issueListViews.map((i) {
-      final bool showProgressIndicator = i.result == null;
-
-      if (i.items != null) {
-        return wIssueList(i.items, showProgressIndicator, store.state.config.listViewMode == ListViewMode.COMPACT);
+      if (i.error != null) {
+        return Column(
+            children: i.error.errorMessages
+                .map((err) => ListTile(leading: Icon(Icons.error, color: Colors.red), title: Text(err)))
+                .toList() as List<Widget>);
+      } else if (i.items != null) {
+        return wIssueList(i.items, i.showProgressIndicator(), store.state.config.listViewMode == ListViewMode.COMPACT);
       } else {
         return Column(children: [
           Text('Loading ...'),

@@ -4,7 +4,7 @@ import 'package:todo_flutter_app/jira/domain/responses.dart';
 import 'package:todo_flutter_app/util/types.dart';
 
 class FetchJqlError implements Action {
-  final String error;
+  final JiraError error;
   final JiraFilter jiraFilter;
 
   FetchJqlError(this.error, this.jiraFilter);

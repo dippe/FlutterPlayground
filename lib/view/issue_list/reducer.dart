@@ -18,6 +18,8 @@ Reducer<ViewState> listViewReducer = combineReducers<ViewState>([
   TypedReducer<ViewState, Actions.SetActListIdx>(_actListIdx),
   TypedReducer<ViewState, JiraActions.FetchJqlStart>(_fetchJqlStart),
   TypedReducer<ViewState, JiraActions.FetchJqlDone>(_addItemsFromJqlFetch),
+  TypedReducer<ViewState, JiraActions.FetchJqlError>(_fetchJqlError),
+
   TypedReducer<ViewState, Actions.Add>(_add),
   TypedReducer<ViewState, Actions.Edit>(_edit),
   TypedReducer<ViewState, Actions.Drag>(_drag),
@@ -104,6 +106,31 @@ ViewState _addItemsFromJqlFetch(ViewState state, JiraActions.FetchJqlDone action
     );
   } catch (e) {
     print(e.toString());
+  }
+
+  return state.copyWith(issueListViews: listViewsCopy);
+}
+
+ViewState _fetchJqlError(ViewState state, JiraActions.FetchJqlError action) {
+  // throw exception when when no element has been found
+  bool sameFilterId(IssueListView i) => i.filter.id == action.jiraFilter.id;
+//  final IssueListView getViewByFilter = state.issueListViews.firstWhere(sameFilterId);
+
+  final List<IssueListView> listViewsCopy =
+      //ignore: unnecessary_cast
+      List<IssueListView>.from(state.issueListViews).toList() as List<IssueListView>;
+
+  final idx = state.issueListViews.indexWhere(sameFilterId);
+
+  try {
+    listViewsCopy[idx] = listViewsCopy[idx].copyWith(
+      error: action.error,
+      items: [],
+      resetResult: true,
+    );
+  } catch (e) {
+    print(e.toString());
+    rethrow;
   }
 
   return state.copyWith(issueListViews: listViewsCopy);

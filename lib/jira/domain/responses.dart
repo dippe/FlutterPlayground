@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:todo_flutter_app/jira/domain/issue.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
 
@@ -92,4 +93,20 @@ class JiraComponents {
   JiraComponents.fromJson(Map<String, dynamic> json)
       // fixme asd!!!
       : components = json['asd']?.map((list) => JiraComponent.fromJson(list))?.toList() as List<JiraComponent>;
+}
+
+class JiraError {
+  List<String> errorMessages;
+  Map<String, dynamic> errors;
+
+  JiraError({@required this.errorMessages, @required this.errors});
+
+  JiraError.fromJson(Map<String, dynamic> json)
+      : errors = json['errors'],
+        errorMessages = json['errorMessages'];
+
+  @override
+  String toString() {
+    return 'JiraError{errorMessages: $errorMessages, errors: $errors}';
+  }
 }

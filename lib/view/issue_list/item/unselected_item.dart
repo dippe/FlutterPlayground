@@ -26,6 +26,7 @@ Widget wItemLineForSelected(ListItemData item, isCompact, onTapCb, onDoubleTapCb
     _wPriority(item, isCompact),
 //    _wIssueKey(item, isCompact),
     _wName(item, isCompact, onTapCb, onDoubleTapCb),
+    Icon(Icons.keyboard_arrow_up),
 //    wIssueStatusChip(item, isCompact),
   ]);
 }

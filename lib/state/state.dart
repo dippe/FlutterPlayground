@@ -81,7 +81,7 @@ final _initState = AppState(
     listViewMode: ListViewMode.COMPACT,
   ),
   view: ViewState(
-    search: SearchState(text: null, recent: [], resultItems: null),
+    search: SearchState(text: null, recent: [], resultItems: []),
     messages: initAppMessages,
     actListIdx: 0,
     actPage: PageType.IssueList,

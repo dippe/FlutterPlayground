@@ -93,7 +93,15 @@ class JiraRestClient {
             : '(No error response)';
         throw new HttpException(msg);
       } catch (e) {
-        throw new HttpException('Error: ' + resp.reasonPhrase);
+        throw new HttpException('HTTP Error ' +
+                '\nPlease check the Configuration!' +
+                '\nStatus Code: ' +
+                resp.statusCode.toString() +
+                '\nReason: ' +
+                resp.reasonPhrase +
+                ' ' +
+                e.message ??
+            '');
       }
     } else {
       return resp;

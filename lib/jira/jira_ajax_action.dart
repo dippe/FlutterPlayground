@@ -1,5 +1,6 @@
 import 'package:todo_flutter_app/jira/action.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
+import 'package:todo_flutter_app/jira/domain/responses.dart';
 import 'package:todo_flutter_app/jira/jira_rest_client.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/messages/action.dart';
@@ -25,6 +26,9 @@ class JiraAjax {
         return err.result;
       } else {
         store.dispatch(AddErrorMessageAction(err.message + ' \n Filter: ' + filter.name));
+        store.dispatch(FetchJqlError(
+            JiraError(errors: {}, errorMessages: [err is Exception ? (err as dynamic).message : err.toString()]),
+            filter));
         throw Exception('AJAX ERROR: ' + err.toString());
       }
     }).then((res) => store.dispatch(FetchJqlDone(res, filter)));

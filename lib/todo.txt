@@ -8,10 +8,17 @@ Feature:
 - metadata leszedése
 - konfigolható custom fields
 - státusz change
+- lista: utolsó frissítés détumát kiírni
+- lista: copy to clipboard long tap-ra
 
 Fix:
+- végtelen homokóra indításkor
+- végtelen homokóra hiba esetén
+- végtelen homokóra search indításkor
+- nincs reload config után back-ra nyomva
 - konfigurálható tabok száma
-
+- back gomb nem műxik (navigator kellene)
+- reducerek egységesítése
 
 kész:
 - ok-mok helyett back

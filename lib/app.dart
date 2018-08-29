@@ -20,20 +20,24 @@ class FlutterReduxApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-//    return PersistorGate(
-//      persistor: persistor,
-//      builder: (context) =>
-    return StoreProvider<AppState>(
-      // Pass the store to the StoreProvider. Any ancestor `StoreConnector`
-      // Widgets will find and use this value as the `Store`.
-      store: store,
-      child: MaterialApp(
-        home: _wMainRoot(context),
-        title: 'Test title',
-        theme: ThemeData.dark(),
-      ),
+    try {
+      final mainRoot = _wMainRoot(context);
+
+      return StoreProvider<AppState>(
+        // Pass the store to the StoreProvider. Any ancestor `StoreConnector`
+        // Widgets will find and use this value as the `Store`.
+        store: store,
+        child: MaterialApp(
+          home: mainRoot,
+          title: 'Test title',
+          theme: ThemeData.dark(),
+        ),
 //          ),
-    );
+      );
+    } catch (e) {
+      print(e.toString());
+      rethrow;
+    }
   }
 }
 

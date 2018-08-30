@@ -23,13 +23,20 @@ wSearchPage() => new StoreConnector<AppState, SearchState>(
                 JiraAjax.doSearchAction(txt);
               },
             ),
-            _renderResult(vm.resultItems),
+            _renderResult(vm.text?.isEmpty ?? true, vm.resultItems),
           ],
         ));
 
-Widget _renderResult(List items) => (items?.length == 0)
-    ? Flex(
-        direction: Axis.vertical,
-        children: [Text('-- No result --')],
-      )
-    : Expanded(child: wIssueList(items ?? [], items == null, store.state.config.listViewMode == ListViewMode.COMPACT));
+Widget _renderResult(bool txtIsEmpty, List items) {
+  if (items?.length == 0) {
+    return Flex(
+      direction: Axis.vertical,
+      children: [Text('-- No result --')],
+    );
+  } else if (txtIsEmpty) {
+    return Text('');
+  } else {
+    return Expanded(
+        child: wIssueList(items ?? [], items == null, store.state.config.listViewMode == ListViewMode.COMPACT));
+  }
+}

@@ -13,8 +13,8 @@ Feature:
 Fix:
 - Fix nincs reload config után back-ra nyomva
 - konfigurálható tabok száma
-- back gomb nem műxik (navigator kellene)
 - Refactor: reducerek egységesítése
+- Refactor: one export file per package
 
 kész:
 - ok-mok helyett back
@@ -42,3 +42,4 @@ kész:
 - Fix végtelen homokóra search indításkor
 - Scrollbar
 - lista: copy to clipboard long tap-ra
+- back gomb nem műxik (navigator kellene)

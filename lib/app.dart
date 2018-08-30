@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:todo_flutter_app/state/domain.dart';
+import 'package:todo_flutter_app/view/action.dart';
 import 'package:todo_flutter_app/view/app/app_drawer.dart';
 import 'package:todo_flutter_app/view/app/header.dart';
 import 'package:todo_flutter_app/view/config/config_page.dart';
@@ -21,14 +24,24 @@ class FlutterReduxApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     try {
-      final mainRoot = _wMainRoot(context);
-
       return StoreProvider<AppState>(
         // Pass the store to the StoreProvider. Any ancestor `StoreConnector`
         // Widgets will find and use this value as the `Store`.
         store: store,
         child: MaterialApp(
-          home: mainRoot,
+          home: WillPopScope(
+            child: Scaffold(
+              key: mainGlobalScaffold,
+              appBar: wHeaderAppBar(),
+              body: _wBody(),
+              drawer: wDrawer(context),
+              bottomSheet: wMessages(),
+            ),
+            onWillPop: () {
+              store.dispatch(ShowActualIssueListPage());
+              return Future.value(false);
+            },
+          ),
           title: 'Test title',
           theme: ThemeData.dark(),
         ),
@@ -46,14 +59,6 @@ class FlutterReduxApp extends StatelessWidget {
  * Renderer functions
  *
  * ************************************/
-
-Widget _wMainRoot(context) => Scaffold(
-      key: mainGlobalScaffold,
-      appBar: wHeaderAppBar(),
-      body: _wBody(),
-      drawer: wDrawer(context),
-      bottomSheet: wMessages(),
-    );
 
 Widget _wBody() => StoreConnector<AppState, dynamic>(
     converter: (store) => {

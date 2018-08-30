@@ -15,11 +15,14 @@ ItemWidget wSelectedItem = (ListItemData item, isCompact) {
   final onTapCb = (item) => dispatch(Actions.UnSelectAll());
   return Column(
     children: <Widget>[
-      ListTile(
+      GestureDetector(
         onTap: () => dispatch(Actions.UnSelectAll()),
-        title: wItemLineForSelected(item, isCompact, onTapCb, onTapCb),
+        child: Container(
+          color: Colors.grey.shade800,
+          child: wItemLineForSelected(item, isCompact, onTapCb, onTapCb),
+        ),
       ),
-      _IssueDetails(item.issue)
+      _IssueDetails(item.issue),
     ],
   );
 };
@@ -43,7 +46,7 @@ Widget _IssueDetails(JiraIssue issue) {
 
   return Container(
     child: Card(
-      child: ListView(
+      child: Column(
         children: <Widget>[
           _IssueField('Prj/Key', issue.fields.project.name + ' [' + issue.key + ']'),
 //          _IssueField('Summary', issue.fields.summary),
@@ -61,7 +64,6 @@ Widget _IssueDetails(JiraIssue issue) {
         ],
       ),
     ),
-    height: _DETAILS_BLOCK_HEIGHT,
   );
 }
 

@@ -9,7 +9,6 @@ Feature:
 - konfigolható custom fields
 - státusz change
 - lista: utolsó frissítés détumát kiírni
-- lista: copy to clipboard long tap-ra
 
 Fix:
 - Fix nincs reload config után back-ra nyomva
@@ -42,3 +41,4 @@ kész:
 - Fix végtelen homokóra hiba esetén
 - Fix végtelen homokóra search indításkor
 - Scrollbar
+- lista: copy to clipboard long tap-ra

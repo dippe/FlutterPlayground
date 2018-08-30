@@ -12,13 +12,10 @@ Feature:
 - lista: copy to clipboard long tap-ra
 
 Fix:
-- végtelen homokóra indításkor
-- végtelen homokóra hiba esetén
-- végtelen homokóra search indításkor
-- nincs reload config után back-ra nyomva
+- Fix nincs reload config után back-ra nyomva
 - konfigurálható tabok száma
 - back gomb nem műxik (navigator kellene)
-- reducerek egységesítése
+- Refactor: reducerek egységesítése
 
 kész:
 - ok-mok helyett back
@@ -41,3 +38,7 @@ kész:
 - utolsó komment(ek) megjelenítése
 - szerver, user, jelszó elkódolása?
 - Mentés?? hibakezelés?
+- Fix végtelen homokóra indításkor
+- Fix végtelen homokóra hiba esetén
+- Fix végtelen homokóra search indításkor
+- Scrollbar

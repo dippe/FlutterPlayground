@@ -76,17 +76,13 @@ Widget _IssueField(label, text) => Container(
             ),
           ),
           Expanded(
-            child: Text(text),
+            child: GestureDetector(
+              child: Text(text),
+              onLongPress: _copyToClipboardFn(text),
+            ),
             flex: 3,
           ),
-          IconButton(
-              icon: Icon(Icons.content_copy),
-              onPressed: () {
-                Clipboard.setData(new ClipboardData(text: text));
-                (mainGlobalScaffold.currentState as ScaffoldState).showSnackBar(new SnackBar(
-                  content: new Text("Copied to Clipboard: "),
-                ));
-              }),
+          // IconButton(icon: Icon(Icons.content_copy), onPressed: _copyToClipboardFn(text)),
         ],
       ),
     );
@@ -118,3 +114,10 @@ ItemWidget _wName = (item, isCompact) => Expanded(
       onTapCb: () => dispatch(Actions.Edit(item)),
       onDoubleTapCb: () => dispatch(Actions.Edit(item)),
     ));
+
+_copyToClipboardFn(text) => () {
+      Clipboard.setData(new ClipboardData(text: text));
+      (mainGlobalScaffold.currentState as ScaffoldState).showSnackBar(new SnackBar(
+        content: new Text("Copied to Clipboard: " + text),
+      ));
+    };

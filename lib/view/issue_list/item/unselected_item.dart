@@ -9,14 +9,19 @@ import 'package:todo_flutter_app/view/issue_list/item/list_item.dart';
 ItemWidget wUnselectedItem = (ListItemData item, isCompact) {
   final onTapCb = (item) => dispatch(Actions.Select(item));
   final onDoubleTapCb = (item) => dispatch(Actions.Edit(item));
-  return Row(
-    children: [
-      isCompact ? Text('') : _wIssuetype(item, isCompact),
-      _wPriority(item, isCompact),
-      _wIssueKey(item, isCompact),
-      _wName(item, isCompact, onTapCb, onDoubleTapCb),
-      wIssueStatusChip(item, isCompact),
-    ],
+  return Container(
+    child: Row(
+      children: [
+        isCompact ? Text('') : _wIssuetype(item, isCompact),
+        _wPriority(item, isCompact),
+        _wIssueKey(item, isCompact),
+        _wName(item, isCompact, onTapCb, onDoubleTapCb),
+        wIssueStatusChip(item, isCompact),
+      ],
+    ),
+    decoration: BoxDecoration(
+      border: Border(bottom: BorderSide(style: BorderStyle.solid, width: 1.0, color: Colors.grey.shade600)),
+    ),
   );
 };
 
@@ -24,7 +29,7 @@ Widget wItemLineForSelected(ListItemData item, isCompact, onTapCb, onDoubleTapCb
   return Row(children: [
     isCompact ? Text('') : _wIssuetype(item, isCompact),
     _wPriority(item, isCompact),
-//    _wIssueKey(item, isCompact),
+//    _wIssueKey(item, isCompact)
     _wName(item, isCompact, onTapCb, onDoubleTapCb),
     Icon(Icons.keyboard_arrow_up),
 //    wIssueStatusChip(item, isCompact),

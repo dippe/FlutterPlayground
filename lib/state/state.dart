@@ -128,7 +128,8 @@ final _initState = AppState(
         name: _predefinedFilters[4].name,
         filter: _predefinedFilters[4],
         result: null,
-        items: List.from([new ListItemData(null, 'Hello world :P', 'ISSUELONG-11234')]),
+//        items: List.from([new ListItemData(null, 'Hello world :P', 'ISSUELONG-11234')]),
+        items: null,
       ),
       IssueListView(
         id: '1',

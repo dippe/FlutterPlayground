@@ -35,7 +35,6 @@ class _wJqlTabsPageState extends State<JqlTabsPage> with SingleTickerProviderSta
 
   @override
   void initState() {
-    // fixme: rethink, maybe index mustbe started from 0 ??
     _currIdx = _appStore.state.view.actListIdx ?? 0;
 
     _recent = _appStore.state.view.issueListViews;

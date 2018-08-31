@@ -9,21 +9,17 @@ import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/jira/domain/responses.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/util/auth.dart';
-import 'package:todo_flutter_app/util/tripledes/lib/tripledes.dart';
 import 'package:todo_flutter_app/view/config/reducer.dart';
 
 const URL_ISSUE = "/rest/api/2/issue/";
 const URL_JQL = "/rest/api/2/search";
-
-// fixme: this should be configurable on the Config page!
 const FIELDS_TO_GET = "*all";
 
-// fixme: re-enable this for performance improvement with finalized fields
+// todo: re-enable this for performance improvement with finalized fields
 //const FIELDS_TO_GET = "status,summary,components,fixVersions,project,issuelinks,issuetype,priority";
 
 class JiraRestClient {
   static Future<Response> _jiraGet(String path) async {
-    // fixme: rethink this direct store access hack
     final user = store.state.config.user;
     final baseUrl = store.state.config.baseUrl;
     final fullUrl = baseUrl + path;
@@ -48,8 +44,6 @@ class JiraRestClient {
   }
 
   static Future<JiraSearch> fetchIssuesByJql(JiraFilter filter, maxResults) {
-    // fixme: re-enable encoding
-    //  String ncodedJql = encodeURIComponent(jql);
     String ncodedJql = filter.jql;
 
     String path = URL_JQL + '?maxResults=' + maxResults.toString() + "&fields=" + FIELDS_TO_GET + '&jql=' + ncodedJql;

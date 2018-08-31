@@ -100,14 +100,11 @@ Widget _wReadOnlyTitle({
   @required Function onTapCb,
   @required Function onDoubleTapCb,
 }) {
-  // the actual substate is the proper tododata (see the PropertyManager)
   return InkWell(
     onDoubleTap: onDoubleTapCb,
     onTap: onTapCb,
-    // todo: kell ez a container?
     child: Container(
       padding: new EdgeInsets.all(10.0),
-      // color: new Color(0X9900CCCC),
       child: Text(
         item.title,
         style: TextStyle(decoration: item.done ? TextDecoration.lineThrough : TextDecoration.none),

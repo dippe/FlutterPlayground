@@ -179,7 +179,6 @@ ViewState _toggle(ViewState state, Actions.CbToggle action) {
   return _changeActualItemList(unselectedState, set);
 }
 
-// fixme: change action payload to key instead of item
 ViewState _select(ViewState state, Actions.Select action) {
   final ListModifierFn select = (l) {
     var item = getByKey(l, action.item.key);
@@ -187,8 +186,6 @@ ViewState _select(ViewState state, Actions.Select action) {
     l[idx] = item.copyWith(isSelected: true);
     return l;
   };
-  // fixme? optimization of state change somehow?
-  //  return state..issueListViews[0].items[0] = state.issueListViews[0].items[0].copyWith(title: '1234');
 
   final unselectedState = _unSelectAll(state, Actions.UnSelectAll());
   return _changeActualItemList(unselectedState, select);

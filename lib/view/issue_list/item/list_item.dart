@@ -30,7 +30,6 @@ ItemWidget wListItem = (ListItemData item, isCompact) {
 
 ItemWidget wDraggableListItem = (ListItemData item, isCompact) {
   return DragTarget<ListItemData>(
-    // fixme:re-think keying! perf/ref?
     key: ObjectKey(item),
     onAccept: (dragged) => (dragged != item) ? dispatch(Actions.Drop(dragged, item)) : null,
     onWillAccept: (dragged) => true,

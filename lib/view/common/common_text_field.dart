@@ -46,14 +46,13 @@ class _FieldState extends State<CommonTextField> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _controller.dispose();
     super.dispose();
   }
 
   @override
   void didUpdateWidget(CommonTextField oldWidget) {
-    // HACK: Fix the state not recreated issue caused by the same widget key + flutter optimization
+    // fixme HACK: Fix the state not recreated issue caused by the same widget key + flutter optimization
     _controller.text = widget.initValue;
     super.didUpdateWidget(oldWidget);
   }

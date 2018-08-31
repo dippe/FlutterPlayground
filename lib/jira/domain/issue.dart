@@ -11,7 +11,7 @@ class StatusName {
 @JsonSerializable()
 class JiraUser {
   final bool active;
-  final dynamic avatarUrls; // fixme type
+  final dynamic avatarUrls;
   final String displayName;
   final String emailAddress;
   final String key;

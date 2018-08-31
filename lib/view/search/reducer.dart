@@ -84,7 +84,6 @@ ViewState _unSelectAll(ViewState state, UnSelectAll action) {
   return state.copyWith(search: newSrcState);
 }
 
-// fixme: change action payload to key instead of item
 ViewState _select(ViewState state, Select action) {
   // fixme: re-think this hack:
   if (state.actPage != PageType.Search) {

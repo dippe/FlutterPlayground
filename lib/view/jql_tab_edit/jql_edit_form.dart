@@ -11,7 +11,6 @@ import 'package:todo_flutter_app/view/jql_tab_edit/action.dart';
 
 wJqlEditPage() => new StoreConnector<AppState, _ViewModel>(
       converter: (store) {
-        // fixme: this converter function holds the old name value >> form won't be updated on changes (maybe this not a problem (?))
         final List<JiraFilter> tmpFilters = List<JiraFilter>.from(store.state.jira.predefinedFilters)
           ..addAll(store.state.jira.fetchedFilters ?? []);
 

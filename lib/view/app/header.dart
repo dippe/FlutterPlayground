@@ -62,11 +62,11 @@ Widget _wAddButton = IconButton(
 Widget _wRefreshButton = new StoreConnector<AppState, ViewState>(
   converter: (store) => store.state.view,
   builder: (context, view) {
+    final actFilter = view.issueListViews[view.actListIdx].filter;
     return IconButton(
       tooltip: 'Refresh',
       icon: Icon(Icons.refresh),
-      // fixme: re-think this overcomplicated line >> probably a new action is required e.g. fetchCurrentPage...
-      onPressed: () => JiraAjax.doFetchJqlAction(view.issueListViews[view.actListIdx].filter),
+      onPressed: () => JiraAjax.doFetchJqlAction(actFilter),
     );
   },
 );

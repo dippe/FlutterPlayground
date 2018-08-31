@@ -1,3 +1,10 @@
+Release:
+- rename the app
+- icon
+- manual
+- about/help
+- version number
+
 
 Feature:
 - minden state mentése (issue list)

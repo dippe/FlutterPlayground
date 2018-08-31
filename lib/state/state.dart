@@ -29,7 +29,7 @@ Future initStore() async {
     store = new Store<AppState>(
       combineReducers([_debugReducer, appReducer]),
       initialState: _initState,
-      middleware: [persistor.createMiddleware()],
+      middleware: [_createMiddleware(persistor)],
     );
 
     // Load initial state
@@ -38,6 +38,33 @@ Future initStore() async {
   } catch (e) {
     print('***** CRITICAL INIT ERROR' + e);
     throw (e);
+  }
+}
+
+/// Middleware used for Redux which saves on each action.
+_createMiddleware(persistor) => (Store<AppState> store, dynamic action, NextDispatcher next) async {
+      next(action);
+
+      if (action is! PersistAction && _isToBeSaved(store.state)) {
+        try {
+          // Save
+          await persistor.save(store);
+        } catch (_) {
+          print('************* SAVE ERROR ' + _.toString());
+          rethrow;
+        }
+      }
+    };
+
+var _lastStateHash = '';
+
+bool _isToBeSaved(AppState state) {
+  final newHash = state.config.hashCode.toString() + state.view.actPage.toString();
+  if (newHash != _lastStateHash) {
+    _lastStateHash = newHash;
+    return true;
+  } else {
+    return false;
   }
 }
 
@@ -60,10 +87,12 @@ final void Function(Action) dispatch = (Action action) => store.dispatch(action)
 E callReducers<E>(List<Reducer<E>> reducers, E state, Action action) =>
     reducers.fold(state, (E state, fn) => fn(state, action));
 
-Reducer<AppState> _debugReducer = (AppState state, action) {
-  print('*** Action triggered with type: ' + action.runtimeType.toString() + ' val: ' + action.toString());
-  return state;
-};
+Reducer<AppState> _debugReducer = DEBUG
+    ? (AppState state, action) {
+        print('*** Action triggered with type: ' + action.runtimeType.toString() + ' val: ' + action.toString());
+        return state;
+      }
+    : (AppState state, action) => state;
 
 Reducer<E> debugReducer<E>(name) => (E state, action) {
       if (DEBUG) print('*** Reducer: $name  >>> get action: ${action.toString()}');

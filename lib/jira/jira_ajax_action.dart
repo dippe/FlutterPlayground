@@ -22,7 +22,11 @@ class JiraAjax {
       return res;
     }).catchError((err) {
       if (err is ValidationException) {
-        store.dispatch(AddWarningMessageAction('Validation Error: ' + err.message + ' \n Filter: ' + filter.name));
+        store.dispatch(AddWarningMessageAction(err.message +
+            ' \n Filter: ' +
+            filter.name +
+            '\n (Validation Exception)'
+            ''));
         return err.result;
       } else {
         store.dispatch(AddErrorMessageAction(err.message + ' \n Filter: ' + filter.name));
@@ -98,8 +102,8 @@ class JiraAjax {
   static _validateJqlMaxResult(res, allowedMax) {
     if (res.total > allowedMax || res.total > res.maxResults) {
       throw new ValidationException(_AjaxError.LIMIT_REACHED + allowedMax.toString(), res);
-    } else if (res.total == 0) {
-      throw new ValidationException(_AjaxError.EMPTY_JQL_RESULT, res);
+//    } else if (res.total == 0) {
+//      throw new ValidationException(_AjaxError.EMPTY_JQL_RESULT, res);
     } else {
       return res;
     }

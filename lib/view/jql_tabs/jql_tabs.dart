@@ -130,7 +130,12 @@ List<Widget> _renderChildren(Store<AppState> store) => store.state.view.issueLis
             children: i.error.errorMessages
                 .map((err) => ListTile(leading: Icon(Icons.error, color: Colors.red), title: Text(err)))
                 .toList() as List<Widget>);
-      } else if (i.items != null) {
+      } else if (i.items != null && i.items?.length == 0) {
+        return Flex(
+          direction: Axis.vertical,
+          children: [Text('-- No result --')],
+        );
+      } else if (i.items != null && i.items?.length > 0) {
         return wIssueList(i.items, i.showProgressIndicator(), store.state.config.listViewMode == ListViewMode.COMPACT);
       } else {
         return Column(children: [

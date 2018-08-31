@@ -104,14 +104,22 @@ class _wJqlTabsPageState extends State<JqlTabsPage> with SingleTickerProviderSta
 
 List<Widget> _tabsFromStore(AppState appState) => appState.view.issueListViews.map((i) {
       return Tab(
-        icon: GestureDetector(
+        child: GestureDetector(
           onLongPress: () {
             dispatch(SetActListIdx(appState.view.issueListViews.indexOf(i)));
+            JiraAjax.doFetchFilters();
             dispatch(ViewActions.ShowJqlEditPage());
           },
-          child: Icon(Icons.art_track),
+          child: Card(
+            margin: EdgeInsets.all(0.0),
+            child: Text(
+              i.name,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
-        text: i.name,
       );
     }).toList();
 

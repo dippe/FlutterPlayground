@@ -1,4 +1,4 @@
-package org.dippe.todoflutterapp
+package org.dippe.jtg
 
 import android.os.Bundle
 

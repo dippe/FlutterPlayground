@@ -1,5 +1,5 @@
 name: todo_flutter_app
-description: A new Flutter application.
+description: Simple JIRA mobile client.
 
 dependencies:
   flutter:

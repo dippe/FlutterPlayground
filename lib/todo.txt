@@ -1,9 +1,8 @@
 Release:
-- rename the app
+- https://flutter.io/android-release/
 - icon
 - manual
 - about/help
-- version number
 
 
 Feature:
@@ -51,3 +50,5 @@ kész:
 - Scrollbar
 - lista: copy to clipboard long tap-ra
 - back gomb nem műxik (navigator kellene)
+- rename the app
+- version number

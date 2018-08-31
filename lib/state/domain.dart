@@ -87,30 +87,6 @@ class IssueListView {
 
   bool showProgressIndicator() => result == null && error == null;
 
-  @deprecated
-  int length() {
-    return items.length;
-  }
-
-  @deprecated
-  int lengthDone() {
-    return items.where((d) => d.done).length;
-  }
-
-  @deprecated
-  int lengthTodo() {
-    return items.where((d) => !d.done).length;
-  }
-
-  // fixme remove later if unneeded
-  //  bool _itemsEqual(List<ListItemData> items, List<ListItemData> otherItems) {
-  //    if (!(otherItems is List<ListItemData>)) {
-  //      return false;
-  //    } else {
-  //      return items.every((i) => otherItems.any((o) => o == i));
-  //    }
-  //  }
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

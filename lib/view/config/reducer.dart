@@ -47,6 +47,8 @@ getDecryptedPwd(ConfigState state, pwd) {
     final decrypted = blockCipher.decodeB64(pwd);
     return decrypted;
   } catch (e) {
+    // FIXME: ?
+    store.dispatch(Actions.SetPwd(''));
     store.dispatch(AddWarningMessageAction('Password decrypt error: try to re-enter the pwd!  ' + e.toString()));
     return '';
   }

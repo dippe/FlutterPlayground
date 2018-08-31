@@ -67,27 +67,33 @@ Widget _IssueDetails(JiraIssue issue) {
   );
 }
 
-Widget _IssueField(label, text) => Container(
-      padding: EdgeInsets.all(10.0),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Text(
-              label,
-              style: TextStyle(fontWeight: FontWeight.w600),
+Widget _IssueField(label, String text) => text.trim() == ''
+    ? SizedBox(
+        height: 0.0,
+        width: 0.0,
+      )
+    : Container(
+        padding: EdgeInsets.all(10.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
             ),
-          ),
-          Expanded(
-            child: GestureDetector(
-              child: Text(text),
-              onLongPress: _copyToClipboardFn(text),
+            Expanded(
+              child: GestureDetector(
+                child: Text(text),
+                onLongPress: _copyToClipboardFn(text),
+              ),
+              flex: 3,
             ),
-            flex: 3,
-          ),
-          // IconButton(icon: Icon(Icons.content_copy), onPressed: _copyToClipboardFn(text)),
-        ],
-      ),
-    );
+            // IconButton(icon: Icon(Icons.content_copy), onPressed: _copyToClipboardFn(text)),
+          ],
+        ),
+      );
 
 Widget _wReadOnlyTitle({
   @required ListItemData item,

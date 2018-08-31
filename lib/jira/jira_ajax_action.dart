@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:todo_flutter_app/jira/action.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/jira/domain/responses.dart';
@@ -11,11 +13,11 @@ class _AjaxError {
 }
 
 class JiraAjax {
-  static void doFetchJqlAction(JiraFilter filter) {
+  static Future doFetchJqlAction(JiraFilter filter) {
     final allowedMax = store.state.config.maxJqlIssueNum;
     store.dispatch(FetchJqlStart(filter));
 
-    JiraRestClient.fetchIssuesByJql(filter, allowedMax)
+    return JiraRestClient.fetchIssuesByJql(filter, allowedMax)
         .then((res) => _validateJqlMaxResult(res, allowedMax))
         .then((res) {
       store.dispatch(AddInfoMessageAction('JQL fetch finished successfully'));

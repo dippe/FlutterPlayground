@@ -75,16 +75,16 @@ bool _isToBeSaved(AppState state) {
 }
 
 _reloadFirstTab() {
-  final idx = store.state.view?.actListIdx;
-  final filter = store.state.view.issueListViews[idx].filter;
+  final filter1 = store.state.view.issueListViews[0].filter;
+  final filter2 = store.state.view.issueListViews[1].filter;
+  final filter3 = store.state.view.issueListViews[2].filter;
 
-  if (filter != null) {
-    store.dispatch(ShowJqlEditPage());
-    JiraAjax.doFetchJqlAction(filter);
-    store.dispatch(ShowActualIssueListPage());
-  }
+  JiraAjax.doFetchJqlAction(filter1)
+      .then((a) => JiraAjax.doFetchJqlAction(filter2))
+      .then((a) => JiraAjax.doFetchJqlAction(filter3))
+      .then((a) => JiraAjax.doFetchFilters());
 
-  JiraAjax.doFetchFilters();
+  store.dispatch(ShowActualIssueListPage());
 }
 
 /// dispatch action into the global store

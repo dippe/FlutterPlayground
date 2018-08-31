@@ -10,7 +10,7 @@ part 'domain.g.dart';
 /**
  * BUILD JSON CONVERTERS: flutter packages pub run build_runner build
  */
-enum PageType { Config, IssueList, JqlEdit, Search }
+enum PageType { Config, IssueList, JqlEdit, Search, AppStart }
 
 class ListItemData {
   final String key;

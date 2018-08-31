@@ -63,6 +63,7 @@ class FlutterReduxApp extends StatelessWidget {
 Widget _wBody() => StoreConnector<AppState, dynamic>(
     converter: (store) => {
           // fixme: rethink page handling
+          'appStart': store.state.view.actPage == PageType.AppStart,
           'showJqlEdit': store.state.view.actPage == PageType.JqlEdit,
           'showConfig': store.state.view.actPage == PageType.Config,
           'showSearch': store.state.view.actPage == PageType.Search,
@@ -70,8 +71,14 @@ Widget _wBody() => StoreConnector<AppState, dynamic>(
           'error': store.state.jira.error,
         },
     builder: (context2, s) {
-      // fixme: replace paging with https://flutter.io/cookbook/navigation/navigation-basics/
-      if (s['error'] != null) {
+      if (s['appStart']) {
+        return new Row(
+          // fixme: replace to app icon
+          children: [SizedBox(height: 100.0, width: 100.0, child: new LinearProgressIndicator())],
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+        );
+      } else if (s['error'] != null) {
         return SimpleDialog(
           title: Text('Ajax Error'),
           children: <Widget>[
@@ -91,8 +98,3 @@ Widget _wBody() => StoreConnector<AppState, dynamic>(
         return JqlTabsPage();
       }
     });
-
-//void _debug(BuildContext context, String msg) {
-//  print('**** ' + msg);
-////  Scaffold.of(context).showSnackBar(SnackBar(content: Text(msg)));
-//}

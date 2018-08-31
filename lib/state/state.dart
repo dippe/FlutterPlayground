@@ -9,6 +9,8 @@ import 'package:todo_flutter_app/reducer.dart';
 import 'package:todo_flutter_app/state/.config.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/util/types.dart';
+import 'package:todo_flutter_app/view/action.dart';
+import 'package:todo_flutter_app/view/messages/action.dart';
 
 const DEBUG = false;
 
@@ -36,7 +38,10 @@ Future initStore() async {
     await persistor.load(store);
     _reloadFirstTab();
   } catch (e) {
-    print('***** CRITICAL INIT ERROR' + e);
+    print('***** CRITICAL INIT ERROR' + e.toString());
+    if (e is SerializationException) {
+      store.dispatch(AddErrorMessageAction('DATA LOAD ERROR!!! \n' + (e as dynamic).message));
+    }
     throw (e);
   }
 }
@@ -59,7 +64,8 @@ _createMiddleware(persistor) => (Store<AppState> store, dynamic action, NextDisp
 var _lastStateHash = '';
 
 bool _isToBeSaved(AppState state) {
-  final newHash = state.config.hashCode.toString() + state.view.actPage.toString();
+  final filterHashes = state.view.issueListViews.fold('', (acc, i) => acc + i.filter.hashCode.toString());
+  final newHash = state.config.hashCode.toString() + state.view.actPage.toString() + filterHashes;
   if (newHash != _lastStateHash) {
     _lastStateHash = newHash;
     return true;
@@ -73,7 +79,9 @@ _reloadFirstTab() {
   final filter = store.state.view.issueListViews[idx].filter;
 
   if (filter != null) {
+    store.dispatch(ShowJqlEditPage());
     JiraAjax.doFetchJqlAction(filter);
+    store.dispatch(ShowActualIssueListPage());
   }
 
   JiraAjax.doFetchFilters();
@@ -113,7 +121,7 @@ final _initState = AppState(
     search: SearchState(text: null, recent: [], resultItems: []),
     messages: initAppMessages,
     actListIdx: 0,
-    actPage: PageType.IssueList,
+    actPage: PageType.AppStart,
     issueListViews: [
       IssueListView(
         id: '4',

@@ -14,14 +14,6 @@ const DEFAULT_ITEM_NAME = 'Unnamed issue';
 
 Widget wHeaderAppBar() => AppBar(
       actions: <Widget>[
-        // fixme: generalize connectors
-        new StoreConnector<AppState, AppState>(
-            converter: (store) => store.state,
-            builder: (context, todos) {
-              return Text('-');
-              // fixme- re-enable
-//              return SimpleBarChart.renderProgressChart(todos.lengthDone(), todos.lengthTodo());
-            }),
         _wMainBtns,
       ],
     );

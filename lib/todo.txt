@@ -22,6 +22,7 @@ Fix:
 - konfigurálható tabok száma
 - Refactor: reducerek egységesítése
 - Refactor: one export file per package
+- Refactor: generalize store connectors > reusable (converters?)
 
 kész:
 - ok-mok helyett back

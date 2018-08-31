@@ -35,8 +35,16 @@ Widget _renderResult(bool txtIsEmpty, List items) {
     );
   } else if (txtIsEmpty) {
     return Text('');
+  } else if (items == null) {
+    return Column(children: [
+      Text('Loading ...'),
+      new SizedBox(
+        width: 40.0,
+        height: 40.0,
+        child: new CircularProgressIndicator(),
+      ),
+    ]);
   } else {
-    return Expanded(
-        child: wIssueList(items ?? [], items == null, store.state.config.listViewMode == ListViewMode.COMPACT));
+    return Expanded(child: wIssueList(items ?? [], store.state.config.listViewMode == ListViewMode.COMPACT));
   }
 }

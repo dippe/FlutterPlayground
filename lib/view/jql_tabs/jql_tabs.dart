@@ -89,6 +89,8 @@ class _wJqlTabsPageState extends State<JqlTabsPage> with SingleTickerProviderSta
       this._children = _renderChildren(_appStore);
     }
 
+    this._myTabs = _tabsFromStore(_appStore.state);
+
     return new Scaffold(
       appBar: new TabBar(
         controller: _tabController,
@@ -105,21 +107,27 @@ class _wJqlTabsPageState extends State<JqlTabsPage> with SingleTickerProviderSta
 List<Widget> _tabsFromStore(AppState appState) => appState.view.issueListViews.map((i) {
       return Tab(
         child: GestureDetector(
-          onLongPress: () {
-            dispatch(SetActListIdx(appState.view.issueListViews.indexOf(i)));
-            JiraAjax.doFetchFilters();
-            dispatch(ViewActions.ShowJqlEditPage());
-          },
-          child: Card(
-            margin: EdgeInsets.all(0.0),
-            child: Text(
-              i.name,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
+            onLongPress: () {
+              dispatch(SetActListIdx(appState.view.issueListViews.indexOf(i)));
+              JiraAjax.doFetchFilters();
+              dispatch(ViewActions.ShowJqlEditPage());
+            },
+            child: Column(
+              children: <Widget>[
+                Card(
+                  margin: EdgeInsets.all(0.0),
+                  child: Text(
+                    i.name,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                i.showProgressIndicator()
+                    ? SizedBox(height: 2.0, child: new LinearProgressIndicator())
+                    : SizedBox(height: 2.0),
+              ],
+            )),
       );
     }).toList();
 
@@ -136,7 +144,7 @@ List<Widget> _renderChildren(Store<AppState> store) => store.state.view.issueLis
           children: [Text('-- No result --')],
         );
       } else if (i.items != null && i.items?.length > 0) {
-        return wIssueList(i.items, i.showProgressIndicator(), store.state.config.listViewMode == ListViewMode.COMPACT);
+        return wIssueList(i.items, store.state.config.listViewMode == ListViewMode.COMPACT);
       } else {
         return Column(children: [
           Text('Loading ...'),

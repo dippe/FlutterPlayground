@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:todo_flutter_app/consts.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/view/action.dart';
 import 'package:todo_flutter_app/view/app/app_drawer.dart';
@@ -60,41 +61,42 @@ class FlutterReduxApp extends StatelessWidget {
  *
  * ************************************/
 
-Widget _wBody() => StoreConnector<AppState, dynamic>(
-    converter: (store) => {
-          // fixme: rethink page handling
-          'appStart': store.state.view.actPage == PageType.AppStart,
-          'showJqlEdit': store.state.view.actPage == PageType.JqlEdit,
-          'showConfig': store.state.view.actPage == PageType.Config,
-          'showSearch': store.state.view.actPage == PageType.Search,
-          // fixme: rethink error handling
-          'error': store.state.jira.error,
-        },
-    builder: (context2, s) {
-      if (s['appStart']) {
+Widget _wBody() => StoreConnector<AppState, _BodyDto>(
+    converter: (store) => _BodyDto(
+          actPage: store.state.view.actPage,
+          error: store.state.jira.error,
+        ),
+    builder: (context2, d) {
+      if (d.actPage == PageType.AppStart) {
         return new Row(
-          // fixme: replace to app icon
-          children: [SizedBox(height: 100.0, width: 100.0, child: new LinearProgressIndicator())],
+          children: [SizedBox(height: 100.0, width: 100.0, child: AppConsts.APP_LOGO)],
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
         );
-      } else if (s['error'] != null) {
+      } else if (d.error != null) {
         return SimpleDialog(
           title: Text('Ajax Error'),
           children: <Widget>[
             Text(
-              'ERROR: ' + s['error'],
+              'ERROR: ' + d.error,
               style: TextStyle(color: Colors.redAccent),
             )
           ],
         );
-      } else if (s['showJqlEdit']) {
+      } else if (d.actPage == PageType.JqlEdit) {
         return wJqlEditPage();
-      } else if (s['showConfig']) {
+      } else if (d.actPage == PageType.Config) {
         return wConfigPage();
-      } else if (s['showSearch']) {
+      } else if (d.actPage == PageType.Search) {
         return wSearchPage();
       } else {
         return JqlTabsPage();
       }
     });
+
+class _BodyDto {
+  final PageType actPage;
+  final String error;
+
+  _BodyDto({this.actPage, this.error});
+}

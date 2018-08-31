@@ -17,11 +17,7 @@ wSearchPage() => new StoreConnector<AppState, SearchState>(
               inputType: FieldInputType.TEXT,
               icon: Icons.search,
               labelText: 'Search',
-              onChange: (txt) {
-                // fixme: re-think actions/middleware
-                dispatch(DoSearchAction(txt));
-                JiraAjax.doSearchAction(txt);
-              },
+              onChange: (txt) => JiraAjax.doSearchAction(txt),
             ),
             _renderResult(vm.text?.isEmpty ?? true, vm.resultItems),
           ],

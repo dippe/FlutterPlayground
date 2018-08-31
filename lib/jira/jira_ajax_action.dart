@@ -6,6 +6,7 @@ import 'package:todo_flutter_app/jira/domain/responses.dart';
 import 'package:todo_flutter_app/jira/jira_rest_client.dart';
 import 'package:todo_flutter_app/state/state.dart';
 import 'package:todo_flutter_app/view/messages/action.dart';
+import 'package:todo_flutter_app/view/search/action.dart';
 
 class _AjaxError {
   static const LIMIT_REACHED = 'Cannot get all of the issues because the MaxResults limit is reached ';
@@ -41,6 +42,8 @@ class JiraAjax {
   }
 
   static void doSearchAction(String text) {
+    store.dispatch(DoSearchAction(text));
+
     store.dispatch(SearchStartAction());
 
     final keyRegexp = RegExp("([a-zA-Z0-9]{1,15}-[0-9]+)");

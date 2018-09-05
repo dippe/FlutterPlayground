@@ -27,11 +27,16 @@ Map<String, dynamic> _$IssueListViewToJson(IssueListView instance) =>
 SearchState _$SearchStateFromJson(Map<String, dynamic> json) {
   return SearchState(
       recent: (json['recent'] as List)?.map((e) => e as String)?.toList(),
-      text: json['text'] as String);
+      text: json['text'] as String,
+      error: json['error'] as String);
 }
 
 Map<String, dynamic> _$SearchStateToJson(SearchState instance) =>
-    <String, dynamic>{'recent': instance.recent, 'text': instance.text};
+    <String, dynamic>{
+      'error': instance.error,
+      'recent': instance.recent,
+      'text': instance.text
+    };
 
 ViewState _$ViewStateFromJson(Map<String, dynamic> json) {
   return ViewState(
@@ -78,7 +83,8 @@ const _$PageTypeEnumMap = <PageType, dynamic>{
   PageType.Config: 'Config',
   PageType.IssueList: 'IssueList',
   PageType.JqlEdit: 'JqlEdit',
-  PageType.Search: 'Search'
+  PageType.Search: 'Search',
+  PageType.AppStart: 'AppStart'
 };
 
 AppState _$AppStateFromJson(Map<String, dynamic> json) {

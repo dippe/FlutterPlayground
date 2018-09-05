@@ -57,7 +57,7 @@ class IssueListView {
   @JsonKey(ignore: true, defaultValue: null, includeIfNull: true)
   final JiraSearch result; // link to the ajax result
   @JsonKey(ignore: true, defaultValue: null)
-  final JiraError error; // link to the ajax result
+  final String error; // link to the ajax result
   final int idCounter;
 
   IssueListView({
@@ -72,7 +72,7 @@ class IssueListView {
   });
 //  }) : this.items = items ?? [] as List<ListItemData>;
 
-  IssueListView copyWith({id, name, filter, result, items, idCounter, JiraError error, bool resetResult = false}) {
+  IssueListView copyWith({id, name, filter, result, items, idCounter, String error, bool resetResult = false}) {
     return IssueListView(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -110,24 +110,26 @@ class IssueListView {
 
 @JsonSerializable()
 class SearchState {
+  final String error;
   final List<String> recent;
   final String text;
   @JsonKey(ignore: true, defaultValue: [], includeIfNull: true)
   final List<ListItemData> resultItems;
 
-  SearchState({this.recent, this.text, this.resultItems});
+  SearchState({this.recent, this.text, this.resultItems, this.error});
 
   SearchState copyWith({
     List<String> recent,
     String text,
     List<ListItemData> resultItems,
     bool resetResultItems = false,
+    String error,
   }) {
     return SearchState(
-      recent: recent ?? this.recent ?? [],
-      text: text ?? this.text ?? '',
-      resultItems: resetResultItems ? null : resultItems ?? this.resultItems,
-    );
+        recent: recent ?? this.recent ?? [],
+        text: text ?? this.text ?? '',
+        resultItems: resetResultItems ? null : resultItems ?? this.resultItems,
+        error: resultItems != null ? null : error ?? this.error);
   }
 
   factory SearchState.fromJson(Map<String, dynamic> json) => _$SearchStateFromJson(json);

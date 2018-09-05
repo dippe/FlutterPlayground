@@ -80,14 +80,14 @@ class JiraRestClient {
   }
 
   static _validateResponse(Response resp) {
+    String msg;
     if (resp.statusCode >= 400) {
       try {
-        var msg = (resp.body != null && resp.body.length > 0)
+        msg = (resp.body != null && resp.body.length > 0)
             ? JiraErrorMsg.fromJson(json.decode(resp.body)).errorMessages.reduce((v, e) => v + ';  ' + e)
             : '(No error response)';
-        throw new HttpException(msg);
       } catch (e) {
-        throw new HttpException('HTTP Error ' +
+        msg = 'HTTP Error ' +
                 '\nPlease check the Configuration!' +
                 '\nStatus Code: ' +
                 resp.statusCode.toString() +
@@ -95,8 +95,9 @@ class JiraRestClient {
                 resp.reasonPhrase +
                 ' ' +
                 e.message ??
-            '');
+            '';
       }
+      throw new HttpException(msg);
     } else {
       return resp;
     }

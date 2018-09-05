@@ -19,19 +19,28 @@ wSearchPage() => new StoreConnector<AppState, SearchState>(
               labelText: 'Search',
               onChange: (txt) => JiraAjax.doSearchAction(txt),
             ),
-            _renderResult(vm.text?.isEmpty ?? true, vm.resultItems),
+            _renderResult(vm),
           ],
         ));
 
-Widget _renderResult(bool txtIsEmpty, List items) {
-  if (items?.length == 0) {
+Widget _renderResult(SearchState vm) {
+  if (vm.resultItems == null && (vm.error != null)) {
+    return Column(
+      children: [
+        ListTile(
+          leading: Icon(Icons.error, color: Colors.red),
+          title: Text(vm.error),
+        ),
+      ],
+    );
+  } else if (vm.resultItems?.length == 0) {
     return Flex(
       direction: Axis.vertical,
       children: [Text('-- No result --')],
     );
-  } else if (txtIsEmpty) {
+  } else if (vm.text?.isEmpty ?? true) {
     return Text('');
-  } else if (items == null) {
+  } else if (vm.resultItems == null) {
     return Column(children: [
       Text('Loading ...'),
       new SizedBox(
@@ -41,6 +50,6 @@ Widget _renderResult(bool txtIsEmpty, List items) {
       ),
     ]);
   } else {
-    return Expanded(child: wIssueList(items ?? [], store.state.config.listViewMode == ListViewMode.COMPACT));
+    return Expanded(child: wIssueList(vm.resultItems ?? [], store.state.config.listViewMode == ListViewMode.COMPACT));
   }
 }

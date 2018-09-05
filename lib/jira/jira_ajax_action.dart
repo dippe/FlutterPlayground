@@ -33,9 +33,7 @@ class JiraAjax {
         return err.result;
       } else {
         store.dispatch(AddErrorMessageAction(err.message + ' \n Filter: ' + filter.name));
-        store.dispatch(FetchJqlError(
-            JiraError(errors: {}, errorMessages: [err is Exception ? (err as dynamic).message : err.toString()]),
-            filter));
+        store.dispatch(FetchJqlError(err is Exception ? (err as dynamic).message : err.toString(), filter));
         throw Exception('AJAX ERROR: ' + err.toString());
       }
     }).then((res) => store.dispatch(FetchJqlDone(res, filter)));
@@ -67,6 +65,7 @@ class JiraAjax {
         return err.result;
       } else {
         store.dispatch(AddErrorMessageAction(err.message + ' \n Filter: ' + filter.name));
+        store.dispatch(SearchFetchJqlError(err is Exception ? (err as dynamic).message : err.toString(), filter));
         throw Exception('AJAX ERROR: ' + err.toString());
       }
     }).then((res) => store.dispatch(FetchSearchDone(res)));

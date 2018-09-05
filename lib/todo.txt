@@ -17,6 +17,7 @@ Feature:
 - lista: utolsó frissítés détumát kiírni
 
 Fix:
+- JQL search - hiba esetén végtelen homokóra, nincs feedback
 - Fix nincs reload config után back-ra nyomva
 - konfigurálható tabok száma
 - Refactor: reducerek egységesítése

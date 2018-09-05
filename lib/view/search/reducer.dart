@@ -21,6 +21,7 @@ const int MAX_RECENT_SEARCH_NUM = 20;
 Reducer<ViewState> searchReducer = combineReducers<ViewState>([
   debugReducer<ViewState>('searchReducer'),
   TypedReducer<ViewState, FetchSearchDone>(_addItemsFromSearchFetch),
+  TypedReducer<ViewState, SearchFetchJqlError>(_fetchJqlError),
   TypedReducer<ViewState, DoSearchAction>(_doSearch),
   TypedReducer<ViewState, Select>(_select),
   TypedReducer<ViewState, UnSelectAll>(_unSelectAll),
@@ -47,7 +48,7 @@ ViewState _addItemsFromSearchFetch(ViewState state, FetchSearchDone action) {
   };
 
   try {
-    final newSrcState = state.search.copyWith(resultItems: mapToItems(action.jiraJqlResult.issues));
+    final newSrcState = state.search.copyWith(error: null, resultItems: mapToItems(action.jiraJqlResult.issues));
     return state.copyWith(search: newSrcState);
   } catch (e) {
     print('******* EXCEPTION: ' + e.toString());
@@ -102,4 +103,17 @@ ViewState _select(ViewState state, Select action) {
   _unSelectAll(state, UnSelectAll());
   final newSrcState = state.search.copyWith(resultItems: select(items));
   return state.copyWith(search: newSrcState);
+}
+
+ViewState _fetchJqlError(ViewState state, SearchFetchJqlError action) {
+  try {
+    final searchRes = state.search.copyWith(
+      error: action.error,
+      resultItems: null,
+    );
+    return state.copyWith(search: searchRes);
+  } catch (e) {
+    print(e.toString());
+    rethrow;
+  }
 }

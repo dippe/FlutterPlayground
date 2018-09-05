@@ -4,7 +4,7 @@ import 'package:todo_flutter_app/jira/domain/responses.dart';
 import 'package:todo_flutter_app/util/types.dart';
 
 class FetchJqlError implements Action {
-  final JiraError error;
+  final String error;
   final JiraFilter jiraFilter;
 
   FetchJqlError(this.error, this.jiraFilter);
@@ -12,6 +12,18 @@ class FetchJqlError implements Action {
   @override
   String toString() {
     return 'FetchJqlError{error: $error, jql: ${jiraFilter.jql}}';
+  }
+}
+
+class SearchFetchJqlError implements Action {
+  final String error;
+  final JiraFilter jiraFilter;
+
+  SearchFetchJqlError(this.error, this.jiraFilter);
+
+  @override
+  String toString() {
+    return 'SearchFetchJqlError{error: $error, jql: ${jiraFilter.jql}}';
   }
 }
 

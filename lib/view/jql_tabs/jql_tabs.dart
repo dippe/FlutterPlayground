@@ -134,9 +134,13 @@ List<Widget> _tabsFromStore(AppState appState) => appState.view.issueListViews.m
 List<Widget> _renderChildren(Store<AppState> store) => store.state.view.issueListViews.map((i) {
       if (i.error != null) {
         return Column(
-            children: i.error.errorMessages
-                .map((err) => ListTile(leading: Icon(Icons.error, color: Colors.red), title: Text(err)))
-                .toList() as List<Widget>);
+          children: [
+            ListTile(
+              leading: Icon(Icons.error, color: Colors.red),
+              title: Text(i.error),
+            ),
+          ],
+        );
       } else if (i.items != null && i.items?.length == 0) {
         return Flex(
           direction: Axis.vertical,

@@ -6,13 +6,18 @@ import 'package:redux_persist_flutter/redux_persist_flutter.dart';
 import 'package:todo_flutter_app/jira/domain/misc.dart';
 import 'package:todo_flutter_app/jira/jira_ajax_action.dart';
 import 'package:todo_flutter_app/reducer.dart';
-import 'package:todo_flutter_app/state/.config.dart';
 import 'package:todo_flutter_app/state/domain.dart';
 import 'package:todo_flutter_app/util/types.dart';
 import 'package:todo_flutter_app/view/action.dart';
 import 'package:todo_flutter_app/view/messages/action.dart';
 
 const DEBUG = false;
+
+// FIXME !!!!!!! - remove / re-think
+const TMP_USER = 'TMP_USER';
+const TMP_PWD = 'TMP_PWD';
+const TMP_BASE_URL = 'TMP_BASE_URL';
+
 
 /// global store "singleton"
 Store<AppState> store;

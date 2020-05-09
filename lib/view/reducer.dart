@@ -20,6 +20,8 @@ Reducer<ViewState> viewReducer = combineReducers<ViewState>([
   TypedReducer<ViewState, HideJqlEditPage>(_hideJqlEditPage),
   TypedReducer<ViewState, ShowConfigPage>(_showConfigPage),
   TypedReducer<ViewState, HideConfigPage>(_hideConfigPage),
+  TypedReducer<ViewState, ShowWVPage>(_showWVPage),
+  TypedReducer<ViewState, HideWVPage>(_hideWVPage),
   TypedReducer<ViewState, ShowActualIssueListPage>(_showActualIssueListPage),
 ]);
 
@@ -46,6 +48,14 @@ ViewState _showConfigPage(ViewState state, ShowConfigPage action) {
 }
 
 ViewState _hideConfigPage(ViewState state, HideConfigPage action) {
+  return state.copyWith(actPage: PageType.IssueList);
+}
+
+ViewState _showWVPage(ViewState state, ShowWVPage action) {
+  return state.copyWith(actPage: PageType.WV);
+}
+
+ViewState _hideWVPage(ViewState state, HideWVPage action) {
   return state.copyWith(actPage: PageType.IssueList);
 }
 

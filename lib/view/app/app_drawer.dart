@@ -52,6 +52,17 @@ Widget wDrawer(context) => Drawer(
               Navigator.pop(_globalKey.currentContext);
             },
           ),
+          ListTile(
+            leading: Icon(Icons.web),
+            title: Text('WebView'),
+            onTap: () {
+              dispatch(ShowWVPage());
+              // Update the state of the app
+              // ...
+              // Then close the drawer
+              Navigator.pop(_globalKey.currentContext);
+            },
+          ),
         ],
       ),
     );

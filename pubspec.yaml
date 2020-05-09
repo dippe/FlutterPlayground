@@ -34,6 +34,7 @@ dependencies:
   redux_persist_flutter: ^0.6.0
   redux_persist: ^0.7.0
   json_annotation: 1.1.0
+  webview_flutter: ^0.3.21
 
 #  flutter_secure_storage: ^3.1.1
 

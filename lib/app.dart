@@ -13,6 +13,8 @@ import 'package:todo_flutter_app/view/jql_tab_edit/jql_edit_form.dart';
 import 'package:todo_flutter_app/view/jql_tabs/jql_tabs.dart';
 import 'package:todo_flutter_app/view/messages/messages.dart';
 import 'package:todo_flutter_app/view/search/search.dart';
+import 'package:todo_flutter_app/view/wv/wv_page.dart';
+
 
 final mainGlobalScaffold = GlobalKey(debugLabel: 'MainGlobalScaffold');
 
@@ -87,6 +89,8 @@ Widget _wBody() => StoreConnector<AppState, _BodyDto>(
         return wJqlEditPage();
       } else if (d.actPage == PageType.Config) {
         return wConfigPage();
+      } else if (d.actPage == PageType.WV) {
+        return wWVPage();
       } else if (d.actPage == PageType.Search) {
         return wSearchPage();
       } else {

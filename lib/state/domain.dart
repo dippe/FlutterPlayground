@@ -249,6 +249,32 @@ class ConfigState {
   factory ConfigState.fromJson(Map<String, dynamic> json) => _$ConfigStateFromJson(json);
 
   Map<String, dynamic> toJson() => _$ConfigStateToJson(this);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is ConfigState &&
+              runtimeType == other.runtimeType &&
+              user == other.user &&
+              password == other.password &&
+              baseUrl == other.baseUrl &&
+              listViewMode == other.listViewMode &&
+              maxJqlIssueNum == other.maxJqlIssueNum &&
+              maxIssueKeyLength == other.maxIssueKeyLength &&
+              recentIssueCommentsNum == other.recentIssueCommentsNum;
+
+  @override
+  int get hashCode =>
+      user.hashCode ^
+      password.hashCode ^
+      baseUrl.hashCode ^
+      listViewMode.hashCode ^
+      maxJqlIssueNum.hashCode ^
+      maxIssueKeyLength.hashCode ^
+      recentIssueCommentsNum.hashCode;
+
+
+
 }
 
 ///
